@@ -40,7 +40,12 @@ export function isFull(booked: number, capacity: number): boolean {
 
 const hh = (h: number) => String(h).padStart(2, "0");
 
-export function listSlots(now: Date, timeZone: string, booked: Record<string, number>, capacity: number): Slot[] {
+export function listSlots(
+  now: Date,
+  timeZone: string,
+  booked: Record<string, number>,
+  capacity: number,
+): Slot[] {
   const today = localParts(now, timeZone).date;
   const closedFirst = cutoffPassed(now, timeZone);
   const out: Slot[] = [];
@@ -49,11 +54,20 @@ export function listSlots(now: Date, timeZone: string, booked: Record<string, nu
     for (let h = FIRST_HOUR; h <= LAST_HOUR; h++) {
       const slotId = `${date}T${hh(h)}`;
       const n = booked[slotId] ?? 0;
-      const status: SlotStatus = d === 1 && closedFirst ? "closed" : isFull(n, capacity) ? "full" : "open";
+      const status: SlotStatus =
+        d === 1 && closedFirst ? "closed" : isFull(n, capacity) ? "full" : "open";
       out.push({
-        slotId, date, start: `${hh(h)}:00`, end: `${hh(h + 1)}:00`,
-        dateText: dateLabel(date), label: `${dateLabel(date)}, ${hh(h)}:00 to ${hh(h + 1)}:00`,
-        feeCents: slotFee(h), capacity, booked: n, remaining: Math.max(0, capacity - n), status,
+        slotId,
+        date,
+        start: `${hh(h)}:00`,
+        end: `${hh(h + 1)}:00`,
+        dateText: dateLabel(date),
+        label: `${dateLabel(date)}, ${hh(h)}:00 to ${hh(h + 1)}:00`,
+        feeCents: slotFee(h),
+        capacity,
+        booked: n,
+        remaining: Math.max(0, capacity - n),
+        status,
       });
     }
   }

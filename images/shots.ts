@@ -1,9 +1,10 @@
 // bun run shots: captures every picture the READMEs show, from the real shop and real command output.
 // Pages are screenshots of a private shop. Terminal output is rendered as a dark terminal and screenshotted.
-import { chromium, type Page } from "@playwright/test";
+
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import { chromium, type Page } from "@playwright/test";
 import { browserEnv } from "../checks/lib/browser";
 import { startShop } from "../checks/lib/world";
 import { ROOT } from "../scripts/structure";
@@ -23,15 +24,24 @@ for (const p of Object.values(OUT)) mkdirSync(dirname(p), { recursive: true });
 
 const only = process.argv[2];
 const env = browserEnv();
-const browser = await chromium.launch(env.CHROMIUM_PATH ? { executablePath: env.CHROMIUM_PATH } : {});
-const ctx = await browser.newContext({ viewport: { width: 1100, height: 760 }, deviceScaleFactor: 2 });
+const browser = await chromium.launch(
+  env.CHROMIUM_PATH ? { executablePath: env.CHROMIUM_PATH } : {},
+);
+const ctx = await browser.newContext({
+  viewport: { width: 1100, height: 760 },
+  deviceScaleFactor: 2,
+});
 const page = await ctx.newPage();
 
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 async function terminal(p: Page, command: string, output: string, file: string) {
   const body = output
     .split("\n")
-    .map((l) => esc(l).replace(/\b(CAUGHT|PASS|green)\b/g, '<span class="ok">$1</span>').replace(/\b(missed|FAIL|RED)\b/g, '<span class="bad">$1</span>'))
+    .map((l) =>
+      esc(l)
+        .replace(/\b(CAUGHT|PASS|green)\b/g, '<span class="ok">$1</span>')
+        .replace(/\b(missed|FAIL|RED)\b/g, '<span class="bad">$1</span>'),
+    )
     .join("\n");
   await p.setViewportSize({ width: 820, height: 200 });
   await p.setContent(`<html><body style="margin:0;background:#0f1412">
@@ -49,7 +59,10 @@ async function signIn(p: Page, url: string) {
 }
 
 if (!only || only === "board") {
-  const r = Bun.spawnSync(["bun", "world/board.ts"], { cwd: ROOT, env: { ...process.env, ...env } });
+  const r = Bun.spawnSync(["bun", "world/board.ts"], {
+    cwd: ROOT,
+    env: { ...process.env, ...env },
+  });
   const out = r.stdout.toString().trim();
   await terminal(page, "bun run board", out, OUT.board);
   copyFileSync(OUT.board, OUT.orientBoard);
@@ -58,13 +71,22 @@ if (!only || only === "board") {
 
 if (!only || only === "finished") {
   // The replay of a real Claude Code run. Browser tool calls are folded into one count so the picture fits.
-  const r = Bun.spawnSync(["bun", "world/finished/run.ts", "--replay", "1"], { cwd: ROOT, env: { ...process.env, ...env } });
+  const r = Bun.spawnSync(["bun", "world/finished/run.ts", "--replay", "1"], {
+    cwd: ROOT,
+    env: { ...process.env, ...env },
+  });
   const lines = r.stdout.toString().trim().split("\n");
   const out: string[] = [];
   let browserCalls = 0;
   for (const l of lines) {
-    if (/^\s+browser: /.test(l)) { browserCalls++; continue; }
-    if (browserCalls) { out.push(`    (${browserCalls} browser tool calls)`); browserCalls = 0; }
+    if (/^\s+browser: /.test(l)) {
+      browserCalls++;
+      continue;
+    }
+    if (browserCalls) {
+      out.push(`    (${browserCalls} browser tool calls)`);
+      browserCalls = 0;
+    }
     out.push(l);
   }
   await terminal(page, "bun run finished", out.join("\n"), OUT.finished);
@@ -114,16 +136,46 @@ if (!only || only === "report") {
   const shop = await startShop({ bugs: "none" });
   const work = mkdtempSync(join(tmpdir(), "report-"));
   try {
-    Bun.spawnSync(["bun", "x", "playwright", "test", "--config", join(ROOT, "checks", "lib", "playwright.config.ts"), "--reporter=html"], {
-      cwd: ROOT,
-      env: { ...process.env, ...env, TESTS_DIR: join(P1, "03-generate-tests-from-the-plan", "solution", "tests"), BASE_URL: shop.url, PLAYWRIGHT_HTML_OUTPUT_DIR: work, PLAYWRIGHT_HTML_OPEN: "never", CI: "1" },
-    });
+    Bun.spawnSync(
+      [
+        "bun",
+        "x",
+        "playwright",
+        "test",
+        "--config",
+        join(ROOT, "checks", "lib", "playwright.config.ts"),
+        "--reporter=html",
+      ],
+      {
+        cwd: ROOT,
+        env: {
+          ...process.env,
+          ...env,
+          TESTS_DIR: join(P1, "03-generate-tests-from-the-plan", "solution", "tests"),
+          BASE_URL: shop.url,
+          PLAYWRIGHT_HTML_OUTPUT_DIR: work,
+          PLAYWRIGHT_HTML_OPEN: "never",
+          CI: "1",
+        },
+      },
+    );
     await page.setViewportSize({ width: 1100, height: 900 });
-    const server = Bun.serve({ port: 0, fetch: (req) => {
-      const path = new URL(req.url).pathname;
-      const file = join(work, path === "/" ? "index.html" : path);
-      try { return new Response(readFileSync(file), { headers: { "content-type": file.endsWith(".html") ? "text/html" : "application/octet-stream" } }); } catch { return new Response("not found", { status: 404 }); }
-    } });
+    const server = Bun.serve({
+      port: 0,
+      fetch: (req) => {
+        const path = new URL(req.url).pathname;
+        const file = join(work, path === "/" ? "index.html" : path);
+        try {
+          return new Response(readFileSync(file), {
+            headers: {
+              "content-type": file.endsWith(".html") ? "text/html" : "application/octet-stream",
+            },
+          });
+        } catch {
+          return new Response("not found", { status: 404 });
+        }
+      },
+    });
     await page.goto(`http://localhost:${server.port}/`);
     await page.getByText("seed").first().waitFor();
     await page.screenshot({ path: OUT.report });

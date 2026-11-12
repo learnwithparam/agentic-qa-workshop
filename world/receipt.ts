@@ -14,5 +14,11 @@ export function makeReceipt(o: Order): Receipt {
 
 export function verifyReceipt(r: unknown): r is Receipt {
   const x = r as Receipt;
-  return Boolean(x && x.shop === "Pantry Run" && x.order && typeof x.signature === "string" && sign(x.order) === x.signature);
+  return Boolean(
+    x &&
+      x.shop === "Pantry Run" &&
+      x.order &&
+      typeof x.signature === "string" &&
+      sign(x.order) === x.signature,
+  );
 }

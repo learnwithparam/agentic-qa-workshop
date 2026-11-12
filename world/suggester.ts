@@ -1,8 +1,8 @@
 // The AI feature: when an item is out of stock, a model suggests up to three replacements.
 // It answers from the shop's stand-in model (world/replay/model.ts), so the same seed gives the same answer.
 import { on } from "./bugs";
-import { reply } from "./replay/model";
 import type { Product } from "./domain/basket";
+import { reply } from "./replay/model";
 
 export const MAX_SUGGESTIONS = 3;
 
@@ -19,11 +19,15 @@ export function buildPrompt(item: Product, candidates: Product[], allergens: str
     `Item: ${item.sku} | ${item.name} | ${item.category} | ${money(item.priceCents)}`,
   ];
   // The planted bug: the allergen line is dropped from the prompt.
-  if (!on("ai-allergen")) lines.push(`Shopper allergens: ${allergens.length ? allergens.join(", ") : "none declared"}`);
+  if (!on("ai-allergen"))
+    lines.push(`Shopper allergens: ${allergens.length ? allergens.join(", ") : "none declared"}`);
   lines.push(
     "Rules: same category, in stock, at most 15% dearer, never an allergen the shopper declared.",
     "Candidates (sku | name | category | price | allergens | stock):",
-    ...candidates.map((c) => `${c.sku} | ${c.name} | ${c.category} | ${money(c.priceCents)} | ${c.allergens.join(" ") || "none"} | ${c.stock}`),
+    ...candidates.map(
+      (c) =>
+        `${c.sku} | ${c.name} | ${c.category} | ${money(c.priceCents)} | ${c.allergens.join(" ") || "none"} | ${c.stock}`,
+    ),
     `Reply with JSON only: {"skus": [up to ${MAX_SUGGESTIONS} skus, best first]}`,
   );
   return lines.join("\n");

@@ -16,15 +16,21 @@ export function scenarios(md: string): Scenario[] {
   const flush = () => {
     if (!cur) return;
     const body = cur.body.join("\n").replace(/\*\*/g, "");
-    const covers = (body.match(/^\s*[-*]?\s*Covers:\s*(.+)$/im)?.[1] ?? "").split(/[,\s]+/).filter((x) => /^[A-Z]+-\d+$/.test(x));
+    const covers = (body.match(/^\s*[-*]?\s*Covers:\s*(.+)$/im)?.[1] ?? "")
+      .split(/[,\s]+/)
+      .filter((x) => /^[A-Z]+-\d+$/.test(x));
     const kind = (body.match(/^\s*[-*]?\s*Kind:\s*(\w+)/im)?.[1] ?? "").toLowerCase();
     out.push({ title: cur.title, covers, kind, body });
   };
   for (const l of lines) {
     const m = HEADING.exec(l);
-    if (m) { flush(); cur = { title: m[1].replace(/\*\*/g, "").trim(), body: [] }; }
-    else if (/^#{1,3}\s/.test(l) && cur) { flush(); cur = null; }
-    else if (cur) cur.body.push(l);
+    if (m) {
+      flush();
+      cur = { title: m[1].replace(/\*\*/g, "").trim(), body: [] };
+    } else if (/^#{1,3}\s/.test(l) && cur) {
+      flush();
+      cur = null;
+    } else if (cur) cur.body.push(l);
   }
   flush();
   return out;
@@ -34,4 +40,8 @@ export function requirementIds(md: string): string[] {
   return [...new Set([...md.matchAll(/\|\s*([A-Z]+-\d+)\s*\|/g)].map((m) => m[1]))];
 }
 
-export const norm = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+export const norm = (t: string) =>
+  t
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();

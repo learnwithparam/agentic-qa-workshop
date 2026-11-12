@@ -52,12 +52,12 @@ Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
-| What you see | Fix |
-|---|---|
-| `FAIL it passes 3 runs in a row` | Run the command above and read the first error. A missing reset often fails on the second run. |
-| `FAIL every run ends on an empty basket page` | The seed must not add anything. Open `/basket` last. |
-| `Timed out waiting ... config.webServer` | Start the shop yourself with `bun run shop` in another terminal. |
-| `getByLabel("Email")` finds nothing | You are not on `/signin`. Go there first with `page.goto("/signin")`. |
+| What you see                                  | Fix                                                                                            |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `FAIL it passes 3 runs in a row`              | Run the command above and read the first error. A missing reset often fails on the second run. |
+| `FAIL every run ends on an empty basket page` | The seed must not add anything. Open `/basket` last.                                           |
+| `Timed out waiting ... config.webServer`      | Start the shop yourself with `bun run shop` in another terminal.                               |
+| `getByLabel("Email")` finds nothing           | You are not on `/signin`. Go there first with `page.goto("/signin")`.                          |
 
 ## Words you will use
 

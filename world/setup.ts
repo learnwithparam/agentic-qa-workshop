@@ -5,7 +5,9 @@ import { reset } from "./store";
 
 const [major, minor] = Bun.version.split(".").map(Number);
 if (major < 1 || (major === 1 && minor < 4)) {
-  console.log(`Bun ${Bun.version} is too old. Install Bun 1.4 or newer from bun.sh, then run bun run setup again.`);
+  console.log(
+    `Bun ${Bun.version} is too old. Install Bun 1.4 or newer from bun.sh, then run bun run setup again.`,
+  );
   process.exit(1);
 }
 let browser = "Chromium installed";

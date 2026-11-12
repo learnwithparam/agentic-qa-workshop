@@ -100,14 +100,14 @@ flowchart LR
 
 ## The parts
 
-| Part | Steps | Minutes | You prove |
-|---|---|---|---|
-| [Orientation](00-orientation/README.md) | meet-the-shop | 15 | you can run the shop, place an order and read the goal board |
-| [1. Write tests with agents](parts/01-write-tests-with-agents/README.md) | write-the-seed-test, plan-tests-from-requirements, generate-tests-from-the-plan, review-the-agent-tests | 55 | every written rule has a scenario, and the weak agent tests are fixed |
-| [2. Prove the tests catch bugs](parts/02-prove-the-tests-catch-bugs/README.md) | catch-the-seeded-bugs, kill-the-mutants, guard-the-assertions | 60 | at least 7 of 8 requirement bugs caught, mutation score 70 or more, a guard that rejects weakened tests |
-| [3. Keep the suite healthy](parts/03-keep-the-suite-healthy/README.md) | heal-a-renamed-button, stop-the-healer-hiding-a-bug, triage-the-flaky-tests, check-looks-and-access | 60 | healing that changes locators only, a regression kept red, zero flaky tests |
-| [4. Test beyond the UI](parts/04-test-beyond-the-ui/README.md) | test-the-order-api-contract, explore-with-an-agent, test-the-substitution-suggester | 60 | the API contract, bugs no requirement names, and an AI feature judged by properties |
-| [5. Run it as a team](parts/05-run-it-as-a-team/README.md) | compare-mcp-and-cli, fuzz-the-api-from-the-schema, measure-the-agent-cost, gate-the-pull-request, write-the-team-playbook | 100 | one gate, measured cost, and the team's rules for agents |
+| Part                                                                           | Steps                                                                                                                     | Minutes | You prove                                                                                               |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------- |
+| [Orientation](00-orientation/README.md)                                        | meet-the-shop                                                                                                             | 15      | you can run the shop, place an order and read the goal board                                            |
+| [1. Write tests with agents](parts/01-write-tests-with-agents/README.md)       | write-the-seed-test, plan-tests-from-requirements, generate-tests-from-the-plan, review-the-agent-tests                   | 55      | every written rule has a scenario, and the weak agent tests are fixed                                   |
+| [2. Prove the tests catch bugs](parts/02-prove-the-tests-catch-bugs/README.md) | catch-the-seeded-bugs, kill-the-mutants, guard-the-assertions                                                             | 60      | at least 7 of 8 requirement bugs caught, mutation score 70 or more, a guard that rejects weakened tests |
+| [3. Keep the suite healthy](parts/03-keep-the-suite-healthy/README.md)         | heal-a-renamed-button, stop-the-healer-hiding-a-bug, triage-the-flaky-tests, check-looks-and-access                       | 60      | healing that changes locators only, a regression kept red, zero flaky tests                             |
+| [4. Test beyond the UI](parts/04-test-beyond-the-ui/README.md)                 | test-the-order-api-contract, explore-with-an-agent, test-the-substitution-suggester                                       | 60      | the API contract, bugs no requirement names, and an AI feature judged by properties                     |
+| [5. Run it as a team](parts/05-run-it-as-a-team/README.md)                     | compare-mcp-and-cli, fuzz-the-api-from-the-schema, measure-the-agent-cost, gate-the-pull-request, write-the-team-playbook | 100     | one gate, measured cost, and the team's rules for agents                                                |
 
 Orientation and parts 1 to 4 are the core (250 minutes). Part 5 is the extension for a full day or a cohort.
 `schedules.toml` maps the parts onto a one-day format, four evenings and a weekly cohort.
@@ -134,11 +134,11 @@ A hiring manager reads the top of your README and sees a number, not a claim.
 
 ## Read before you start
 
-| Read | Why | Minutes |
-|---|---|---|
-| [The Playwright healer agent prompt](https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/playwright-test-healer.agent.md) | What the healer is allowed to change, in its own words. | 3 |
-| [Mutate test kata README](https://raw.githubusercontent.com/vmzakharov/mutate-test-kata/master/README.md) | Why passing tests and high coverage prove less than they seem. | 10 |
-| [Playwright MCP README, top section](https://raw.githubusercontent.com/microsoft/playwright-mcp/main/README.md) | Why the browser tool an agent uses is a choice with a cost. | 6 |
+| Read                                                                                                                                                             | Why                                                            | Minutes |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ------- |
+| [The Playwright healer agent prompt](https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/playwright-test-healer.agent.md) | What the healer is allowed to change, in its own words.        | 3       |
+| [Mutate test kata README](https://raw.githubusercontent.com/vmzakharov/mutate-test-kata/master/README.md)                                                        | Why passing tests and high coverage prove less than they seem. | 10      |
+| [Playwright MCP README, top section](https://raw.githubusercontent.com/microsoft/playwright-mcp/main/README.md)                                                  | Why the browser tool an agent uses is a choice with a cost.    | 6       |
 
 ## Claude Code in this course
 
@@ -148,9 +148,9 @@ account). The course never asks for an API key. What you build is Claude Code's 
 with it: `CLAUDE.md`, `.claude/settings.json` permissions, hooks, Playwright's planner, generator and healer agents,
 and headless runs with `claude -p`.
 
-| Command | What it does |
-|---|---|
-| `bun run doctor` | Asks `claude` for its version and whether it is signed in. Tested on Claude Code 2.1.322 and newer. |
-| `bun run finished` | A live `claude -p` run on a fresh copy of `world/finished/template` when Claude Code is signed in; otherwise a replay of a recorded run. |
-| `bun run finished --replay all` | Replays every recorded run and scores each, so you see how much one run differs from the next. |
-| `bun test` | Tests the course's hook with the exact JSON Claude Code sends it, and checks the recordings. No model needed. |
+| Command                         | What it does                                                                                                                             |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `bun run doctor`                | Asks `claude` for its version and whether it is signed in. Tested on Claude Code 2.1.322 and newer.                                      |
+| `bun run finished`              | A live `claude -p` run on a fresh copy of `world/finished/template` when Claude Code is signed in; otherwise a replay of a recorded run. |
+| `bun run finished --replay all` | Replays every recorded run and scores each, so you see how much one run differs from the next.                                           |
+| `bun test`                      | Tests the course's hook with the exact JSON Claude Code sends it, and checks the recordings. No model needed.                            |

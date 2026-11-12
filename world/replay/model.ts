@@ -14,12 +14,16 @@ export const replayKey = (prompt: string, seed: number) =>
 
 let replies: Record<string, string> | null = null;
 function load(): Record<string, string> {
-  if (!replies) replies = existsSync(REPLAY_FILE) ? JSON.parse(readFileSync(REPLAY_FILE, "utf8")) : {};
+  if (!replies)
+    replies = existsSync(REPLAY_FILE) ? JSON.parse(readFileSync(REPLAY_FILE, "utf8")) : {};
   return replies!;
 }
 
 export function reply(prompt: string, seed: number): string {
   const text = load()[replayKey(prompt, seed)];
-  if (text === undefined) throw new ReplayMiss("No recorded reply for this request. The suggester only answers the seeds and shoppers the course recorded.");
+  if (text === undefined)
+    throw new ReplayMiss(
+      "No recorded reply for this request. The suggester only answers the seeds and shoppers the course recorded.",
+    );
   return text;
 }

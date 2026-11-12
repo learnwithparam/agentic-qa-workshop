@@ -27,11 +27,11 @@ flowchart LR
   A[agent edit as a diff] --> GU[qa/guard.ts] -->|exit 2| X[rejected]
 ```
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| catch-the-seeded-bugs | 20 | more or better tests in `tests/` | the bug-kill matrix over the 8 requirement bugs: at least 7 caught, fixed build green |
-| kill-the-mutants | 25 | `world/domain` unit tests (Vitest) and `stryker.config.json` with `thresholds.break: 70` | Stryker's JSON report: score at least 70 on slots, basket and substitutions; each test file kills a mutant |
-| guard-the-assertions | 15 | `qa/guard.ts`: a diff on stdin, exit 0 to accept, exit 2 to reject | 8 planted diffs: the 5 that weaken a test rejected, the 3 safe ones accepted |
+| Step                  | Minutes | You produce                                                                              | The check reads                                                                                            |
+| --------------------- | ------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| catch-the-seeded-bugs | 20      | more or better tests in `tests/`                                                         | the bug-kill matrix over the 8 requirement bugs: at least 7 caught, fixed build green                      |
+| kill-the-mutants      | 25      | `world/domain` unit tests (Vitest) and `stryker.config.json` with `thresholds.break: 70` | Stryker's JSON report: score at least 70 on slots, basket and substitutions; each test file kills a mutant |
+| guard-the-assertions  | 15      | `qa/guard.ts`: a diff on stdin, exit 0 to accept, exit 2 to reject                       | 8 planted diffs: the 5 that weaken a test rejected, the 3 safe ones accepted                               |
 
 ## Walkthrough
 

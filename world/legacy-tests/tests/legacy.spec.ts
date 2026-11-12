@@ -1,5 +1,5 @@
 // Hand-written by the previous tester. Most of it is fine. Some of it fails now and then, and nobody knows why.
-import { expect, test, type Page } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 async function login(page: Page, email = "ana@pantryrun.test") {
   await page.goto("/signin");
@@ -9,7 +9,10 @@ async function login(page: Page, email = "ana@pantryrun.test") {
 }
 async function add(page: Page, name: string) {
   await page.goto("/");
-  await page.getByRole("article", { name, exact: true }).getByRole("button", { name: "Add" }).click();
+  await page
+    .getByRole("article", { name, exact: true })
+    .getByRole("button", { name: "Add" })
+    .click();
 }
 async function qty(page: Page, name: string, n: number) {
   await page.goto("/basket");
@@ -24,7 +27,9 @@ async function book(page: Page, slot: RegExp) {
 }
 
 test.describe("legacy: shop", () => {
-  test.beforeEach(async ({ request }) => { await request.post("/__test/reset"); });
+  test.beforeEach(async ({ request }) => {
+    await request.post("/__test/reset");
+  });
 
   test("home page lists products", async ({ page }) => {
     await page.goto("/");
@@ -55,11 +60,15 @@ test.describe("legacy: shop", () => {
   });
   test("out of stock items say so", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("article", { name: "Whole milk 2 L" })).toContainText("Out of stock");
+    await expect(page.getByRole("article", { name: "Whole milk 2 L" })).toContainText(
+      "Out of stock",
+    );
   });
   test("3 for 2 badge shows", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("article", { name: "Greek yoghurt 500 g" }).getByText("3 for 2")).toBeVisible();
+    await expect(
+      page.getByRole("article", { name: "Greek yoghurt 500 g" }).getByText("3 for 2"),
+    ).toBeVisible();
   });
   test("loose produce shows price per kg", async ({ page }) => {
     await page.goto("/");

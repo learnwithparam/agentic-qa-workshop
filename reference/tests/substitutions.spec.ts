@@ -7,7 +7,8 @@ test.beforeEach(async ({ page, request }) => {
   await signIn(page);
 });
 
-const packing = (page: import("@playwright/test").Page, sku: string) => page.locator(`[data-testid="order-line"][data-sku="${sku}"]`).getByTestId("packing");
+const packing = (page: import("@playwright/test").Page, sku: string) =>
+  page.locator(`[data-testid="order-line"][data-sku="${sku}"]`).getByTestId("packing");
 
 test("new lines allow substitutes", async ({ page }) => {
   await addItem(page, "Whole milk 2 L");

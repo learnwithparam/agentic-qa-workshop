@@ -30,12 +30,12 @@ flowchart LR
   YOU --> OK[a suite that catches bugs]
 ```
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| [write-the-seed-test](01-write-the-seed-test/problem/README.md) | 10 | `tests/seed.spec.ts` | three runs against a private shop and its event log |
-| [plan-tests-from-requirements](02-plan-tests-from-requirements/problem/README.md) | 20 | `specs/slots.md`, `specs/basket.md` | every SLOT and BASK ID covered, a boundary case per plan |
-| [generate-tests-from-the-plan](03-generate-tests-from-the-plan/problem/README.md) | 15 | `tests/slots.spec.ts`, `tests/basket.spec.ts` | one test per scenario, no CSS or sleeps, green on the fixed build |
-| [review-the-agent-tests](04-review-the-agent-tests/problem/README.md) | 10 | `qa/review.md` and fixed tests | a verdict per test, and the fixed suite catching 3 planted bugs |
+| Step                                                                              | Minutes | You produce                                   | The check reads                                                   |
+| --------------------------------------------------------------------------------- | ------- | --------------------------------------------- | ----------------------------------------------------------------- |
+| [write-the-seed-test](01-write-the-seed-test/problem/README.md)                   | 10      | `tests/seed.spec.ts`                          | three runs against a private shop and its event log               |
+| [plan-tests-from-requirements](02-plan-tests-from-requirements/problem/README.md) | 20      | `specs/slots.md`, `specs/basket.md`           | every SLOT and BASK ID covered, a boundary case per plan          |
+| [generate-tests-from-the-plan](03-generate-tests-from-the-plan/problem/README.md) | 15      | `tests/slots.spec.ts`, `tests/basket.spec.ts` | one test per scenario, no CSS or sleeps, green on the fixed build |
+| [review-the-agent-tests](04-review-the-agent-tests/problem/README.md)             | 10      | `qa/review.md` and fixed tests                | a verdict per test, and the fixed suite catching 3 planted bugs   |
 
 Total: 55 minutes. Each step's folder is self-contained: work in its `problem/` folder.
 

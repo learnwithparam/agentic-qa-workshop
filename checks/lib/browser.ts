@@ -8,7 +8,11 @@ const SYSTEM = ["/opt/pw-browsers/chromium"];
 
 export function ensurePackages() {
   if (!existsSync(join(ROOT, "node_modules", "@playwright", "test"))) {
-    Bun.spawnSync(["bun", "install", "--frozen-lockfile"], { cwd: ROOT, stdout: "ignore", stderr: "ignore" });
+    Bun.spawnSync(["bun", "install", "--frozen-lockfile"], {
+      cwd: ROOT,
+      stdout: "ignore",
+      stderr: "ignore",
+    });
   }
 }
 
@@ -16,13 +20,17 @@ export function ensurePackages() {
 // installed a moment ago is the one that answers.
 function playwrightChromium(): string | null {
   ensurePackages();
-  const r = Bun.spawnSync(["bun", "-e", 'console.log(require("@playwright/test").chromium.executablePath())'], { cwd: ROOT, stdout: "pipe", stderr: "ignore" });
+  const r = Bun.spawnSync(
+    ["bun", "-e", 'console.log(require("@playwright/test").chromium.executablePath())'],
+    { cwd: ROOT, stdout: "pipe", stderr: "ignore" },
+  );
   const p = r.stdout.toString().trim();
   return r.exitCode === 0 && p && existsSync(p) ? p : null;
 }
 
 export function chromiumPath(): string | null {
-  if (process.env.CHROMIUM_PATH && existsSync(process.env.CHROMIUM_PATH)) return process.env.CHROMIUM_PATH;
+  if (process.env.CHROMIUM_PATH && existsSync(process.env.CHROMIUM_PATH))
+    return process.env.CHROMIUM_PATH;
   if (playwrightChromium()) return "";
   for (const p of SYSTEM) if (existsSync(p)) return p;
   return null;
@@ -34,10 +42,20 @@ export function browserEnv(): Record<string, string> {
   let p = chromiumPath();
   if (p === null && !tried) {
     tried = true;
-    Bun.spawnSync(["bun", "x", "playwright", "install", "--with-deps", "chromium"], { cwd: ROOT, stdout: "ignore", stderr: "ignore" });
-    if (chromiumPath() === null) Bun.spawnSync(["bun", "x", "playwright", "install", "chromium"], { cwd: ROOT, stdout: "ignore", stderr: "ignore" });
+    Bun.spawnSync(["bun", "x", "playwright", "install", "--with-deps", "chromium"], {
+      cwd: ROOT,
+      stdout: "ignore",
+      stderr: "ignore",
+    });
+    if (chromiumPath() === null)
+      Bun.spawnSync(["bun", "x", "playwright", "install", "chromium"], {
+        cwd: ROOT,
+        stdout: "ignore",
+        stderr: "ignore",
+      });
     p = chromiumPath();
   }
-  if (p === null) throw new Error("No Chromium found. Run bun run setup, or set CHROMIUM_PATH in .env.");
+  if (p === null)
+    throw new Error("No Chromium found. Run bun run setup, or set CHROMIUM_PATH in .env.");
   return p ? { CHROMIUM_PATH: p } : {};
 }

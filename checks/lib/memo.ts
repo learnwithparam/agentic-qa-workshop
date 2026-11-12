@@ -1,6 +1,6 @@
 // Several rules in one check read the same run. This keeps one run per folder and content.
 import { createHash } from "node:crypto";
-import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 function hashDir(dir: string): string {

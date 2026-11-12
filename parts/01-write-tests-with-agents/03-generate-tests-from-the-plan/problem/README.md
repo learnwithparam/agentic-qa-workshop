@@ -54,12 +54,12 @@ Expect: `Done. All 7 rules pass.`
 
 ## If you get stuck
 
-| What you see | Fix |
-|---|---|
-| `FAIL every plan scenario has a test with the same title` | Copy the title from the `####` heading. Numbering is ignored. |
-| `FAIL no test finds elements by CSS or XPath` | Swap `locator("#slot-...")` for `getByRole("radio", { name: /Mar 12 09:00/ })`. |
-| A radio cannot be found by name | Slot names read like `Thu, Mar 12 09:00 to 10:00, $2.99`. Match part of it with a regular expression. |
-| A test fails on the second run only | It depends on data another test made. Reset in `beforeEach`. |
+| What you see                                              | Fix                                                                                                   |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `FAIL every plan scenario has a test with the same title` | Copy the title from the `####` heading. Numbering is ignored.                                         |
+| `FAIL no test finds elements by CSS or XPath`             | Swap `locator("#slot-...")` for `getByRole("radio", { name: /Mar 12 09:00/ })`.                       |
+| A radio cannot be found by name                           | Slot names read like `Thu, Mar 12 09:00 to 10:00, $2.99`. Match part of it with a regular expression. |
+| A test fails on the second run only                       | It depends on data another test made. Reset in `beforeEach`.                                          |
 
 ## Words you will use
 

@@ -1,5 +1,5 @@
 // Shared steps for the finished suite. Every test starts from the seed and the seeded store clock.
-import { expect, type APIRequestContext, type Page } from "@playwright/test";
+import { type APIRequestContext, expect, type Page } from "@playwright/test";
 
 export const ANA = { email: "ana@pantryrun.test", password: "pantry" };
 export const PARTNER = { Authorization: "Bearer pantry-partner-key" };

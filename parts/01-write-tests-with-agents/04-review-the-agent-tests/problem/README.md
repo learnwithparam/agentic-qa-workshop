@@ -45,11 +45,11 @@ Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
-| What you see | Fix |
-|---|---|
+| What you see                              | Fix                                                                                            |
+| ----------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | `FAIL the reviewed suite now catches ...` | A test you marked fix still passes with the bug on. Make it check the number the shopper pays. |
-| `FAIL every test marked fix was changed` | The check compares with the agent's original. Edit the test, not only the review. |
-| You dropped a weak test | Then nothing checks that rule. A weak test is usually worth fixing. |
+| `FAIL every test marked fix was changed`  | The check compares with the agent's original. Edit the test, not only the review.              |
+| You dropped a weak test                   | Then nothing checks that rule. A weak test is usually worth fixing.                            |
 
 ## Words you will use
 

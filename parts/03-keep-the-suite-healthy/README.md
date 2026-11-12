@@ -30,12 +30,12 @@ flowchart LR
   L[world/legacy-tests] --> T[repeat 20 times, shuffled] --> TR[qa/triage.json, approved by a person]
 ```
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| heal-a-renamed-button | 15 | healed tests | the suite on `RELEASE=v2`: locator-only failures now pass, the diff touches only locators, assertion count per file the same or higher, no `fixme` or `skip` |
-| stop-the-healer-hiding-a-bug | 10 | the SUB-1 test still failing, and `qa/bugs/SUB-1.md` | the SUB-1 test fails on v2 and still asserts substitutes are allowed; the bug report has Steps, Expected, Actual, Requirement |
-| triage-the-flaky-tests | 20 | `qa/triage.json` and the fixes | `--repeat-each=20 --shuffle` on the 3 flaky legacy tests: 0 failures; causes match the planted ones (race, shared-data, clock); every entry has `approvedBy` |
-| check-looks-and-access | 15 | `tests/visual.spec.ts` and `tests/a11y.spec.ts` | green on the fixed build, red on `price-overlap` and on `missing-label` |
+| Step                         | Minutes | You produce                                          | The check reads                                                                                                                                              |
+| ---------------------------- | ------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| heal-a-renamed-button        | 15      | healed tests                                         | the suite on `RELEASE=v2`: locator-only failures now pass, the diff touches only locators, assertion count per file the same or higher, no `fixme` or `skip` |
+| stop-the-healer-hiding-a-bug | 10      | the SUB-1 test still failing, and `qa/bugs/SUB-1.md` | the SUB-1 test fails on v2 and still asserts substitutes are allowed; the bug report has Steps, Expected, Actual, Requirement                                |
+| triage-the-flaky-tests       | 20      | `qa/triage.json` and the fixes                       | `--repeat-each=20 --shuffle` on the 3 flaky legacy tests: 0 failures; causes match the planted ones (race, shared-data, clock); every entry has `approvedBy` |
+| check-looks-and-access       | 15      | `tests/visual.spec.ts` and `tests/a11y.spec.ts`      | green on the fixed build, red on `price-overlap` and on `missing-label`                                                                                      |
 
 ## Walkthrough
 

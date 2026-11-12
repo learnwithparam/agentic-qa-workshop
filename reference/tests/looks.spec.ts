@@ -16,7 +16,11 @@ test("on a 375 px phone no price sits on its Add button", async ({ page }) => {
     const price = await card.locator(".price").boundingBox();
     const button = await card.getByRole("button", { name: "Add" }).boundingBox();
     expect(price && button).toBeTruthy();
-    const overlap = price!.x < button!.x + button!.width && button!.x < price!.x + price!.width && price!.y < button!.y + button!.height && button!.y < price!.y + price!.height;
+    const overlap =
+      price!.x < button!.x + button!.width &&
+      button!.x < price!.x + price!.width &&
+      price!.y < button!.y + button!.height &&
+      button!.y < price!.y + price!.height;
     expect(overlap, `price overlaps Add on card ${i + 1}`).toBe(false);
   }
 });
@@ -24,13 +28,17 @@ test("on a 375 px phone no price sits on its Add button", async ({ page }) => {
 test("the slot picker has no WCAG 2.1 AA violations", async ({ page }) => {
   await signIn(page);
   await page.goto("/slots");
-  const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+  const results = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+    .analyze();
   expect(results.violations.map((v) => v.id)).toEqual([]);
 });
 
 test("the shop page has no WCAG 2.1 AA violations", async ({ page }) => {
   await signIn(page);
   await page.goto("/");
-  const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
+  const results = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+    .analyze();
   expect(results.violations.map((v) => v.id)).toEqual([]);
 });

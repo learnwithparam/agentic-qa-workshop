@@ -1,5 +1,5 @@
 // Checks the orders page.
-import { expect, test, type Page } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 async function login(page: Page, email = "ana@pantryrun.test") {
   await page.goto("/signin");

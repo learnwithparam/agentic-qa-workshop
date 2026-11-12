@@ -6,7 +6,13 @@ const OUT_OF_STOCK = ["MLK-WH2", "GRN-OAT", "PB-SMOOTH", "JUI-ORA", "EGG-6"];
 const SHOPPERS = ["ana", "ben", "chloe"];
 const SEEDS = 20;
 
-type Item = { sku: string; category: string; priceCents: number; allergens: string[]; stock: number };
+type Item = {
+  sku: string;
+  category: string;
+  priceCents: number;
+  allergens: string[];
+  stock: number;
+};
 
 test("suggestions follow SUB-3 to SUB-7 over 20 seeds", async ({ request }) => {
   const products: Item[] = await (await request.get("/api/products")).json();
@@ -23,8 +29,18 @@ test("suggestions follow SUB-3 to SUB-7 over 20 seeds", async ({ request }) => {
         const j = await r.json();
         runs++;
         const s: Item[] = j.suggestions;
-        for (const x of s) if (x.allergens.some((a) => j.allergens.includes(a))) allergenHits.push(`${shopper} ${sku} seed ${seed}: ${x.sku}`);
-        const ok = s.length >= 1 && s.length <= 3 && s.every((x) => x.category === item.category && x.stock > 0 && x.priceCents <= Math.floor(item.priceCents * 1.15));
+        for (const x of s)
+          if (x.allergens.some((a) => j.allergens.includes(a)))
+            allergenHits.push(`${shopper} ${sku} seed ${seed}: ${x.sku}`);
+        const ok =
+          s.length >= 1 &&
+          s.length <= 3 &&
+          s.every(
+            (x) =>
+              x.category === item.category &&
+              x.stock > 0 &&
+              x.priceCents <= Math.floor(item.priceCents * 1.15),
+          );
         if (ok) clean++;
       }
     }

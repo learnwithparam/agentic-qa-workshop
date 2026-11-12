@@ -52,12 +52,12 @@ Expect: `Done. All 6 rules pass.` and a `Progress:` line.
 
 ## If you get stuck
 
-| What you see | Fix |
-|---|---|
-| `FAIL receipt.json is in this folder and the shop signed it` | Save the downloaded file here unchanged. An edited receipt fails on purpose. |
+| What you see                                                    | Fix                                                                              |
+| --------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `FAIL receipt.json is in this folder and the shop signed it`    | Save the downloaded file here unchanged. An edited receipt fails on purpose.     |
 | `FAIL a chilled out-of-stock item had substitutes switched off` | Untick the box before checkout, then place a new order and download its receipt. |
-| Checkout is grey | The page says why: spend more, or book a slot first. |
-| The basket redirects to Sign in | Sign in as `ana@pantryrun.test` with password `pantry`. |
+| Checkout is grey                                                | The page says why: spend more, or book a slot first.                             |
+| The basket redirects to Sign in                                 | Sign in as `ana@pantryrun.test` with password `pantry`.                          |
 
 ## Words you will use
 

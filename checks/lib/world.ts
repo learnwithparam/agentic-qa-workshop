@@ -3,10 +3,15 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { ROOT } from "../../scripts/structure";
-import { readEvents } from "./events";
 import { ensurePackages } from "./browser";
+import { readEvents } from "./events";
 
-export type Shop = { url: string; dataDir: string; events: () => ReturnType<typeof readEvents>; stop: () => void };
+export type Shop = {
+  url: string;
+  dataDir: string;
+  events: () => ReturnType<typeof readEvents>;
+  stop: () => void;
+};
 
 function freePort(): number {
   const s = Bun.listen({ hostname: "127.0.0.1", port: 0, socket: { data() {} } });
@@ -15,13 +20,21 @@ function freePort(): number {
   return p;
 }
 
-export async function startShop(opts: { bugs?: string; release?: "v1" | "v2" } = {}): Promise<Shop> {
+export async function startShop(
+  opts: { bugs?: string; release?: "v1" | "v2" } = {},
+): Promise<Shop> {
   ensurePackages();
   const dataDir = mkdtempSync(join(tmpdir(), "pantry-"));
   const port = freePort();
   const proc = Bun.spawn(["bun", join(ROOT, "world", "server.ts")], {
     cwd: ROOT,
-    env: { ...process.env, PORT: String(port), BUGS: opts.bugs ?? "none", RELEASE: opts.release ?? "v1", PANTRY_DATA: dataDir },
+    env: {
+      ...process.env,
+      PORT: String(port),
+      BUGS: opts.bugs ?? "none",
+      RELEASE: opts.release ?? "v1",
+      PANTRY_DATA: dataDir,
+    },
     stdout: "ignore",
     stderr: "ignore",
   });
@@ -31,17 +44,32 @@ export async function startShop(opts: { bugs?: string; release?: "v1" | "v2" } =
       if ((await fetch(`${url}/health`)).ok) break;
     } catch {}
     await Bun.sleep(100);
-    if (i === 99) { proc.kill(); throw new Error(`The shop did not start on ${url}`); }
+    if (i === 99) {
+      proc.kill();
+      throw new Error(`The shop did not start on ${url}`);
+    }
   }
   return {
     url,
     dataDir,
     events: () => readEvents(dataDir),
-    stop: () => { proc.kill(); try { rmSync(dataDir, { recursive: true, force: true }); } catch {} },
+    stop: () => {
+      proc.kill();
+      try {
+        rmSync(dataDir, { recursive: true, force: true });
+      } catch {}
+    },
   };
 }
 
-export async function withShop<T>(opts: { bugs?: string; release?: "v1" | "v2" }, fn: (s: Shop) => Promise<T>): Promise<T> {
+export async function withShop<T>(
+  opts: { bugs?: string; release?: "v1" | "v2" },
+  fn: (s: Shop) => Promise<T>,
+): Promise<T> {
   const shop = await startShop(opts);
-  try { return await fn(shop); } finally { shop.stop(); }
+  try {
+    return await fn(shop);
+  } finally {
+    shop.stop();
+  }
 }

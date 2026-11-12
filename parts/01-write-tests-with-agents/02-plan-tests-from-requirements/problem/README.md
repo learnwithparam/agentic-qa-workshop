@@ -22,6 +22,7 @@ Expected part, and two extra lines the course checks:
 
 ```markdown
 #### 2.1 A full slot shows Full and cannot be booked
+
 **Covers:** SLOT-2
 **Kind:** boundary
 ```
@@ -49,12 +50,12 @@ Expect: `Done. All 7 rules pass.`
 
 ## If you get stuck
 
-| What you see | Fix |
-|---|---|
-| `FAIL every SLOT requirement is covered` | List the IDs in your Covers lines and compare with `world/requirements/slots.md`. |
-| `FAIL every scenario has a Covers line` | The planner does not add Covers by itself. Add it to the prompt, or by hand. |
-| `FAIL each plan has at least one boundary` | For each number in a rule, plan a scenario just below and just at it. |
-| `init-agents` overwrote `.mcp.json` | It writes one in this folder. Keep your own copy elsewhere if you have one. |
+| What you see                               | Fix                                                                               |
+| ------------------------------------------ | --------------------------------------------------------------------------------- |
+| `FAIL every SLOT requirement is covered`   | List the IDs in your Covers lines and compare with `world/requirements/slots.md`. |
+| `FAIL every scenario has a Covers line`    | The planner does not add Covers by itself. Add it to the prompt, or by hand.      |
+| `FAIL each plan has at least one boundary` | For each number in a rule, plan a scenario just below and just at it.             |
+| `init-agents` overwrote `.mcp.json`        | It writes one in this folder. Keep your own copy elsewhere if you have one.       |
 
 ## Words you will use
 

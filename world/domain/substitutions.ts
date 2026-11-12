@@ -14,7 +14,11 @@ export function safeFor(candidate: Product, allergens: string[]): boolean {
 }
 
 // SUB-3, SUB-4, SUB-5, SUB-6: same category, no declared allergen, within price, in stock. Closest price wins.
-export function pickSubstitute(original: Product, products: Product[], allergens: string[]): Product | null {
+export function pickSubstitute(
+  original: Product,
+  products: Product[],
+  allergens: string[],
+): Product | null {
   const ok = products.filter(
     (p) =>
       p.sku !== original.sku &&
@@ -23,17 +27,33 @@ export function pickSubstitute(original: Product, products: Product[], allergens
       withinPrice(original, p) &&
       (on("sub-allergen") || safeFor(p, allergens)),
   );
-  ok.sort((a, b) => Math.abs(a.priceCents - original.priceCents) - Math.abs(b.priceCents - original.priceCents) || a.sku.localeCompare(b.sku));
+  ok.sort(
+    (a, b) =>
+      Math.abs(a.priceCents - original.priceCents) - Math.abs(b.priceCents - original.priceCents) ||
+      a.sku.localeCompare(b.sku),
+  );
   return ok[0] ?? null;
 }
 
-export type Packed = { sku: string; status: "packed" | "substituted" | "unavailable"; substituteSku?: string; substituteName?: string };
+export type Packed = {
+  sku: string;
+  status: "packed" | "substituted" | "unavailable";
+  substituteSku?: string;
+  substituteName?: string;
+};
 
 // SUB-2: "No substitutes" is always respected, chilled items included.
-export function packLine(line: Line, product: Product, products: Product[], allergens: string[]): Packed {
+export function packLine(
+  line: Line,
+  product: Product,
+  products: Product[],
+  allergens: string[],
+): Packed {
   if (product.stock > 0) return { sku: line.sku, status: "packed" };
   const optedOut = !line.substitutes && !(on("sub-optout-chilled") && product.chilled);
   if (optedOut) return { sku: line.sku, status: "unavailable" };
   const sub = pickSubstitute(product, products, allergens);
-  return sub ? { sku: line.sku, status: "substituted", substituteSku: sub.sku, substituteName: sub.name } : { sku: line.sku, status: "unavailable" };
+  return sub
+    ? { sku: line.sku, status: "substituted", substituteSku: sub.sku, substituteName: sub.name }
+    : { sku: line.sku, status: "unavailable" };
 }

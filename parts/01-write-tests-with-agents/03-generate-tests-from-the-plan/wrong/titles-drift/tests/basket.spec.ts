@@ -1,6 +1,6 @@
 // spec: specs/basket.md
 // seed: tests/seed.spec.ts
-import { expect, test, type Page } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 test.beforeEach(async ({ page, request }) => {
   await request.post("/__test/reset");
@@ -25,7 +25,8 @@ async function setQty(page: Page, name: string, qty: number) {
   await page.getByRole("button", { name: `Update ${name}` }).click();
 }
 
-const lineTotal = (page: Page, name: string) => page.getByTestId("basket-line").filter({ hasText: name }).getByTestId("line-total");
+const lineTotal = (page: Page, name: string) =>
+  page.getByTestId("basket-line").filter({ hasText: name }).getByTestId("line-total");
 
 test.describe("Lines and quantities", () => {
   test("Adding the same item twice raises its quantity", async ({ page }) => {
@@ -102,6 +103,8 @@ test.describe("Offers, voucher and minimum", () => {
     await expect(page.getByRole("button", { name: "Checkout" })).toBeEnabled();
     await page.getByRole("button", { name: "Remove one Ground coffee 227 g" }).click();
     await expect(page.getByRole("button", { name: "Checkout" })).toBeDisabled();
-    await expect(page.getByTestId("checkout-blocked")).toContainText("Spend $2.55 more to check out");
+    await expect(page.getByTestId("checkout-blocked")).toContainText(
+      "Spend $2.55 more to check out",
+    );
   });
 });
