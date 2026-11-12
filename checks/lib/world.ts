@@ -21,7 +21,7 @@ export async function startShop(opts: { bugs?: string; release?: "v1" | "v2" } =
   const port = freePort();
   const proc = Bun.spawn(["bun", join(ROOT, "world", "server.ts")], {
     cwd: ROOT,
-    env: { ...process.env, PORT: String(port), BUGS: opts.bugs ?? "none", RELEASE: opts.release ?? "v1", PANTRY_DATA: dataDir, LLM_PROVIDER: "replay" },
+    env: { ...process.env, PORT: String(port), BUGS: opts.bugs ?? "none", RELEASE: opts.release ?? "v1", PANTRY_DATA: dataDir },
     stdout: "ignore",
     stderr: "ignore",
   });

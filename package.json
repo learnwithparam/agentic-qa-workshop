@@ -10,14 +10,11 @@
     "world": "bun world/cli.ts",
     "shop": "bun world/cli.ts shop",
     "board": "bun world/board.ts",
-    "models": "bun config/models-check.ts",
-    "shots": "bun images/shots.ts"
+    "shots": "bun images/shots.ts",
+    "doctor": "bun scripts/doctor.ts",
+    "finished": "bun world/finished/run.ts"
   },
   "dependencies": {
-    "@ai-sdk/anthropic": "4.0.103",
-    "@ai-sdk/openai": "4.0.116",
-    "@openrouter/ai-sdk-provider": "3.1.0",
-    "ai": "7.0.171",
     "hono": "4.13.18",
     "zod": "4.6.7"
   },

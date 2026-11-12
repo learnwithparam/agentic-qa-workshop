@@ -1,15 +1,12 @@
-// Builds world/replay/replies.json, the recorded replies replay mode answers from.
-// With a live provider set (LLM_PROVIDER=anthropic and a key), it records real replies.
-// With no key it writes scripted replies that behave like a small model: mostly right, with the
-// mistakes the course plants. The checks never depend on which way the file was made.
+// Builds world/replay/replies.json, the replies the shop's stand-in model answers from.
+// The replies are scripted to behave like a small model: mostly right, with the mistakes the course plants
+// (a dearer pick now and then, and allergens slipping through when the ai-allergen bug drops them from the prompt).
 import { createHash } from "node:crypto";
 import { writeFileSync } from "node:fs";
 import seed from "../seed.json";
 import { setBugs } from "../bugs";
 import { buildPrompt, candidatesFor } from "../suggester";
-import { complete, REPLAY_FILE, replayKey } from "../../config/llm";
-import { PING } from "../../config/ping";
-import { provider } from "../../config/models";
+import { REPLAY_FILE, replayKey } from "./model";
 import { safeFor, withinPrice } from "../domain/substitutions";
 import type { Product } from "../domain/basket";
 
@@ -35,20 +32,16 @@ function scripted(item: Product, declared: string[], seedN: number, promptHasAll
   return JSON.stringify({ skus: picks });
 }
 
-const live = provider() !== "replay";
 for (const variant of ["none", "ai-allergen"]) {
   setBugs(variant);
   for (const item of outOfStock) {
     for (const shopper of seed.shoppers) {
       const prompt = buildPrompt(item, candidatesFor(item, products), shopper.allergens);
       for (let s = 1; s <= SEEDS; s++) {
-        out[replayKey("fast", prompt, s)] = live
-          ? (await complete("fast", prompt, { seed: s })).text
-          : scripted(item, shopper.allergens, s, variant === "none");
+        out[replayKey(prompt, s)] = scripted(item, shopper.allergens, s, variant === "none");
       }
     }
   }
 }
-for (const role of ["fast", "smart", "judge"] as const) out[replayKey(role, PING, 0)] = live ? (await complete(role, PING)).text : "ready";
 writeFileSync(REPLAY_FILE, JSON.stringify(out) + "\n");
-console.log(`Wrote ${Object.keys(out).length} replies to world/replay/replies.json (${live ? "recorded live" : "scripted, no key"}).`);
+console.log(`Wrote ${Object.keys(out).length} replies to world/replay/replies.json.`);

@@ -9,7 +9,7 @@ import { parseSlotId, type Slot } from "./domain/slots";
 import { packLine } from "./domain/substitutions";
 import { suggest } from "./suggester";
 import { makeReceipt } from "./receipt";
-import { ReplayMiss } from "../config/llm";
+import { ReplayMiss } from "./replay/model";
 import { BasketView, Layout, OrderView, ProductCard, SlotPicker, money, release } from "./ui";
 
 export const PARTNER_KEY = "pantry-partner-key";

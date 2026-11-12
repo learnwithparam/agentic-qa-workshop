@@ -1,7 +1,7 @@
 // The AI feature: when an item is out of stock, a model suggests up to three replacements.
-// It runs on recorded replies by default (LLM_PROVIDER=replay), so the same seed gives the same answer.
+// It answers from the shop's stand-in model (world/replay/model.ts), so the same seed gives the same answer.
 import { on } from "./bugs";
-import { complete } from "../config/llm";
+import { reply } from "./replay/model";
 import type { Product } from "./domain/basket";
 
 export const MAX_SUGGESTIONS = 3;
@@ -42,9 +42,9 @@ export function parseReply(text: string): string[] {
 
 export async function suggest(item: Product, all: Product[], allergens: string[], seed: number) {
   const prompt = buildPrompt(item, candidatesFor(item, all), allergens);
-  const reply = await complete("fast", prompt, { seed });
+  const text = reply(prompt, seed);
   const bySku = new Map(all.map((p) => [p.sku, p]));
-  return parseReply(reply.text)
+  return parseReply(text)
     .map((s) => bySku.get(s))
     .filter((p): p is Product => Boolean(p))
     .slice(0, MAX_SUGGESTIONS);
