@@ -1,2 +1,7 @@
 verify-report.json
 node_modules
+.env
+world/.data
+**/test-results
+**/playwright-report
+.runs

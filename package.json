@@ -1,10 +1,29 @@
 {
-  "name": "workshop-template",
+  "name": "agentic-qa-workshop",
   "private": true,
   "type": "module",
   "packageManager": "bun@1.4.4",
   "scripts": {
     "check": "bun scripts/check.ts && bun scripts/verify.ts --all",
-    "verify": "bun scripts/verify.ts"
+    "verify": "bun scripts/verify.ts",
+    "setup": "bun world/setup.ts",
+    "world": "bun world/cli.ts",
+    "shop": "bun world/cli.ts shop",
+    "board": "bun world/board.ts",
+    "models": "bun config/models-check.ts",
+    "shots": "bun images/shots.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/anthropic": "4.0.103",
+    "@ai-sdk/openai": "4.0.116",
+    "@openrouter/ai-sdk-provider": "3.1.0",
+    "ai": "7.0.171",
+    "hono": "4.13.18",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.65.0",
+    "@types/bun": "1.4.4"
   }
 }
