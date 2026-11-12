@@ -17,8 +17,8 @@ test("shows one-hour slots from 08:00 to 20:00 for three dates", async ({ page }
 
 test("a full slot shows Full and cannot be booked", async ({ page }) => {
   await page.goto("/slots");
-  const full = page.getByRole("radio", { name: /Mar 11 18:00 to 19:00/ });
-  await expect(full).toBeDisabled();
+  const fullSlot = page.getByRole("radio", { name: /Mar 11 18:00 to 19:00/ });
+  await expect(fullSlot).toBeDisabled();
   await expect(page.getByText("Wed, Mar 11 18:00 to 19:00, $4.99, Full")).toBeVisible();
 });
 

@@ -2,20 +2,23 @@
 import { type APIRequestContext, expect, type Page } from "@playwright/test";
 
 export const ANA = { email: "ana@pantryrun.test", password: "pantry" };
-export const PARTNER = { Authorization: "Bearer pantry-partner-key" };
+// The HTTP header a partner app sends to call the orders API. Header names ignore case.
+export const PARTNER = { authorization: "Bearer pantry-partner-key" };
 
 export async function freshShop(request: APIRequestContext) {
-  expect((await request.post("/__test/reset")).ok()).toBeTruthy();
+  const response = await request.post("/__test/reset");
+  expect(response.ok()).toBeTruthy();
 }
 
-export async function setStoreClock(request: APIRequestContext, at: string) {
-  expect((await request.post("/__test/clock", { data: { at } })).ok()).toBeTruthy();
+export async function setStoreClock(request: APIRequestContext, storeTime: string) {
+  const response = await request.post("/__test/clock", { data: { at: storeTime } });
+  expect(response.ok()).toBeTruthy();
 }
 
-export async function signIn(page: Page, who = ANA) {
+export async function signIn(page: Page, shopper = ANA) {
   await page.goto("/signin");
-  await page.getByLabel("Email").fill(who.email);
-  await page.getByLabel("Password").fill(who.password);
+  await page.getByLabel("Email").fill(shopper.email);
+  await page.getByLabel("Password").fill(shopper.password);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByText("Signed in as")).toBeVisible();
 }
@@ -28,13 +31,13 @@ export async function addItem(page: Page, name: string, weight?: string) {
   await expect(page.getByRole("status")).toHaveText(`Added ${name} to your basket`);
 }
 
-export function line(page: Page, name: string) {
+export function basketLine(page: Page, name: string) {
   return page.getByTestId("basket-line").filter({ hasText: name });
 }
 
-export async function setQuantity(page: Page, name: string, qty: number) {
+export async function setQuantity(page: Page, name: string, quantity: number) {
   await page.goto("/basket");
-  await page.getByLabel(`Quantity of ${name}`).fill(String(qty));
+  await page.getByLabel(`Quantity of ${name}`).fill(String(quantity));
   await page.getByRole("button", { name: `Update ${name}` }).click();
 }
 

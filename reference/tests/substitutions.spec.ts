@@ -1,13 +1,14 @@
 // spec: world/requirements/substitutions.md
-import { expect, test } from "@playwright/test";
-import { addItem, bookSlot, checkout, freshShop, line, reachMinimum, signIn } from "./shop";
+import { expect, type Page, test } from "@playwright/test";
+import { addItem, bookSlot, checkout, freshShop, reachMinimum, signIn } from "./shop";
 
 test.beforeEach(async ({ page, request }) => {
   await freshShop(request);
   await signIn(page);
 });
 
-const packing = (page: import("@playwright/test").Page, sku: string) =>
+// What the packer did with one order line, found by the product's stock code (SKU).
+const packingNote = (page: Page, sku: string) =>
   page.locator(`[data-testid="order-line"][data-sku="${sku}"]`).getByTestId("packing");
 
 test("new lines allow substitutes", async ({ page }) => {
@@ -24,7 +25,7 @@ test("no substitutes is respected for chilled milk", async ({ page }) => {
   await reachMinimum(page);
   await bookSlot(page, /Mar 12 09:00/);
   await checkout(page);
-  await expect(packing(page, "MLK-WH2")).toHaveText("Not available");
+  await expect(packingNote(page, "MLK-WH2")).toHaveText("Not available");
 });
 
 test("a substitute never has an allergen the shopper declared", async ({ page }) => {
@@ -33,7 +34,7 @@ test("a substitute never has an allergen the shopper declared", async ({ page })
   await reachMinimum(page);
   await bookSlot(page, /Mar 12 09:00/);
   await checkout(page);
-  await expect(packing(page, "GRN-OAT")).toHaveText("Substituted with Honey granola 500 g");
+  await expect(packingNote(page, "GRN-OAT")).toHaveText("Substituted with Honey granola 500 g");
 });
 
 test("a substitute is same category, in stock and at most 15% dearer", async ({ page }) => {
@@ -41,5 +42,5 @@ test("a substitute is same category, in stock and at most 15% dearer", async ({ 
   await reachMinimum(page);
   await bookSlot(page, /Mar 12 09:00/);
   await checkout(page);
-  await expect(packing(page, "JUI-ORA")).toHaveText("Substituted with Pineapple juice 1 L");
+  await expect(packingNote(page, "JUI-ORA")).toHaveText("Substituted with Pineapple juice 1 L");
 });

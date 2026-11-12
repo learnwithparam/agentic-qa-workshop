@@ -28,51 +28,52 @@ const Order = z.strictObject({
   totalCents: z.number().int(),
 });
 const ApiError = z.object({ error: z.string(), message: z.string() });
-const coffee = [{ sku: "COF-GRD", qty: 6 }];
+// Six bags of ground coffee: enough to reach the $25.00 minimum.
+const sixCoffees = [{ sku: "COF-GRD", qty: 6 }];
 
 test.beforeEach(async ({ request }) => freshShop(request));
 
 test("POST /api/orders returns 201 and an Order", async ({ request }) => {
-  const r = await request.post("/api/orders", {
+  const response = await request.post("/api/orders", {
     headers: PARTNER,
-    data: { shopper: "ana", slotId: "2026-03-12T09", lines: coffee },
+    data: { shopper: "ana", slotId: "2026-03-12T09", lines: sixCoffees },
   });
-  expect(r.status()).toBe(201);
-  const body = Order.parse(await r.json());
-  expect(body.slotId).toBe("2026-03-12T09");
-  expect(body.totalCents).toBe(2694 + 299);
-  const again = await request.get(`/api/orders/${body.orderId}`, { headers: PARTNER });
-  expect(Order.parse(await again.json()).orderId).toBe(body.orderId);
+  expect(response.status()).toBe(201);
+  const order = Order.parse(await response.json());
+  expect(order.slotId).toBe("2026-03-12T09");
+  expect(order.totalCents).toBe(2694 + 299);
+  const readBack = await request.get(`/api/orders/${order.orderId}`, { headers: PARTNER });
+  expect(Order.parse(await readBack.json()).orderId).toBe(order.orderId);
 });
 
 test("a full slot answers 409 slot_full", async ({ request }) => {
-  const r = await request.post("/api/orders", {
+  const response = await request.post("/api/orders", {
     headers: PARTNER,
-    data: { shopper: "ana", slotId: "2026-03-11T18", lines: coffee },
+    data: { shopper: "ana", slotId: "2026-03-11T18", lines: sixCoffees },
   });
-  expect(r.status()).toBe(409);
-  expect(ApiError.parse(await r.json()).error).toBe("slot_full");
+  expect(response.status()).toBe(409);
+  expect(ApiError.parse(await response.json()).error).toBe("slot_full");
 });
 
 test("a missing partner key answers 401", async ({ request }) => {
-  const r = await request.post("/api/orders", {
-    data: { shopper: "ana", slotId: "2026-03-12T09", lines: coffee },
+  const response = await request.post("/api/orders", {
+    data: { shopper: "ana", slotId: "2026-03-12T09", lines: sixCoffees },
   });
-  expect(r.status()).toBe(401);
-  ApiError.parse(await r.json());
+  expect(response.status()).toBe(401);
+  ApiError.parse(await response.json());
 });
 
 test("an order below the minimum answers 422", async ({ request }) => {
-  const r = await request.post("/api/orders", {
+  const response = await request.post("/api/orders", {
     headers: PARTNER,
     data: { shopper: "ana", slotId: "2026-03-12T09", lines: [{ sku: "PAS-PEN", qty: 2 }] },
   });
-  expect(r.status()).toBe(422);
-  expect(ApiError.parse(await r.json()).error).toBe("below_minimum");
+  expect(response.status()).toBe(422);
+  expect(ApiError.parse(await response.json()).error).toBe("below_minimum");
 });
 
 test("an unknown order answers 404", async ({ request }) => {
-  const r = await request.get("/api/orders/PR-9999", { headers: PARTNER });
-  expect(r.status()).toBe(404);
-  ApiError.parse(await r.json());
+  const response = await request.get("/api/orders/PR-9999", { headers: PARTNER });
+  expect(response.status()).toBe(404);
+  ApiError.parse(await response.json());
 });

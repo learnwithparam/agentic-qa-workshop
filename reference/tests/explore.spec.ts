@@ -36,8 +36,9 @@ test("going back after checkout does not place a second order", async ({ page, r
   await page.getByRole("button", { name: "Checkout" }).click();
   await expect(page.getByRole("heading", { name: /Order PR-1001 placed/ })).toBeVisible();
   await page.goBack();
-  const again = page.getByRole("button", { name: "Checkout" });
-  if (await again.isEnabled()) await again.click();
-  const orders = await (await request.get("/api/orders?shopper=ana", { headers: PARTNER })).json();
+  const checkoutButton = page.getByRole("button", { name: "Checkout" });
+  if (await checkoutButton.isEnabled()) await checkoutButton.click();
+  const response = await request.get("/api/orders?shopper=ana", { headers: PARTNER });
+  const orders = await response.json();
   expect(orders).toHaveLength(1);
 });
