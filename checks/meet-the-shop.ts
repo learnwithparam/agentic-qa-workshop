@@ -3,7 +3,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Rule } from "../scripts/verify";
-import { chromiumPath } from "./lib/browser";
+import { browserEnv } from "./lib/browser";
 import { verifyReceipt, type Receipt } from "../world/receipt";
 import seed from "../world/seed.json";
 
@@ -20,7 +20,7 @@ export default [
   },
   {
     says: "Playwright can find a Chromium",
-    test: () => chromiumPath() !== null,
+    test: () => { try { browserEnv(); return true; } catch { return false; } },
     tryNext: "run bun run setup; if the download is blocked, set CHROMIUM_PATH in .env to a Chromium you have",
   },
   {
