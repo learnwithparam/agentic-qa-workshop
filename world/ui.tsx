@@ -271,6 +271,8 @@ export function BasketView(props: {
 document.querySelectorAll('[data-suggest]').forEach((b) => b.addEventListener('click', async () => {
   const sku = b.dataset.suggest; const ul = document.querySelector('[data-testid="suggestions-' + sku + '"]');
   ul.innerHTML = '<li>Thinking...</li>';
+  // The suggester takes a moment, and not always the same moment.
+  await new Promise((r) => setTimeout(r, 100 + Math.floor(Math.random() * 700)));
   const r = await fetch('/api/suggest?sku=' + sku + '&shopper=${props.shopperId}&seed=1');
   const j = await r.json();
   ul.innerHTML = r.ok ? j.suggestions.map((s) => '<li>' + s.name + ' (' + '$' + (s.priceCents / 100).toFixed(2) + ')</li>').join('') || '<li>No suggestion</li>' : '<li>' + (j.message || 'No suggestion') + '</li>';
