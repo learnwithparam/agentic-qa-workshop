@@ -12,15 +12,13 @@ export function ensurePackages() {
   }
 }
 
+// Asks the installed @playwright/test where its Chromium lives. It runs in a child process so a package
+// installed a moment ago is the one that answers.
 function playwrightChromium(): string | null {
   ensurePackages();
-  try {
-    const { chromium } = require(join(ROOT, "node_modules", "@playwright", "test"));
-    const p: string = chromium.executablePath();
-    return p && existsSync(p) ? p : null;
-  } catch {
-    return null;
-  }
+  const r = Bun.spawnSync(["bun", "-e", 'console.log(require("@playwright/test").chromium.executablePath())'], { cwd: ROOT, stdout: "pipe", stderr: "ignore" });
+  const p = r.stdout.toString().trim();
+  return r.exitCode === 0 && p && existsSync(p) ? p : null;
 }
 
 export function chromiumPath(): string | null {
