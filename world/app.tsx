@@ -8,6 +8,7 @@ import { addToLines, meetsMinimum, priceBasket, removeOne, setQuantity, type Lin
 import { parseSlotId, type Slot } from "./domain/slots";
 import { packLine } from "./domain/substitutions";
 import { suggest } from "./suggester";
+import { makeReceipt } from "./receipt";
 import { ReplayMiss } from "../config/llm";
 import { BasketView, Layout, OrderView, ProductCard, SlotPicker, money, release } from "./ui";
 
@@ -40,6 +41,13 @@ function priced(shopperId: string) {
   else if (!meetsMinimum(totals.afterDiscountCents, b.peakCents, min)) reason = `Spend ${money(min - totals.afterDiscountCents)} more to check out. The minimum order is ${money(min)}.`;
   else if (held.length === 0) reason = "Book a delivery slot to check out.";
   return { b, held, totals, reason, canCheckout: reason === "" };
+}
+
+// The highest basket value seen. The min-order bug checks this instead of the basket as it is now.
+function trackPeak(shopperId: string) {
+  const t = priced(shopperId);
+  t.b.peakCents = Math.max(t.b.peakCents, t.totals.afterDiscountCents);
+  S.saveBasket(t.b);
 }
 
 // Pack every line: decide packed, substituted or not available, as the store picker will.
@@ -120,9 +128,7 @@ app.post("/basket/add", async (c) => {
   // Release v2 ships a real regression: new lines start with substitutes switched off (breaks SUB-1).
   if (release() === "v2" && isNew) b.lines.find((l) => l.sku === p.sku)!.substitutes = false;
   S.saveBasket(b);
-  const t = priced(s.id);
-  b.peakCents = Math.max(b.peakCents, t.totals.afterDiscountCents);
-  S.saveBasket(b);
+  trackPeak(s.id);
   S.logEvent("basket_add", { shopper: s.id, sku: p.sku, amount });
   return c.redirect(`/?added=${p.sku}`, 303);
 });
@@ -160,6 +166,7 @@ app.post("/basket/lines/:sku/:action", async (c) => {
     return c.redirect(`/basket?error=${encodeURIComponent((e as Error).message)}`, 303);
   }
   S.saveBasket(b);
+  trackPeak(s.id);
   S.logEvent("basket_change", { shopper: s.id, sku: p.sku, action });
   return c.redirect("/basket", 303);
 });
@@ -253,6 +260,15 @@ app.get("/orders/:id", (c) => {
       <OrderView o={o} slot={slotFor(o.slotId)} />
     </Layout>,
   );
+});
+
+app.get("/orders/:id/receipt", (c) => {
+  const s = needShopper(c);
+  if (!s) return c.redirect("/signin?next=/orders", 303);
+  const o = S.order(c.req.param("id"));
+  if (!o || o.shopper !== s.id) return c.notFound();
+  c.header("Content-Disposition", `attachment; filename="receipt.json"`);
+  return c.body(JSON.stringify(makeReceipt(o), null, 2) + "\n", 200, { "Content-Type": "application/json" });
 });
 
 // ---------- partner API (openapi.yaml) ----------

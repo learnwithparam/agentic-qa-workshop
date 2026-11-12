@@ -18,11 +18,15 @@ const dirs = (p: string) =>
 // Folders keep an order prefix for sorting only. Learners never type it.
 export const bareName = (folder: string) => folder.replace(/^\d+-/, "");
 
+// The orientation is a part too when 00-orientation holds a step folder (one with a step.toml).
+// Part folders with no steps yet are skeletons a later part session fills in.
 export function parts(): Part[] {
   const root = join(ROOT, "parts");
-  return dirs(root).map((p) => {
-    const dir = join(root, p);
-    const steps = dirs(dir).map((s) => {
+  const orientation = join(ROOT, "00-orientation");
+  const hasStep = dirs(orientation).some((d) => existsSync(join(orientation, d, "step.toml")));
+  const list = [...(hasStep ? [{ folder: "orientation", dir: orientation }] : []), ...dirs(root).map((p) => ({ folder: p, dir: join(root, p) }))];
+  return list.map(({ folder: p, dir }) => {
+    const steps = dirs(dir).filter((s) => existsSync(join(dir, s, "step.toml"))).map((s) => {
       const sdir = join(dir, s);
       const metaPath = join(sdir, "step.toml");
       const raw = existsSync(metaPath) ? (Bun.TOML.parse(readFileSync(metaPath, "utf8")) as any) : {};

@@ -8,7 +8,8 @@ export type Slot = {
   date: string;
   start: string; // 08:00
   end: string; // 09:00
-  label: string;
+  dateText: string; // Wed, Mar 11
+  label: string; // Wed, Mar 11, 08:00 to 09:00
   feeCents: number;
   capacity: number;
   booked: number;
@@ -51,7 +52,7 @@ export function listSlots(now: Date, timeZone: string, booked: Record<string, nu
       const status: SlotStatus = d === 1 && closedFirst ? "closed" : isFull(n, capacity) ? "full" : "open";
       out.push({
         slotId, date, start: `${hh(h)}:00`, end: `${hh(h + 1)}:00`,
-        label: `${dateLabel(date)}, ${hh(h)}:00 to ${hh(h + 1)}:00`,
+        dateText: dateLabel(date), label: `${dateLabel(date)}, ${hh(h)}:00 to ${hh(h + 1)}:00`,
         feeCents: slotFee(h), capacity, booked: n, remaining: Math.max(0, capacity - n), status,
       });
     }

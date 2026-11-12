@@ -50,7 +50,7 @@ fieldset { border:1px solid var(--line); border-radius:10px; background:#fff; ma
 legend { font-weight:700; padding:0 6px; }
 .slots { display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:6px 16px; }
 .slot { display:flex; gap:8px; align-items:center; padding:4px 0; }
-.slot.unavailable { color:#8a948f; }
+.slot.unavailable { color:#5b6660; }
 .suggestions { margin:6px 0 0; padding-left:18px; font-size:14px; }
 dialog { border:1px solid var(--line); border-radius:12px; max-width:900px; width:calc(100% - 32px); }
 `;
@@ -132,7 +132,7 @@ export function SlotPicker({ slots, held }: { slots: Slot[]; held: string[] }) {
         const ds = slots.filter((s) => s.date === d);
         return (
           <fieldset>
-            <legend>{ds[0].label.split(",")[0]}</legend>
+            <legend>{ds[0].dateText}</legend>
             <div class="slots">
               {ds.map((s) => {
                 const id = `slot-${s.slotId}`;
@@ -141,7 +141,7 @@ export function SlotPicker({ slots, held }: { slots: Slot[]; held: string[] }) {
                 return (
                   <div class={`slot${s.status === "open" ? "" : " unavailable"}`} data-slot={s.slotId}>
                     <input type="radio" name="slot" id={id} value={s.slotId} disabled={s.status !== "open"} checked={held.includes(s.slotId)} />
-                    {unlabeled ? <span>{text}</span> : <label for={id}>{`${s.label.split(",")[0]} ${text}`}</label>}
+                    {unlabeled ? <span>{text}</span> : <label for={id}>{`${s.dateText} ${text}`}</label>}
                   </div>
                 );
               })}
@@ -287,6 +287,7 @@ export function OrderView({ o, slot }: { o: Order; slot?: Slot }) {
     <div>
       <h1>Order {o.orderId} placed</h1>
       <p data-testid="order-slot">Delivery: {slot ? slot.label : o.slotId}</p>
+      <p><a href={`/orders/${o.orderId}/receipt`} download="receipt.json">Download receipt</a></p>
       <table>
         <thead><tr><th>Item</th><th>Amount</th><th>Packing</th><th>Price</th></tr></thead>
         <tbody>
