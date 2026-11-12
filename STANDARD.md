@@ -14,7 +14,7 @@ parts/NN-<verb-thing>/   README.md: the problem, its cost, a Mermaid diagram
   NN-<verb-thing>/       one step: one problem, one outcome, one check
     step.toml            minutes, screen
     problem/             README.md and the starter; the learner works here
-    solution/            the sample answer; CI proves the check passes on it
+    solution/            the end state Claude Code reached, and prompts.md; CI proves the check passes on it
     wrong/<mistake>/     at least one common mistake; CI proves the check rejects it
     images/expected.png  the expected result, for any step with something on screen
 checks/<step-name>.ts    the rules for one step
@@ -45,6 +45,56 @@ schedules.toml           parts mapped onto formats
 | Model ids live only in `config/models`. Versions are pinned exactly.                                                 | `check.ts` 5      | anthropics/courses #71, philoagents #43              |
 | Every failure message a learner can see is in `00-orientation/troubleshooting.md`.                                   | `check.ts` 5      | Langfuse workshop #30, philoagents #31               |
 | Every schedule covers every part, and its minutes add up.                                                            | `check.ts` 6      | RESEARCH.md                                          |
+| Every `solution/` has `prompts.md`: the prompts, the plan Claude Code showed, and what the learner checked.          | `check.ts` 3      | briefs/build/CLAUDE-CODE.md                          |
+| Code reads like English, and learner pages are plain English.                                                         | `readable.ts`, `plain-english.ts` | briefs/build/READABLE.md               |
+
+## Readable code
+
+Learners read our code before they write their own, so every file reads like plain English, in every
+language. `bun run readable` checks it, and `bun run check` runs it first.
+
+- **Names are whole words** that say what the thing holds or does: `invoice`, `overdueInvoices`,
+  `sendReminder`. Never `d`, `r`, `x`, `ctx`, `res`, `fn` or `msg`. Only `i`, `j`, `id`, `ok`, `db`,
+  `fs`, `os`, `io` and `ui` may be short.
+- **One idea per line.** A chain of more than three calls becomes named steps. Never a ternary inside a
+  ternary; use `if` and `else`.
+- **Short and flat.** A function does one job in 40 lines or fewer, takes at most 4 inputs, and stays
+  shallow (cognitive complexity 10 or less).
+- **Lines are 100 characters or fewer**, formatted by the language's own tool, never by hand: Biome for
+  TypeScript and JavaScript (`bun run format`), ruff for Python (`uvx ruff format`), and `terraform fmt`,
+  `gofmt` or `shfmt` for those languages.
+- **A comment says why**, in a plain sentence. The code already says what.
+
+```typescript
+// Hard to read
+const due = (d: Inv[]) => d.filter((x) => x.s === "open" && x.dt < now()).map((x) => x.id);
+
+// Reads like English
+function overdueInvoiceIds(invoices: Invoice[]): string[] {
+  const today = new Date();
+  const overdue = invoices.filter(
+    (invoice) => invoice.status === "open" && invoice.dueDate < today,
+  );
+  return overdue.map((invoice) => invoice.id);
+}
+```
+
+## Plain English
+
+Learners read every page in their second or third language. So each page uses short sentences, everyday words and a real example.
+
+- One idea per sentence, 25 words at most.
+- Everyday words: "use", not "utilize". "For example", not "e.g.".
+- Every teaching page (the root README, each part README, each step's problem README) shows one case with "For example".
+- Reading grade 8 or lower. A course for people who do not code sets `"plainEnglish": { "grade": 6 }` in package.json.
+
+Hard to read:
+
+> Utilize the verifier subsequent to modifying the configuration in order to ascertain correctness.
+
+Easy to read:
+
+> Change the config. Then run `bun run verify`. For example, after you add a rule, the check tells you if it passes.
 
 ## Checks test behaviour
 

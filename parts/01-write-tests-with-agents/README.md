@@ -1,5 +1,7 @@
 # Part 1: Write tests with agents
 
+This part moves the objective: you get Claude Code to plan and write tests, and you judge them.
+
 ## The problem
 
 Pantry Run's regression sheet has 120 rows and nobody has time to automate it. An agent can write tests faster
@@ -9,12 +11,18 @@ that click through the shop and check nothing a shopper would notice.
 ## Why it matters
 
 Playwright ships three agents for this job: a planner, a generator and a healer. Read their prompts before you
-run them. The planner is asked for "Happy path scenarios", "Edge cases and boundary conditions" and "Error
-handling and validation"
-([planner prompt](https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/playwright-test-planner.agent.md)),
-and nothing checks that it covered every written rule. The healer is told to work on "Fixing
-assertions and expected values" and, when stuck, to mark a test `test.fixme()` so it is skipped
-([healer prompt, microsoft/playwright](https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/playwright-test-healer.agent.md)).
+run them.
+
+- The planner is asked for "Happy path scenarios", "Edge cases and boundary conditions" and "Error handling and
+  validation"
+  ([planner prompt](https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/playwright-test-planner.agent.md)).
+  Nothing checks that it covered every written rule.
+- The healer is told to work on "Fixing assertions and expected values". When it is stuck, it marks a test
+  `test.fixme()`, so the test is skipped
+  ([healer prompt, microsoft/playwright](https://raw.githubusercontent.com/microsoft/playwright/main/packages/playwright/src/agents/playwright-test-healer.agent.md)).
+
+For example, a planner can write ten basket scenarios and still skip BASK-4, the price by weight. Then no test
+ever checks that 750 g of bananas costs $1.04.
 This part builds the habits that keep the planner and generator honest. Part 3 deals with
 the healer.
 
@@ -30,7 +38,9 @@ flowchart LR
   YOU --> OK[a suite that catches bugs]
 ```
 
-| Step                                                                              | Minutes | You produce                                   | The check reads                                                   |
+In every step you type prompts and review. Claude Code makes each file below. The check reads what it made.
+
+| Step                                                                              | Minutes | Claude Code makes                              | The check reads                                                   |
 | --------------------------------------------------------------------------------- | ------- | --------------------------------------------- | ----------------------------------------------------------------- |
 | [write-the-seed-test](01-write-the-seed-test/problem/README.md)                   | 10      | `tests/seed.spec.ts`                          | three runs against a private shop and its event log               |
 | [plan-tests-from-requirements](02-plan-tests-from-requirements/problem/README.md) | 20      | `specs/slots.md`, `specs/basket.md`           | every SLOT and BASK ID covered, a boundary case per plan          |
@@ -79,5 +89,5 @@ Expect: `Part write-tests-with-agents is done: 4/4 steps pass.`
 
 ## Recap
 
-You can now hand an agent a seed and a set of requirements, read its plan against the rules, and judge its tests
-by one question: would this go red if the rule broke? Part 2 answers that question for the whole suite at once.
+You can now give Claude Code a seed and a set of requirements. You can read its plan against the rules. And
+you can judge its tests by one question: would this go red if the rule broke? Part 2 answers that question for the whole suite at once.

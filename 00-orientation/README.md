@@ -1,12 +1,16 @@
 # Orientation: meet the shop
 
-You test Pantry Run, a grocery delivery shop in the fictional city of Larkford. Shoppers book a one-hour
-delivery slot, fill a basket (loose produce is sold by weight), and say what the store may do when an item is out
-of stock. The shop ships with 16 planted bugs. Each one sits behind a switch, so a script can turn it on and ask:
-did your tests notice?
+This part moves the first piece of the promise: you can run the shop and read the goal board.
 
-In this orientation you set up the repo, place one order by hand, and run the finished suite to see the goal.
-It takes about 15 minutes and you write no code.
+You test Pantry Run, a grocery delivery shop in the made-up city of Larkford. Shoppers book a one-hour delivery
+slot. They fill a basket, where loose fruit is sold by weight. They also say what the store may do when an item is
+out of stock.
+
+The shop ships with 16 planted bugs. Each one sits behind a switch, so a script can turn it on and ask: did your
+tests notice? For example, `BUGS=slot-cutoff` lets shoppers book a slot after the 22:00 cutoff.
+
+In this orientation you set up the repo and place one order in the browser. Then you give Claude Code its first
+job, and run the finished suite to see the goal. You write no code.
 
 ```mermaid
 flowchart LR
@@ -43,8 +47,8 @@ claude --version
 Expect: a version such as `2.1.322 (Claude Code)`. On Windows PowerShell run `irm https://claude.ai/install.ps1 | iex`
 instead, and Homebrew users can run `brew install --cask claude-code`.
 
-Sign in. Open Claude Code in this repo, accept the prompt that asks whether you trust the folder, type `/login`
-and follow the browser steps with your Claude account. Then type `/exit`.
+Sign in. Open Claude Code in this repo. It asks if you trust the folder: say yes. Type `/login` and follow the
+steps in the browser with your Claude account. Then type `/exit`.
 
 ```bash
 claude
@@ -88,7 +92,7 @@ Expect: `Pantry Run ready on http://localhost:4173 (bugs: none)`
 
 ![The Pantry Run shop](images/shop.png)
 
-Now do the step [meet-the-shop](meet-the-shop/problem/README.md): place one order by hand. Then run the finished
+Now do the step [meet-the-shop](meet-the-shop/problem/README.md): place one order in the browser. Then run the finished
 system. It starts the shop once on the fixed build and once per planted bug, and runs the finished suite each
 time. It takes a few minutes.
 
@@ -122,10 +126,12 @@ rules behave the same on every machine. Tests move it with `POST /__test/clock`.
 
 ## Watch Claude Code do Part 1
 
-The finished system is Claude Code itself, with the course's `CLAUDE.md`, settings and hook, and Playwright's
-planner and generator agents. It plans and writes a suite for the shop in a fresh folder, and the bug-kill matrix
-scores what it wrote. With Claude Code signed in it makes a live run on your own plan; without it, it replays a
-recorded real run and says so in its first line.
+The finished system is Claude Code itself. It uses the course's `CLAUDE.md`, settings and hook, and Playwright's
+planner and generator agents. It plans and writes a suite for the shop in a fresh folder. Then the bug-kill matrix
+scores what it wrote.
+
+With Claude Code signed in, it makes a live run on your own Claude plan. Without it, it replays a recorded real
+run, and says so in its first line.
 
 ```bash
 bun run finished

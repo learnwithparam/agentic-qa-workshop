@@ -1,18 +1,33 @@
 # Agentic QA: agents write your tests, you prove they work
 
-An agent can write forty Playwright tests that all pass. This course is about the question that comes next:
-would those tests catch a real bug? You let agents plan, write and heal tests for a grocery delivery shop, and
-you prove the result with numbers a script prints: planted bugs caught, mutants killed, assertions kept.
+An agent can write forty Playwright tests that all pass. This course is about the next question: would those
+tests catch a real bug? You let agents plan, write and fix tests for a grocery delivery shop. Then you prove the
+result with numbers a script prints: planted bugs caught, mutants killed, assertions kept.
 
-**Who it is for.** QA engineers, SDETs and test leads who own a web test suite, and developers who own their own
-tests. If you run a regression sheet by hand today, you can start here: orientation needs no code. If you already
-run Playwright in CI, the bug-kill matrix, the assertion guard and the MCP against CLI measurement are where you
-learn something new.
+## The promise
 
-**What you leave with.** A suite an agent wrote that catches the planted bugs it should, a guard that stops any
-agent from weakening an assertion, and a pull request gate that reports four numbers instead of "tests written by
-AI". You do the agent work in Claude Code, signed in with your own Claude account, and the checks never call a
-model: they read the plans, tests and runs Claude Code leaves behind.
+- **Objective.** You can get Claude Code to plan, write and review a Playwright suite, and prove it catches bugs.
+- **Outcome.** You leave with a suite Claude Code wrote, a guard that stops weaker assertions, and a pull request
+  gate.
+- **Transformation.** Before: "the agent wrote 40 tests and they are all green". After: "the agent's tests catch
+  7 of 8 planted bugs, and here is the board".
+- **Goal.** The last step's check: one pull request gate that reports the bugs caught, the mutation score, the
+  guard's log and the cost per kept test.
+
+**Who it is for.** This course is for QA engineers, SDETs and test leads who own a web test suite. It is also for
+developers who own their own tests. Do you run a manual regression sheet today? You can start here: you write no
+code in this course. Already run Playwright in CI? The bug-kill matrix, the assertion guard and the MCP against CLI
+measurement are where you learn something new.
+
+**How you work.** You do every agent task in the real Claude Code, signed in with your own Claude account. You type
+prompts, read the plan Claude Code shows, and say yes or no. Claude Code writes every file. The checks never call a
+model. They read the plans, tests and runs that Claude Code leaves behind.
+
+For example, in the first step you type this prompt, and Claude Code writes the seed test for you:
+
+```text
+Fill in tests/seed.spec.ts. It must reset Pantry Run, sign in as Ana and end on an empty basket.
+```
 
 ## Run the finished system
 
@@ -35,8 +50,8 @@ every bug off.
 
 ![The goal board: 16 of 16 planted bugs caught by the finished suite](images/finished-system.png)
 
-Now watch Claude Code build that kind of suite. With the course's `CLAUDE.md`, settings and hook, and
-Playwright's planner and generator agents, it plans and writes tests for the shop in a fresh folder; then the
+Now watch Claude Code build that kind of suite. It uses the course's `CLAUDE.md`, settings and hook. It also
+uses Playwright's planner and generator agents. It plans and writes tests for the shop in a fresh folder. Then the
 bug-kill matrix scores what it wrote.
 
 ```bash
@@ -45,9 +60,10 @@ bun run finished
 ```
 
 Expect: `Signed in: yes. Claude Code is ready for this course.`, then one line per tool Claude Code used, then
-`Finished run: plans cover 17 of 17 requirements` and how many of the 8 requirement bugs its tests caught. With no
-signed-in Claude Code (or in CI) the first line says `Replay:` and it replays a recorded real run from
-`world/recordings/`.
+`Finished run: plans cover 17 of 17 requirements` and how many of the 8 requirement bugs its tests caught.
+
+Is Claude Code not signed in, or is this CI? Then the first line says `Replay:`. The script replays a recorded
+real run from `world/recordings/`.
 
 Open the shop itself:
 
@@ -59,19 +75,28 @@ Expect: `Pantry Run ready on http://localhost:4173 (bugs: none)`
 
 ![The Pantry Run shop](images/shop.png)
 
-No API key is needed anywhere. Claude Code uses your Claude sign-in, and the shop's one AI feature, the
-substitution suggester, answers from a stand-in model with recorded replies (see [the orientation](00-orientation/README.md)).
+You need no API key. Claude Code uses your Claude sign-in. The shop has one AI feature, the substitution
+suggester. It answers from a stand-in model with recorded replies (see [the orientation](00-orientation/README.md)).
 
 ## The world and what you build
 
-**Pantry Run** is a fictional grocery delivery shop in the fictional city of Larkford. Shoppers book a one-hour
-delivery slot, fill a basket where loose produce is sold by weight, and say what the store may do when an item is
-out of stock. Its rules are in `world/requirements/` (SLOT, BASK and SUB), its partner API in
-`world/openapi.yaml`, and its system of record is one SQLite file you reset with `bun run world reset`.
+**Pantry Run** is a made-up grocery delivery shop in the made-up city of Larkford. Shoppers book a one-hour
+delivery slot. They fill a basket, where loose fruit and vegetables are sold by weight. They also say what the
+store may do when an item is out of stock.
 
-The shop ships with 16 planted bugs, each behind a switch: `BUGS=weighted-price bun run shop`. Eight break a
-written requirement, two break looks and access, two break the API contract, three break no written rule at all,
-and one is in the AI suggester. `bun run world bugs` lists them.
+- The shop's rules are in `world/requirements/` (SLOT, BASK and SUB).
+- Its partner API is described in `world/openapi.yaml`.
+- Its data lives in one SQLite file. You reset it with `bun run world reset`.
+
+The shop ships with 16 planted bugs. Each one sits behind a switch. For example, `BUGS=weighted-price bun run
+shop` starts the shop with the wrong price for bananas sold by weight. Here is what the 16 bugs break:
+
+- 8 break a written requirement.
+- 2 break looks and access, and 2 break the API contract.
+- 3 break no written rule at all.
+- 1 is in the AI suggester.
+
+`bun run world bugs` lists them all.
 
 ```mermaid
 flowchart LR
@@ -114,8 +139,14 @@ Orientation and parts 1 to 4 are the core (250 minutes). Part 5 is the extension
 
 ## How a step works
 
-Each step lives in its own folder with `problem/` (your starting point), `solution/` (a sample, for after you
-pass) and `wrong/` (common mistakes the check rejects). Work in `problem/`, then:
+Each step lives in its own folder with three parts:
+
+- `problem/` is your starting point. You start Claude Code here and give it the job.
+- `solution/` is the end state Claude Code reached, with `prompts.md`: the prompts, the plan it showed and what
+  to check. Read it after you pass.
+- `wrong/` holds common mistakes. The check rejects each one.
+
+When Claude Code is done, check the step:
 
 ```bash
 bun run verify write-the-seed-test
@@ -123,14 +154,14 @@ bun run verify write-the-seed-test
 
 Expect: `PASS` and `FAIL` lines, each `FAIL` with a `Try next:` sentence, then a `Progress:` line.
 
-`bun run verify part <part-name>` checks a whole part. `bun run verify --report` writes `verify-report.json` for
-cohort grading. The rules every course repo follows are in [STANDARD.md](STANDARD.md).
+`bun run verify part <part-name>` checks a whole part. `bun run verify --report` writes `verify-report.json`
+for cohort grading. The rules every course repo follows are in [STANDARD.md](STANDARD.md).
 
 ## The project
 
-Ship a public repo where an agent wrote most of the suite and a CI gate proves it works: the bug-kill grid, the
-mutation score, the assertion guard's log and a cost per kept test, all generated by scripts, none typed by hand.
-A hiring manager reads the top of your README and sees a number, not a claim.
+Ship a public repo where Claude Code wrote most of the suite, and a CI gate proves it works. The gate shows the
+bug-kill grid, the mutation score, the assertion guard's log and a cost per kept test. Scripts make all four
+numbers; nobody types them in. A hiring manager reads the top of your README and sees a number, not a claim.
 
 ## Read before you start
 
@@ -142,11 +173,16 @@ A hiring manager reads the top of your README and sees a number, not a claim.
 
 ## Claude Code in this course
 
-Every agent step runs in the real Claude Code: the `claude` command in a terminal, the Claude Code extension in
-your editor, or the Code tab in Claude Desktop, signed in with your own Claude account (Pro, Max or a Console
-account). The course never asks for an API key. What you build is Claude Code's configuration and the work it does
-with it: `CLAUDE.md`, `.claude/settings.json` permissions, hooks, Playwright's planner, generator and healer agents,
-and headless runs with `claude -p`.
+Every agent step runs in the real Claude Code. You can use it in three places:
+
+- the `claude` command in a terminal;
+- the Claude Code extension in your editor;
+- the Code tab in Claude Desktop.
+
+Sign in with your own Claude account (Pro, Max or a Console account). The course never asks for an API key.
+
+You build Claude Code's setup and the work it does with it. For example: `CLAUDE.md`, the permissions in
+`.claude/settings.json`, hooks, Playwright's planner, generator and healer agents, and runs with `claude -p`.
 
 | Command                         | What it does                                                                                                                             |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |

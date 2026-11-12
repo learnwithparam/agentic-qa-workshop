@@ -2,10 +2,14 @@
 
 ## The problem
 
-Agents write tests that pass today and break next sprint: CSS selectors tied to markup, `waitForTimeout(1000)`
-to hide a race, a test with no `expect` at all. Each one costs a morning later. Playwright's generator agent is
-told to log its steps from the plan, so every test can point back to the scenario it came from. You keep that
-link and the habits that make tests last.
+Agents write tests that pass today and break next sprint. For example:
+
+- A CSS selector such as `#slot-3` breaks when someone changes the page layout.
+- `waitForTimeout(1000)` waits one second to hide a race, and fails on a slow machine.
+- A test with no `expect` passes whatever the page shows.
+
+Each one costs you a morning later. Playwright's generator agent logs its steps from the plan, so every test can point
+back to the scenario it came from. You keep that link, and the habits that make tests last.
 
 ```mermaid
 flowchart LR
@@ -18,18 +22,36 @@ flowchart LR
 
 ## Your challenge
 
-The plans from the last step are in `specs/`. Turn every scenario into a test in `tests/`. Run
-`bunx playwright init-agents --loop=claude` in this folder, start `claude` here, and ask the generator one
-scenario group at a time, for example:
-`Use the playwright-test-generator agent on specs/slots.md, section 1, with tests/seed.spec.ts as the seed. Keep each scenario's title as the test title.`
+The plans from the last step are in `specs/`. Get Claude Code to turn every scenario into a test in `tests/`.
+You type prompts and review. Claude Code writes every line of test code.
 
-Then check what came back:
+Add Playwright's agents to this folder and start Claude Code:
 
-- Each file starts with `// spec: specs/<plan>.md`.
+```bash
+bunx playwright init-agents --loop=claude
+claude
+```
+
+Expect: `init-agents` writes `.claude/agents/` and `.mcp.json`, then Claude Code opens.
+
+Ask for one group of scenarios at a time. For example:
+
+```text
+Use the playwright-test-generator agent on specs/slots.md, section 1, with
+tests/seed.spec.ts as the seed. Keep each scenario's title as the test title.
+Find elements with getByRole, getByLabel, getByText or getByTestId. No CSS or XPath,
+no waitForTimeout, and every test needs an expect.
+```
+
+Then read what came back. Check these five things in every file:
+
+- The file starts with `// spec: specs/<plan>.md`.
 - Each test title matches its scenario's title.
 - Elements are found with `getByRole`, `getByLabel`, `getByText` or `getByTestId`. No CSS, no XPath.
 - No `waitForTimeout`. Let `expect` wait.
 - Every test has an `expect`.
+
+When one is wrong, tell Claude Code what to change. Then run the suite:
 
 ```bash
 bunx playwright test --reporter=html
@@ -54,16 +76,16 @@ Expect: `Done. All 7 rules pass.`
 
 ## If you get stuck
 
-| What you see                                              | Fix                                                                                                   |
-| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `FAIL every plan scenario has a test with the same title` | Copy the title from the `####` heading. Numbering is ignored.                                         |
-| `FAIL no test finds elements by CSS or XPath`             | Swap `locator("#slot-...")` for `getByRole("radio", { name: /Mar 12 09:00/ })`.                       |
-| A radio cannot be found by name                           | Slot names read like `Thu, Mar 12 09:00 to 10:00, $2.99`. Match part of it with a regular expression. |
-| A test fails on the second run only                       | It depends on data another test made. Reset in `beforeEach`.                                          |
+| What you see                                              | Fix                                                                                                |
+| --------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `FAIL every plan scenario has a test with the same title` | Ask Claude Code to copy the title from the `####` heading. Numbers are ignored.                    |
+| `FAIL no test finds elements by CSS or XPath`             | Ask Claude Code to swap `locator("#slot-...")` for `getByRole("radio", { name: /Mar 12 09:00/ })`. |
+| A radio cannot be found by name                           | Slot names read like `Thu, Mar 12 09:00 to 10:00, $2.99`. Tell Claude Code to match part of it.    |
+| A test fails on the second run only                       | It depends on data another test made. Ask Claude Code to reset in `beforeEach`.                    |
 
 ## Words you will use
 
-- **Generator agent**: the Playwright agent that turns a plan scenario into test code by driving the browser.
+- **Generator agent**: the Playwright agent that turns a plan scenario into test code by using the browser.
 - **Locator**: how a test finds an element. Role and label locators match what a shopper sees.
-- **Auto-waiting**: `expect` retries until the page matches or a timeout passes, so sleeps are not needed.
+- **Auto-waiting**: `expect` tries again until the page matches or time runs out, so sleeps are not needed.
 - **HTML report**: Playwright's page of results, one row per test.
