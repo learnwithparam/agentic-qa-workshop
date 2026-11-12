@@ -1,5 +1,32 @@
-[one-day]
-sessions = [{ parts = ["meet-the-world"], minutes = 60 }]
+# Parts mapped onto formats. Minutes are learning minutes; breaks and recaps are in the gaps between them.
+# Part minutes: orientation 15, write-tests-with-agents 55, prove-the-tests-catch-bugs 60,
+# keep-the-suite-healthy 60, test-beyond-the-ui 60, run-it-as-a-team 100. Total 350.
 
+# One full day: about eight hours with lunch and breaks.
+[one-day]
+sessions = [
+  { label = "morning one", parts = ["orientation", "write-tests-with-agents"], minutes = 75 },
+  { label = "morning two", parts = ["prove-the-tests-catch-bugs"], minutes = 65 },
+  { label = "after lunch", parts = ["keep-the-suite-healthy"], minutes = 65 },
+  { label = "afternoon", parts = ["test-beyond-the-ui"], minutes = 65 },
+  { label = "late afternoon", parts = ["run-it-as-a-team"], minutes = 105 },
+]
+
+# Four evenings of up to two hours, each opening with a short recap of the last one.
 [four-evenings]
-sessions = [{ parts = ["meet-the-world"], minutes = 60 }]
+sessions = [
+  { label = "evening 1", parts = ["orientation", "write-tests-with-agents"], minutes = 90 },
+  { label = "evening 2", parts = ["prove-the-tests-catch-bugs", "keep-the-suite-healthy"], minutes = 120 },
+  { label = "evening 3", parts = ["test-beyond-the-ui"], minutes = 90 },
+  { label = "evening 4", parts = ["run-it-as-a-team"], minutes = 120 },
+]
+
+# A graded cohort: one live session a week. Grading is bun run verify --report, then a review of qa/playbook.md.
+[weekly-cohort]
+sessions = [
+  { label = "week 1", parts = ["orientation", "write-tests-with-agents"], minutes = 90 },
+  { label = "week 2", parts = ["prove-the-tests-catch-bugs"], minutes = 90 },
+  { label = "week 3", parts = ["keep-the-suite-healthy"], minutes = 90 },
+  { label = "week 4", parts = ["test-beyond-the-ui"], minutes = 90 },
+  { label = "week 5", parts = ["run-it-as-a-team"], minutes = 120 },
+]

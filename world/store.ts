@@ -1,7 +1,7 @@
 // The system of record: one SQLite file and one event log per running shop.
 // PANTRY_DATA picks the folder, so checks can run several shops side by side.
 import { Database } from "bun:sqlite";
-import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import seedJson from "./seed.json";
 import { addDays, localParts } from "./domain/clock";
@@ -70,7 +70,7 @@ export function reset() {
     const id = `${addDays(today, b.dateOffset)}T${String(b.hour).padStart(2, "0")}`;
     for (let i = 0; i < b.booked; i++) ib.run(id, seed.store.clock);
   }
-  writeFileSync(EVENTS_PATH, "");
+  // The event log survives a reset, so a check can see every run, not only the last one.
   logEvent("reset");
 }
 

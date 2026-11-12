@@ -16,7 +16,8 @@ export function testsIn(file: string): FoundTest[] {
   const re = /\btest(?:\.only)?\(\s*(['"`])((?:\\.|(?!\1).)*)\1\s*,/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(src))) {
-    const open = src.indexOf("{", re.lastIndex);
+    const arrow = src.indexOf("=>", re.lastIndex);
+    const open = arrow < 0 ? -1 : src.indexOf("{", arrow);
     if (open < 0) break;
     let depth = 0;
     let i = open;
