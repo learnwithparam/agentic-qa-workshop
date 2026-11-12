@@ -11,6 +11,7 @@ import { ROOT } from "../scripts/structure";
 const P1 = join(ROOT, "parts", "01-write-tests-with-agents");
 const OUT = {
   board: join(ROOT, "images", "finished-system.png"),
+  finished: join(ROOT, "images", "finished-claude-code.png"),
   shop: join(ROOT, "images", "shop.png"),
   orientBoard: join(ROOT, "00-orientation", "images", "goal-board.png"),
   orientShop: join(ROOT, "00-orientation", "images", "shop.png"),
@@ -53,6 +54,21 @@ if (!only || only === "board") {
   await terminal(page, "bun run board", out, OUT.board);
   copyFileSync(OUT.board, OUT.orientBoard);
   console.log(out.split("\n").at(-1));
+}
+
+if (!only || only === "finished") {
+  // The replay of a real Claude Code run. Browser tool calls are folded into one count so the picture fits.
+  const r = Bun.spawnSync(["bun", "world/finished/run.ts", "--replay", "1"], { cwd: ROOT, env: { ...process.env, ...env } });
+  const lines = r.stdout.toString().trim().split("\n");
+  const out: string[] = [];
+  let browserCalls = 0;
+  for (const l of lines) {
+    if (/^\s+browser: /.test(l)) { browserCalls++; continue; }
+    if (browserCalls) { out.push(`    (${browserCalls} browser tool calls)`); browserCalls = 0; }
+    out.push(l);
+  }
+  await terminal(page, "bun run finished", out.join("\n"), OUT.finished);
+  console.log(lines.at(-1));
 }
 
 if (!only || only === "shop") {
