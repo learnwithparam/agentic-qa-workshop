@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { ROOT } from "../../scripts/structure";
 import { readEvents } from "./events";
+import { ensurePackages } from "./browser";
 
 export type Shop = { url: string; dataDir: string; events: () => ReturnType<typeof readEvents>; stop: () => void };
 
@@ -15,6 +16,7 @@ function freePort(): number {
 }
 
 export async function startShop(opts: { bugs?: string; release?: "v1" | "v2" } = {}): Promise<Shop> {
+  ensurePackages();
   const dataDir = mkdtempSync(join(tmpdir(), "pantry-"));
   const port = freePort();
   const proc = Bun.spawn(["bun", join(ROOT, "world", "server.ts")], {

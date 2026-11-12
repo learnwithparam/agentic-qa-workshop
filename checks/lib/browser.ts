@@ -6,7 +6,7 @@ import { join } from "node:path";
 const ROOT = join(import.meta.dir, "..", "..");
 const SYSTEM = ["/opt/pw-browsers/chromium"];
 
-function ensurePackages() {
+export function ensurePackages() {
   if (!existsSync(join(ROOT, "node_modules", "@playwright", "test"))) {
     Bun.spawnSync(["bun", "install", "--frozen-lockfile"], { cwd: ROOT, stdout: "ignore", stderr: "ignore" });
   }
