@@ -28,12 +28,11 @@ Expected part, and two extra lines the course checks:
 
 `Kind` is `happy`, `boundary` (where a rule flips: 20 orders, 22:00, $25.00) or `negative` (what must not work).
 
-With an agent: from this folder run `bunx playwright init-agents --loop=claude` (or `vscode`, `codex`,
-`opencode`), then ask the planner agent:
-`Plan tests for Pantry Run from ../../../../world/requirements/slots.md and basket.md. Use tests/seed.spec.ts. Save specs/slots.md and specs/basket.md. Under every scenario add **Covers:** with the requirement IDs and **Kind:** happy, boundary or negative.`
+In Claude Code: from this folder run `bunx playwright init-agents --loop=claude`, then start `claude` here and ask:
+`Use the playwright-test-planner agent to plan tests for Pantry Run from ../../../../world/requirements/slots.md and basket.md. Use tests/seed.spec.ts. Save specs/slots.md and specs/basket.md. Under every scenario add **Covers:** with the requirement IDs and **Kind:** happy, boundary or negative.`
 
-Then read the plan against the requirements. Agents often skip the rule that needs a clock or a weight.
-No agent? Write the plan by hand from the two requirement files. The check reads the same thing.
+Then read the plan against the requirements. Agents often skip the rule that needs a clock or a weight. Ask
+Claude Code to add the missing scenarios, or edit the plan yourself: the check reads the file, not who typed it.
 
 ## Done when
 

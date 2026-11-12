@@ -39,12 +39,14 @@ flowchart LR
 
 Total: 55 minutes. Each step's folder is self-contained: work in its `problem/` folder.
 
-## Which agent
+## The agents, in Claude Code
 
-Any of them. `bunx playwright init-agents --loop=<claude|vscode|codex|opencode|copilot>` writes the planner,
-generator and healer for your tool into the folder you run it in. The checks read files and run tests, so they do
-not know or care which agent wrote them. With no agent, every prompt in this part also works pasted into a chat
-tool, or you can write the files by hand.
+You run Playwright's own agents inside Claude Code. In a step's `problem/` folder,
+`bunx playwright init-agents --loop=claude` writes three Claude Code subagents to `.claude/agents/`
+(`playwright-test-planner`, `playwright-test-generator`, `playwright-test-healer`) and a `.mcp.json` that gives
+them a browser through Playwright's test MCP server. Open `claude` in that folder and ask for an agent by name. The
+first time, Claude Code asks you to trust the folder and to allow the `playwright-test` MCP server: say yes to both.
+The checks read the files the agents leave behind and run the tests, never the chat.
 
 ## Walkthrough
 

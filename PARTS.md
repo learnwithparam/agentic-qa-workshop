@@ -9,7 +9,8 @@ part from this file, its part README, and the code it points to.
 | Folder | Steps | Minutes | Status |
 |---|---|---|---|
 | `00-orientation/` | meet-the-shop | 15 | complete: check, solution, 2 wrong answers, picture |
-| `parts/01-write-tests-with-agents/` | write-the-seed-test, plan-tests-from-requirements, generate-tests-from-the-plan, review-the-agent-tests | 10 + 20 + 15 + 10 = 55 | complete: 4 checks, solutions, 2 or 3 wrong answers each, pictures |
+| `parts/01-write-tests-with-agents/` | write-the-seed-test, plan-tests-from-requirements, generate-tests-from-the-plan, review-the-agent-tests | 10 + 20 + 15 + 10 = 55 | complete: 4 checks, solutions, 2 or 3 wrong answers each, pictures; agent work in Claude Code |
+| `world/finished/` | the finished system | none | `bun run finished`: a real Claude Code run, or a replay of `world/recordings/` |
 
 ## To build
 
@@ -64,9 +65,10 @@ part from this file, its part README, and the code it points to.
   `events.jsonl` in the shop's data folder survives resets; `checks/lib/events.ts` reads it.
 - **Checker library**: `runSuite` (Playwright JSON results), `bugKillMatrix` and `printMatrix`, `testsIn` and
   `CSS_OR_XPATH` for static rules, `scenarios` for plans, `once` to share one run between rules.
-- **AI feature**: `world/suggester.ts`; replies in `world/replay/replies.json` for the 5 out-of-stock items, the 3
-  shoppers and seeds 1 to 20, in both the fixed and the `ai-allergen` variant. `bun world/replay/make.ts`
-  rebuilds them (recorded live when a provider key is set, scripted otherwise).
+- **AI feature**: `world/suggester.ts` asks the shop's stand-in model, `world/replay/model.ts`, which answers from
+  `world/replay/replies.json` for the 5 out-of-stock items, the 3 shoppers and seeds 1 to 20, in both the fixed
+  and the `ai-allergen` variant. `bun world/replay/make.ts` rebuilds the replies (scripted). No step's subject is
+  calling a model from code, so the suggester never calls one: the learner tests the feature from outside.
 - **Finished suite**: `reference/tests` catches all 16 bugs. Which test catches which bug:
 
 | Bug | Caught by (reference suite) |
@@ -87,6 +89,37 @@ part from this file, its part README, and the code it points to.
 | negative-qty | the quantity box refuses a negative number |
 | back-resubmit | going back after checkout does not place a second order |
 | ai-allergen | suggestions follow SUB-3 to SUB-7 over 20 seeds |
+
+## Claude Code is the agent
+
+This course follows `briefs/build/CLAUDE-CODE.md` in the curriculum repo. Every agent step runs in the real Claude
+Code (the `claude` CLI, the editor extension or Claude Desktop's Code tab), signed in with the learner's own Claude
+account. No step calls the model API, asks for an API key, or ships a script that stands in for Claude.
+What the learner builds is Claude Code configuration and the work Claude Code does with it.
+
+- **Checks read what Claude Code produced**: plans, tests, `qa/` files, git history, the guard log. Never a reply.
+- **Hooks are tested for real with no model**: feed the hook the exact PreToolUse JSON Claude Code sends on stdin
+  (`session_id`, `transcript_path`, `cwd`, `permission_mode`, `hook_event_name`, `tool_name`, `tool_input`,
+  `tool_use_id`) and assert the exit code (2 blocks, the reason on stderr). `tests/claude-code.test.ts` shows the
+  pattern on the finished run's `test-rules` hook.
+- **The finished system** is `bun run finished` (`world/finished/run.ts`): a live `claude -p` run on a fresh copy of
+  `world/finished/template` (its `CLAUDE.md`, `.claude/settings.json`, `.claude/hooks/test-rules.ts`, the seed
+  test, and Playwright's agents from `init-agents --loop=claude`), scored by the Part 1 rules and the bug-kill
+  matrix. With no signed-in `claude`, or in CI, it replays `world/recordings/finished-N`. Run-to-run variance is
+  judged over 3 recordings with `bun run finished --replay all`.
+- **Recordings are real.** `bun run finished --record N` saves the stream-json transcript (model ids and home paths
+  redacted) and the files it wrote. `world/recordings/RECORD.md` lists every recording and how to remake it.
+
+What each remaining part does in Claude Code:
+
+| Step | In Claude Code |
+|---|---|
+| guard-the-assertions | `qa/guard.ts` keeps the diff-on-stdin contract for the gate, and also runs as a PreToolUse hook on `Edit|Write` in the learner's `.claude/settings.json`. The check feeds it real PreToolUse JSON for Edit and Write calls (old and new text) as well as the 8 diffs. |
+| heal-a-renamed-button, stop-the-healer-hiding-a-bug | The learner runs `playwright-test-healer` in Claude Code with the guard hook on. The check reads the healed files and the guard log, never the chat. A recording of one healer run goes in `world/recordings/` with a RECORD.md entry. |
+| triage-the-flaky-tests | Claude Code proposes causes and fixes; `approvedBy` stays a human. |
+| explore-with-an-agent | Claude Code with Playwright MCP (from `.mcp.json`) explores; findings are repro tests. |
+| compare-mcp-and-cli, measure-the-agent-cost | The same task run twice with `claude -p --output-format json`; tokens, turns and time come from the result's `usage`, `num_turns` and `duration_ms`. On a subscription, `total_cost_usd` is Claude Code's estimate: say so. |
+| gate-the-pull-request | The gate is deterministic and never calls `claude`. |
 
 ## Owed by the part sessions
 

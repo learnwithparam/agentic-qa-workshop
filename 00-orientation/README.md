@@ -25,10 +25,32 @@ flowchart LR
 ## What you need
 
 - Bun 1.4 or newer, and git.
-- One coding agent, if you have one: Claude Code, VS Code with Copilot, Codex or opencode. Orientation needs none.
-- No model key. The shop's one AI feature answers from recorded replies until you choose a live provider.
+- Claude Code, signed in with your own Claude account (Pro, Max or a Console account). You use it in a
+  terminal (`claude`), in your editor through the Claude Code extension, or in the Code tab of Claude Desktop.
+  The course is tested on Claude Code 2.1.322 and newer.
+- No API key. Claude Code uses your Claude sign-in, and the shop's one AI feature, the substitution suggester,
+  answers from a stand-in model with recorded replies, so it costs nothing.
 
 ## Walkthrough
+
+Install Claude Code by the official method. On macOS, Linux or WSL:
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+claude --version
+```
+
+Expect: a version such as `2.1.322 (Claude Code)`. On Windows PowerShell run `irm https://claude.ai/install.ps1 | iex`
+instead, and Homebrew users can run `brew install --cask claude-code`.
+
+Sign in. Open Claude Code in this repo, accept the prompt that asks whether you trust the folder, type `/login`
+and follow the browser steps with your Claude account. Then type `/exit`.
+
+```bash
+claude
+```
+
+Expect: Claude Code opens in the terminal and, after `/login`, says you are signed in.
 
 Set up. This installs packages, finds or downloads Chromium for Playwright, and seeds the shop.
 
@@ -38,6 +60,14 @@ bun run setup
 ```
 
 Expect: `Ready: Bun 1.4.4, Playwright 1.65.0, Chromium installed. Shop data seeded.`
+
+Check that the course can see Claude Code. This asks the `claude` command itself, so it works however you installed it.
+
+```bash
+bun run doctor
+```
+
+Expect: `Claude Code: 2.1.322` (or newer) and `Signed in: yes. Claude Code is ready for this course.`
 
 Meet the world: who shops here, what is out of stock, and which bugs are planted.
 
@@ -90,15 +120,18 @@ Expect: `Done. All 6 rules pass.` and a `Progress:` line.
 `bun run world reset` puts the data back to the seed. The shop's store clock is frozen at a fixed time, so slot
 rules behave the same on every machine. Tests move it with `POST /__test/clock`.
 
-## Choosing a live model (optional)
+## Watch Claude Code do Part 1
 
-Copy `.env.example` to `.env`, set `LLM_PROVIDER` to `anthropic`, `openrouter` or `openai`, and fill in that one
-key. Then:
+The finished system is Claude Code itself, with the course's `CLAUDE.md`, settings and hook, and Playwright's
+planner and generator agents. It plans and writes a suite for the shop in a fresh folder, and the bug-kill matrix
+scores what it wrote. With Claude Code signed in it makes a live run on your own plan; without it, it replays a
+recorded real run and says so in its first line.
 
 ```bash
-bun run models
+bun run finished
 ```
 
-Expect: `Every role answers.` On `replay`, the default, each line says `cost: none, recorded reply`.
+Expect: lines for each tool Claude Code used, then `Finished run: plans cover 17 of 17 requirements` and how
+many of the 8 requirement bugs its tests caught.
 
 When a command prints something you do not expect, look it up in [troubleshooting.md](troubleshooting.md).

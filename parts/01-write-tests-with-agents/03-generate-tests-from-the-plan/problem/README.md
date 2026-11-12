@@ -18,9 +18,10 @@ flowchart LR
 
 ## Your challenge
 
-The plans from the last step are in `specs/`. Turn every scenario into a test in `tests/`. Ask the generator
-agent one scenario group at a time, for example:
-`Generate tests for specs/slots.md, section 1, using tests/seed.spec.ts. Keep each scenario's title as the test title.`
+The plans from the last step are in `specs/`. Turn every scenario into a test in `tests/`. Run
+`bunx playwright init-agents --loop=claude` in this folder, start `claude` here, and ask the generator one
+scenario group at a time, for example:
+`Use the playwright-test-generator agent on specs/slots.md, section 1, with tests/seed.spec.ts as the seed. Keep each scenario's title as the test title.`
 
 Then check what came back:
 

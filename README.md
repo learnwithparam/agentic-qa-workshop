@@ -11,7 +11,8 @@ learn something new.
 
 **What you leave with.** A suite an agent wrote that catches the planted bugs it should, a guard that stops any
 agent from weakening an assertion, and a pull request gate that reports four numbers instead of "tests written by
-AI". It works with Claude Code, VS Code with Copilot, Codex or opencode, and the checks never call a model.
+AI". You do the agent work in Claude Code, signed in with your own Claude account, and the checks never call a
+model: they read the plans, tests and runs Claude Code leaves behind.
 
 ## Run the finished system
 
@@ -34,6 +35,20 @@ every bug off.
 
 ![The goal board: 16 of 16 planted bugs caught by the finished suite](images/finished-system.png)
 
+Now watch Claude Code build that kind of suite. With the course's `CLAUDE.md`, settings and hook, and
+Playwright's planner and generator agents, it plans and writes tests for the shop in a fresh folder; then the
+bug-kill matrix scores what it wrote.
+
+```bash
+bun run doctor
+bun run finished
+```
+
+Expect: `Signed in: yes. Claude Code is ready for this course.`, then one line per tool Claude Code used, then
+`Finished run: plans cover 17 of 17 requirements` and how many of the 8 requirement bugs its tests caught. With no
+signed-in Claude Code (or in CI) the first line says `Replay:` and it replays a recorded real run from
+`world/recordings/`.
+
 Open the shop itself:
 
 ```bash
@@ -44,8 +59,8 @@ Expect: `Pantry Run ready on http://localhost:4173 (bugs: none)`
 
 ![The Pantry Run shop](images/shop.png)
 
-No model key is needed. The shop's one AI feature, the substitution suggester, answers from recorded replies
-until you set a live provider in `.env` (see [the orientation](00-orientation/README.md)).
+No API key is needed anywhere. Claude Code uses your Claude sign-in, and the shop's one AI feature, the
+substitution suggester, answers from a stand-in model with recorded replies (see [the orientation](00-orientation/README.md)).
 
 ## The world and what you build
 
@@ -74,7 +89,7 @@ flowchart LR
     GUARD[assertion guard]
     GATE[pull request gate]
   end
-  AGENT[your coding agent] -.writes.-> PLAN & TESTS
+  AGENT[Claude Code<br/>CLAUDE.md, settings, hook,<br/>planner and generator agents] -.writes.-> PLAN & TESTS
   REQ --> PLAN --> TESTS
   TESTS --> SHOP & API & AI
   BUGS --> SHOP & API & AI
@@ -125,9 +140,17 @@ A hiring manager reads the top of your README and sees a number, not a claim.
 | [Mutate test kata README](https://raw.githubusercontent.com/vmzakharov/mutate-test-kata/master/README.md) | Why passing tests and high coverage prove less than they seem. | 10 |
 | [Playwright MCP README, top section](https://raw.githubusercontent.com/microsoft/playwright-mcp/main/README.md) | Why the browser tool an agent uses is a choice with a cost. | 6 |
 
-## Models
+## Claude Code in this course
 
-The shop calls a model in one place, through `config/llm.ts`. `config/models.ts` is the only file that names a
-model; code asks for a role (`fast`, `smart`, `judge`). `LLM_PROVIDER` picks `replay` (the default, no key),
-`anthropic`, `openrouter`, `openai` or `ollama`, with one key in a git-ignored `.env`. `bun run models` sends one
-tiny call per role and prints pass or fail, never a key.
+Every agent step runs in the real Claude Code: the `claude` command in a terminal, the Claude Code extension in
+your editor, or the Code tab in Claude Desktop, signed in with your own Claude account (Pro, Max or a Console
+account). The course never asks for an API key. What you build is Claude Code's configuration and the work it does
+with it: `CLAUDE.md`, `.claude/settings.json` permissions, hooks, Playwright's planner, generator and healer agents,
+and headless runs with `claude -p`.
+
+| Command | What it does |
+|---|---|
+| `bun run doctor` | Asks `claude` for its version and whether it is signed in. Tested on Claude Code 2.1.322 and newer. |
+| `bun run finished` | A live `claude -p` run on a fresh copy of `world/finished/template` when Claude Code is signed in; otherwise a replay of a recorded run. |
+| `bun run finished --replay all` | Replays every recorded run and scores each, so you see how much one run differs from the next. |
+| `bun test` | Tests the course's hook with the exact JSON Claude Code sends it, and checks the recordings. No model needed. |

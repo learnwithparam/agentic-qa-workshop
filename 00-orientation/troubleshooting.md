@@ -6,7 +6,7 @@ Every message a script in this repo prints on failure is in this table.
 |---|---|---|
 | `bun: command not found` | Bun is not installed. | Install it from bun.sh, then open a new terminal. |
 | `Bun 1.x is too old` | `bun run setup` needs Bun 1.4 or newer. | Run `bun upgrade`, then `bun run setup` again. |
-| `No Chromium found. Run bun run setup, or set CHROMIUM_PATH in .env.` | Playwright could not download its browser (often a company proxy). | Set `CHROMIUM_PATH` in `.env` to a Chromium or Chrome you already have. |
+| `No Chromium found. Run bun run setup, or set CHROMIUM_PATH in .env.` | Playwright could not download its browser (often a company proxy). | Put `CHROMIUM_PATH=/path/to/chromium` in a `.env` file at the repo root (git ignores it), pointing at a Chromium or Chrome you already have. |
 | `Failed to download Chrome for Testing` | The same download problem, printed by Playwright itself. | As above, or run `bunx playwright install chromium` on another network. |
 | `Unknown bug "..."` | `BUGS=` names a bug that does not exist. | Run `bun run world bugs` and copy an id. |
 | `Unknown command "..."` | `bun run world` got a word it does not know. | Use `bun run world`, `bun run world reset` or `bun run world bugs`. |
@@ -17,10 +17,17 @@ Every message a script in this repo prints on failure is in this table.
 | `There is no step called "..."` | The step name is misspelled. | Copy a name from the list it prints. |
 | `There is no part called "..."` | The part name is misspelled. | Copy a name from the list it prints. |
 | `ERROR the check for ... could not load` | The check itself is broken, not your work. | Open an issue with the full output. |
-| `No recorded reply for this request` (HTTP 503 `no_recorded_reply`) | Replay mode only answers the requests the course recorded. | Use the seeds 1 to 20 and the shoppers ana, ben and chloe, or set a live provider in `.env`. |
-| `LLM_PROVIDER is "..."` | The provider name is not one the course knows. | Use `replay`, `anthropic`, `openrouter`, `openai` or `ollama`. |
-| `LLM_PROVIDER is anthropic but ANTHROPIC_API_KEY is not set` | A live provider needs its key. | Add the key to `.env` (copy `.env.example`). Never paste it on the command line. |
-| `FAIL  fast ...` from `bun run models` | One role did not answer on the live provider. | Check the key and your account balance, or go back to `LLM_PROVIDER=replay`. |
+| `No recorded reply for this request` (HTTP 503 `no_recorded_reply`) | The suggester's stand-in model only answers the seeds and shoppers the course recorded. | Use the seeds 1 to 20 and the shoppers ana, ben and chloe. |
+| `Claude Code: not found` | `bun run doctor` could not run `claude`. | Install Claude Code (see the orientation), open a new terminal, and run `claude --version`. |
+| `command not found: claude` | The installer finished but your shell cannot see it yet. | Open a new terminal. If it still fails, follow "Fix your PATH" on the Claude Code install page. |
+| `Signed in: no` | Claude Code is installed but not signed in. | Run `claude`, type `/login`, and sign in with your Claude account. The free plan does not include Claude Code. |
+| `older than 2.1.322, the oldest this course is tested on` | Your Claude Code is older than the course. | Run `claude update`. |
+| `Ignoring 7 permissions.allow entries from .claude/settings.json: this workspace has not been trusted` | Claude Code has not been opened in this repo yet, so it does not trust the project settings. | Run `claude` in the repo once and accept the trust prompt. `bun run finished` passes the same allow list on the command line, so it still runs. |
+| `Replay: Claude Code is not signed in, so this replays ...` | `bun run finished` found no signed-in Claude Code and replays a recorded run. | Nothing to fix. Sign in with `/login` to make a live run. |
+| `No recordings in world/recordings` | The repo has no recorded run to replay. | Make one with `bun run finished --record 1`, or see `world/recordings/RECORD.md`. |
+| `Recording needs Claude Code installed and signed in` | `--record` needs a live run. | Run `bun run doctor` and fix what it says. |
+| `playwright init-agents failed` | Playwright could not write its agents into the run folder. | Run `bun install` and try again. |
+| `Blocked by test-rules: ...` | The course's hook stopped Claude Code writing a test that sleeps, skips or is marked fixme. | Nothing to fix: Claude Code reads the reason and writes the test another way. |
 | `Email or password is wrong.` | The shop sign-in failed. | Shoppers are `ana`, `ben` and `chloe` at `pantryrun.test`; the password is `pantry`. |
 | `Spend $X more to check out.` | The basket is below the $25.00 minimum. | Add more, or raise a quantity. |
 | `Book a delivery slot to check out.` | No slot is booked. | Open Delivery slots and book an open one. |

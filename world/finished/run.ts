@@ -25,8 +25,11 @@ export const PROMPT = [
   "Then use the playwright-test-generator agent to write tests/slots.spec.ts and tests/basket.spec.ts from those plans.",
   "Run bunx playwright test until every test passes, then say how many tests you wrote.",
 ].join(" ");
-export const FLAGS = ["--output-format", "stream-json", "--verbose", "--permission-mode", "acceptEdits", "--max-turns", "200"];
-export const COMMAND = `claude -p "<PROMPT>" ${FLAGS.join(" ")}`;
+// The same allow list as the template's .claude/settings.json, given on the command line too: Claude Code
+// ignores a project's allow list until someone accepts the folder's trust dialog, and a fresh copy is untrusted.
+export const ALLOWED = "mcp__playwright-test,Bash(bunx playwright test),Bash(bunx playwright test *),Write(specs/**),Edit(specs/**),Write(tests/**),Edit(tests/**)";
+export const FLAGS = ["--output-format", "stream-json", "--verbose", "--permission-mode", "acceptEdits", "--allowedTools", ALLOWED, "--max-turns", "200"];
+export const COMMAND = `claude -p "<PROMPT>" ${FLAGS.map((f) => (f === ALLOWED ? `"${f}"` : f)).join(" ")}`;
 const REQUIREMENT_BUGS = BUGS.filter((b) => b.group === "requirement").map((b) => b.id);
 const PRODUCED = ["specs", "tests"];
 

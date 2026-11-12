@@ -23,7 +23,7 @@ test. Make it:
 2. Sign in on the Sign in page as `ana@pantryrun.test`, password `pantry`.
 3. Open `/basket` and expect the empty basket.
 
-Write it yourself, or ask your agent. With Claude Code, from this folder:
+Ask Claude Code, or write it yourself. Start `claude` in this folder and ask:
 `Fill in tests/seed.spec.ts so it resets Pantry Run, signs in as Ana and ends on an empty basket.`
 
 Run it from this folder. Playwright starts the shop if it is not already running.
