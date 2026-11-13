@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__playwright-test",
+      "Bash(bunx playwright test)",
+      "Bash(bunx playwright test *)",
+      "Edit(specs/**)",
+      "Write(specs/**)",
+      "Edit(tests/**)",
+      "Write(tests/**)"
+    ],
+    "deny": ["Edit(requirements/**)", "Write(requirements/**)", "Read(.env)", "Read(.env.*)"]
+  },
+  "enableAllProjectMcpServers": true,
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun \"$CLAUDE_PROJECT_DIR/.claude/hooks/test-rules.ts\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+# The gate on every pull request. In your own repo this file lives in .github/workflows/.
+# It checks out main next to the pull request, so the gate can compare the two suites.
+name: gate
+on:
+  pull_request:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          path: pull
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.base_ref }}
+          path: main
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - run: bun install --frozen-lockfile
+        working-directory: main
+      - run: bunx playwright install --with-deps chromium
+        working-directory: main
+      - name: Mutation report for the pull request
+        run: bunx stryker run
+        working-directory: pull
+      - name: Gate
+        run: bun run gate ../pull --scorecard qa/scorecard.json
+        working-directory: main

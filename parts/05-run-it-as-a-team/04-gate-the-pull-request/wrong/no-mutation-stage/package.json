@@ -1,0 +1,8 @@
+{
+  "name": "pantry-run-gate",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gate": "bun qa/gate.ts"
+  }
+}

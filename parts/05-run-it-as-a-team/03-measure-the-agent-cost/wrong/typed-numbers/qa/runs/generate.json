@@ -1,0 +1,80 @@
+{
+  "type": "result",
+  "subtype": "success",
+  "is_error": false,
+  "duration_ms": 159668,
+  "duration_api_ms": 108155,
+  "num_turns": 5,
+  "result": "I wrote **21 tests** in `tests/basket.spec.ts`, one for each scenario in `specs/basket.md`, using the playwright-test-generator agent. They all passed on the first run of `bunx playwright test`, and the full suite (with the seed test, 22 in all) passes too.\n\n- **Rules:** The file follows CLAUDE.md. The first line is `// spec: specs/basket.md`, test titles match the scenario titles without their numbers, and every test starts by resetting the data and signing in. A search of the file found no CSS or XPath locators, no `waitForTimeout`, and no `skip` or `fixme`.\n- **What the tests check:** They assert the exact values the plan gives for line prices, Subtotal, Offers, Voucher, Delivery and Total, plus the error and \"Spend $X more\" messages, whether Checkout is enabled, and the \"Basket (n)\" header count. All of the business rules held: loose-produce rounding, 3 for 2, SAVE10 skipping 3 for 2 lines, the $25.00 minimum counted after offers and the voucher, and the header counting lines rather than units.\n- **No findings:** No test failed on a requirement.\n- **One weak check:** \"Invalid voucher code is rejected\" confirms the voucher and total stay unchanged and that no \"applied\" or \"accepted\" text appears. It doesn't check for an error message, because the plan doesn't say what that message should be.",
+  "session_id": "5ef6088b-6f3d-431e-ad3d-1af633895058",
+  "total_cost_usd": 0.5458441,
+  "usage": {
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 23577,
+    "cache_read_input_tokens": 217682,
+    "output_tokens": 2260,
+    "output_tokens_details": {
+      "thinking_tokens": 265
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 23577,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 523,
+        "cache_read_input_tokens": 51087,
+        "cache_creation_input_tokens": 1521,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1521
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "modelUsage": {
+    "model-1": {
+      "inputTokens": 10,
+      "outputTokens": 2260,
+      "cacheReadInputTokens": 217682,
+      "cacheCreationInputTokens": 23577,
+      "webSearchRequests": 0,
+      "costUSD": 0.2773924,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 265,
+      "cacheCreationEphemeral5mInputTokens": 0,
+      "cacheCreationEphemeral1hInputTokens": 23577,
+      "canonicalModel": "model",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "model-2": {
+      "inputTokens": 26,
+      "outputTokens": 14239,
+      "cacheReadInputTokens": 287847,
+      "cacheCreationInputTokens": 38890,
+      "webSearchRequests": 0,
+      "costUSD": 0.2684517,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 128000,
+      "thinkingTokens": 2132,
+      "cacheCreationEphemeral5mInputTokens": 38890,
+      "cacheCreationEphemeral1hInputTokens": 0,
+      "canonicalModel": "model",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": []
+}
