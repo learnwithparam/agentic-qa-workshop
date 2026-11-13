@@ -18,6 +18,7 @@ try {
   process.exit(1);
 }
 reset();
+const playwrightVersion = playwrightPackage.version;
 console.log(
-  `Ready: Bun ${Bun.version}, Playwright ${playwrightPackage.version}, ${browser}. Shop data seeded.`,
+  `Ready: Bun ${Bun.version}, Playwright ${playwrightVersion}, ${browser}. Shop data seeded.`,
 );
