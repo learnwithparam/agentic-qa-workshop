@@ -34,7 +34,7 @@ flowchart LR
 
 In every step you type prompts and review. Claude Code makes each file below. The check reads what it made.
 
-| Step                  | Minutes | Claude Code makes                                                                         | The check reads                                                                                            |
+| Step                  | Minutes | Claude Code makes                                                                        | The check reads                                                                                            |
 | --------------------- | ------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | catch-the-seeded-bugs | 20      | more or better tests in `tests/`                                                         | the bug-kill matrix over the 8 requirement bugs: at least 7 caught, fixed build green                      |
 | kill-the-mutants      | 25      | `world/domain` unit tests (Vitest) and `stryker.config.json` with `thresholds.break: 70` | Stryker's JSON report: score at least 70 on slots, basket and substitutions; each test file kills a mutant |

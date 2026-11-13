@@ -138,6 +138,6 @@ bun run finished
 ```
 
 Expect: lines for each tool Claude Code used, then `Finished run: plans cover 17 of 17 requirements` and how
-many of the 8 requirement bugs its tests caught.
+many of the 6 slot and basket bugs its tests caught. The substitution bugs are left for Part 2.
 
 When a command prints something you do not expect, look it up in [troubleshooting.md](troubleshooting.md).

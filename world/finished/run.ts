@@ -72,8 +72,14 @@ function quoteAllowList(commandFlag: string): string {
 const QUOTED_FLAGS = FLAGS.map(quoteAllowList);
 export const COMMAND = `claude -p "<PROMPT>" ${QUOTED_FLAGS.join(" ")}`;
 
-const requirementBugs = BUGS.filter((bug) => bug.group === "requirement");
-const REQUIREMENT_BUG_IDS = requirementBugs.map((bug) => bug.id);
+// The run plans slots and basket, as Part 1 does.
+// So it is scored on the requirement bugs in those areas.
+// The substitution bugs are Part 2's job (catch-the-seeded-bugs).
+function isSlotOrBasketBug(bug: (typeof BUGS)[number]): boolean {
+  const breaksSlotsOrBasket = /^(SLOT|BASK)-/.test(bug.breaks);
+  return bug.group === "requirement" && breaksSlotsOrBasket;
+}
+export const RUN_BUGS = BUGS.filter(isSlotOrBasketBug).map((bug) => bug.id);
 const PRODUCED = ["specs", "tests"];
 
 const commandLineArguments = process.argv.slice(2);
@@ -184,7 +190,11 @@ export function redact(line: string, runDir: string): string {
     /\bclaude-(opus|sonnet|haiku|fable)[a-z0-9.-]*/gi,
     "(model)",
   );
-  return withoutModelNames.replace(/\/(?:root|home\/[^/"]+|Users\/[^/"]+)\/[^"\s]*/g, "<home>");
+  const withoutHome = withoutModelNames.replace(
+    /\/(?:root|home\/[^/"]+|Users\/[^/"]+)\/[^"\s]*/g,
+    "<home>",
+  );
+  return withoutHome.replace(/\/tmp\/claude-[^"\s]*/g, "<tmp>");
 }
 
 function freshFolder(name: string): string {
@@ -325,22 +335,25 @@ async function score(folder: string): Promise<boolean> {
     const verdict = rule.ok ? "PASS" : "FAIL";
     console.log(`  ${verdict}  ${rule.says}`);
   }
-  const runCount = REQUIREMENT_BUG_IDS.length;
+  const runCount = RUN_BUGS.length;
   console.log(
-    `  Running the suite on the fixed build and once per requirement bug (${runCount} runs)...`,
+    `  Running the suite on the fixed build and once per slot and basket bug (${runCount} runs)...`,
   );
-  const matrix = await bugKillMatrix(join(folder, "tests"), REQUIREMENT_BUG_IDS);
+  const matrix = await bugKillMatrix(join(folder, "tests"), RUN_BUGS);
   printMatrix(matrix);
   const green = matrix.baseline.ran && matrix.baseline.failed === 0;
   const plansPass = plans.rules.every((rule) => rule.ok);
   const testsPass = tests.rules.every((rule) => rule.ok);
-  const passed = plansPass && testsPass && green && matrix.caught >= 7;
+  // Behaviour varies run to run. So the bar is set for any one run,
+  // and the result is judged over all three recordings.
+  const enoughBugsCaught = matrix.caught >= RUN_BUGS.length - 1;
+  const passed = plansPass && testsPass && green && enoughBugsCaught;
   console.log("");
   const buildColour = green ? "green" : "RED";
   console.log(
     `Finished run: plans cover ${plans.covered} of ${plans.total} requirements, ` +
       `${tests.count} tests, fixed build ${buildColour}, ` +
-      `${matrix.caught} of ${matrix.rows.length} requirement bugs caught.`,
+      `${matrix.caught} of ${matrix.rows.length} slot and basket bugs caught.`,
   );
   return passed;
 }

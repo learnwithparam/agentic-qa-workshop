@@ -40,7 +40,7 @@ flowchart LR
 
 In every step you type prompts and review. Claude Code makes each file below. The check reads what it made.
 
-| Step                                                                              | Minutes | Claude Code makes                              | The check reads                                                   |
+| Step                                                                              | Minutes | Claude Code makes                             | The check reads                                                   |
 | --------------------------------------------------------------------------------- | ------- | --------------------------------------------- | ----------------------------------------------------------------- |
 | [write-the-seed-test](01-write-the-seed-test/problem/README.md)                   | 10      | `tests/seed.spec.ts`                          | three runs against a private shop and its event log               |
 | [plan-tests-from-requirements](02-plan-tests-from-requirements/problem/README.md) | 20      | `specs/slots.md`, `specs/basket.md`           | every SLOT and BASK ID covered, a boundary case per plan          |

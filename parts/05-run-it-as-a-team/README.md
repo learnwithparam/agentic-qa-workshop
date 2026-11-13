@@ -33,7 +33,7 @@ flowchart LR
 
 In every step you type prompts and review. Claude Code makes each file below. The check reads what it made.
 
-| Step                         | Minutes | Claude Code makes                                                                       | The check reads                                                                                           |
+| Step                         | Minutes | Claude Code makes                                                                      | The check reads                                                                                           |
 | ---------------------------- | ------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | compare-mcp-and-cli          | 20      | `qa/mcp-vs-cli.md`: tokens, time and findings for one task both ways                   | both columns have numbers, and a choice with a reason                                                     |
 | fuzz-the-api-from-the-schema | 20      | a Schemathesis run on `openapi.yaml`, or a TypeScript property test                    | finds `api-status` on `BUGS=release`, zero failures on the fixed build                                    |

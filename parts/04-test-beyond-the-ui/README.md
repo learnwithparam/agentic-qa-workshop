@@ -37,7 +37,7 @@ flowchart LR
 
 In every step you type prompts and review. Claude Code makes each file below. The check reads what it made.
 
-| Step                            | Minutes | Claude Code makes                                                                     | The check reads                                                                                                         |
+| Step                            | Minutes | Claude Code makes                                                                    | The check reads                                                                                                         |
 | ------------------------------- | ------- | ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
 | test-the-order-api-contract     | 20      | `tests/api/orders.spec.ts` with the `request` fixture and zod schemas                | green on the fixed build, red on `api-field-rename` and `api-status`, every path and status in `openapi.yaml` exercised |
 | explore-with-an-agent           | 15      | `qa/explore/charter.md` and one repro test per finding                               | each repro fails on `BUGS=release` and passes with only its bug off; at least 2 of the 3 unwritten bugs found           |

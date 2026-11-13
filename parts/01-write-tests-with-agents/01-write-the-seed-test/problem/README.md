@@ -71,12 +71,12 @@ Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
-| What you see                                  | Fix                                                                                                      |
-| --------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| `FAIL it passes 3 runs in a row`              | Read the first error. A missing reset often fails on the second run. |
-| `FAIL every run ends on an empty basket page` | The seed must not add anything. Tell Claude Code to open `/basket` last and add nothing.                 |
-| `Timed out waiting ... config.webServer`      | Start the shop with `bun run shop` in another terminal, then run again.                                  |
-| `getByLabel("Email")` finds nothing           | The test is not on `/signin`. Tell Claude Code to go to `/signin` first.                                 |
+| What you see                                  | Fix                                                                                      |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `FAIL it passes 3 runs in a row`              | Read the first error. A missing reset often fails on the second run.                     |
+| `FAIL every run ends on an empty basket page` | The seed must not add anything. Tell Claude Code to open `/basket` last and add nothing. |
+| `Timed out waiting ... config.webServer`      | Start the shop with `bun run shop` in another terminal, then run again.                  |
+| `getByLabel("Email")` finds nothing           | The test is not on `/signin`. Tell Claude Code to go to `/signin` first.                 |
 
 ## Words you will use
 

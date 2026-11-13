@@ -60,7 +60,7 @@ bun run finished
 ```
 
 Expect: `Signed in: yes. Claude Code is ready for this course.`, then one line per tool Claude Code used, then
-`Finished run: plans cover 17 of 17 requirements` and how many of the 8 requirement bugs its tests caught.
+`Finished run: plans cover 17 of 17 requirements` and how many of the 6 slot and basket bugs its tests caught.
 
 Is Claude Code not signed in, or is this CI? Then the first line says `Replay:`. The script replays a recorded
 real run from `world/recordings/`.

@@ -76,7 +76,7 @@ Expect: `Done. All 7 rules pass.`
 | `FAIL every SLOT requirement is covered`   | Compare the IDs in the Covers lines with `world/requirements/slots.md`. Ask Claude Code to add the missing ones. |
 | `FAIL every scenario has a Covers line`    | The planner does not add Covers on its own. Put the Covers rule in your prompt and ask again.                    |
 | `FAIL each plan has at least one boundary` | Ask for a scenario just below and just at each number in a rule.                                                 |
-| `init-agents` replaced `.mcp.json`         | It writes one in this folder. Keep your own copy elsewhere.                                 |
+| `init-agents` replaced `.mcp.json`         | It writes one in this folder. Keep your own copy elsewhere.                                                      |
 
 ## Words you will use
 
