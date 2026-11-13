@@ -6,10 +6,9 @@ Partner apps place Pantry Run orders without a browser. They call the partner AP
 `world/openapi.yaml`. That file is the contract: it lists every path, every status code and the shape of every
 answer.
 
-A partner app breaks when the shop drifts from the contract, even if every page still looks fine. For example,
-the contract says an order has `slotId`. If the shop sends `slot_id` instead, a partner app reads no slot and
-books the van for nothing. And when a slot is full, the contract says `409`. A `500` tells the partner app the
-shop crashed, so it keeps retrying.
+A partner app breaks when the shop drifts from the contract. For example, the contract says an order has
+`slotId`. If the shop sends `slot_id`, a partner app reads no slot. And a full slot must answer `409`. A `500`
+says the shop crashed, so the partner app keeps retrying.
 
 ```mermaid
 flowchart LR
@@ -91,4 +90,3 @@ Expect: `Done. All 6 rules pass.`
 - **Contract**: a file that says what an API promises. Here it is `openapi.yaml`.
 - **Schema**: the shape of an answer: which fields, and of which type.
 - **Strict schema**: a schema that also fails on a field it does not name, such as `slot_id`.
-- **Request fixture**: Playwright's way to call an API from a test, with no browser.

@@ -6,9 +6,8 @@ When an item is out of stock, Pantry Run's suggester picks up to three replaceme
 twice with a different seed and you can get a different answer. A **seed** is a number that picks one of the
 possible answers, so the same seed always gives the same answer.
 
-So `toEqual` cannot test it. Two different answers can both be right. For example, for out-of-stock whole milk,
-semi-skimmed milk and oat drink are both fine for Ana. But almond drink is never fine for Ana, because she
-declared tree nuts (SUB-4). One such answer in a thousand is still one shopper in hospital.
+So `toEqual` cannot test it: two different answers can both be right. For example, for out-of-stock whole milk,
+semi-skimmed milk is fine for Ana. Almond drink never is, because she declared tree nuts (SUB-4).
 
 ```mermaid
 flowchart LR
@@ -52,8 +51,7 @@ in the table in qa/ai-notes.md: the suggestions, pass or fail, and the rules it 
 Then list each failure kind under ## Failure kinds. Do not write any test yet.
 ```
 
-Check two rows yourself in the browser, for example
-`http://localhost:4173/api/suggest?sku=MLK-WH2&shopper=ana&seed=1`. Then ask for the test:
+Check a row yourself, for example `http://localhost:4173/api/suggest?sku=MLK-WH2&shopper=ana&seed=1`. Then:
 
 ```text
 Write qa/ai-thresholds.json with seeds 20, minPassRate 0.95 and hardFail ["allergen"].
@@ -97,5 +95,4 @@ Expect: `Done. All 10 rules pass.`
 
 - **Seed**: a number that picks one answer, so a test can ask again and get the same one.
 - **Property**: a rule every good answer keeps, such as "same category".
-- **Pass rate**: the share of answers that keep every property, such as 0.95.
 - **Hard fail**: a rule where one break fails the test, whatever the pass rate.

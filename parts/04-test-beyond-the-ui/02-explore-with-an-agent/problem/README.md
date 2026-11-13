@@ -2,11 +2,9 @@
 
 ## The problem
 
-Planned tests only find what someone wrote down. Pantry Run's release candidate has three bugs that break no
-written requirement. No plan in Part 1 has a scenario for them, so no planned test can catch them.
-
-People find these bugs by exploring: trying what a real shopper might do by accident. For example, a shopper on
-a slow phone taps "Book slot" twice. Does the shop book one slot or two? Does it charge the $2.99 fee twice?
+Planned tests only find what someone wrote down. The release candidate has three bugs that break no written
+requirement, so no planned test can catch them. People find such bugs by exploring. For example, a shopper on a
+slow phone taps "Book slot" twice. Does the shop book two slots and charge the $2.99 fee twice?
 
 ```mermaid
 flowchart LR
@@ -19,9 +17,8 @@ flowchart LR
 
 ## Your challenge
 
-Write a charter with Claude Code, let it explore the release candidate through a real browser, and turn each
-finding into a repro test. A **repro test** is a test that shows one bug: it fails while the bug is there and
-passes once it is fixed. You type prompts and judge each finding. You write no test code.
+Get Claude Code to write a charter, explore the release candidate in a real browser, and turn each finding
+into a repro test. You type prompts and judge each finding. You write no test code.
 
 This folder has a `.mcp.json` that gives Claude Code a browser through Playwright MCP. Start the release
 candidate in one terminal:
@@ -50,14 +47,14 @@ explore the shop at http://localhost:4173 with the playwright browser. Report ea
 as steps, expected and actual. Do not write tests yet.
 ```
 
-Read each finding. Ask yourself: would a shopper or the shop lose money? Then ask for the repro tests:
+Read each finding: would a shopper or the shop lose money? Then ask for the repro tests:
 
 ```text
 Write one repro test per finding in qa/explore/, as CLAUDE.md says. Each test checks what
 should happen, so it fails on this shop and passes once the bug is fixed.
 ```
 
-Run them against the release candidate. Each should go red:
+Each should go red on the release candidate:
 
 ```bash
 bunx playwright test
@@ -77,19 +74,20 @@ bun run verify explore-with-an-agent
 
 Expect: `Done. All 5 rules pass.`
 
-![The check passing](../images/expected.png)
+After a double click on Book slot, Claude Code should see two held slots and the fee charged twice:
+
+![Two slots held after one double click](../images/expected.png)
 
 ## If you get stuck
 
-| What you see                                      | Fix                                                                                 |
-| ------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `/mcp` shows `playwright` as failed               | Run `bun run setup` at the repo root so Chromium is installed, then restart Claude. |
-| `FAIL every repro test passes on the fixed build` | The test expects what the bug did. Ask Claude Code to expect what should happen.    |
-| `Found 1 of 3`                                    | Explore again. Try a double click on Book slot, or Back after checkout.             |
+| What you see                                      | Fix                                                                              |
+| ------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `/mcp` shows `playwright` as failed               | Run `bun run setup` at the repo root, then restart Claude Code.                  |
+| `FAIL every repro test passes on the fixed build` | The test expects what the bug did. Ask Claude Code to expect what should happen. |
+| `Found 1 of 3`                                    | Explore again. Try a double click on Book slot, or Back after checkout.          |
 
 ## Words you will use
 
-- **Exploring**: trying the product the way a curious shopper would, without a script.
 - **Charter**: one short page that aims the exploration: its mission, its areas and how long it may take.
 - **Finding**: something odd you saw, written as steps, expected and actual.
 - **Repro test**: a test that reproduces one finding. Red with the bug, green without it.
