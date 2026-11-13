@@ -4,31 +4,70 @@
 // bun run shop             start the shop (BUGS=<id> bun run shop to switch a bug on)
 import { BUGS, parseBugs } from "./bugs";
 
-const cmd = process.argv[2] ?? "status";
+const command = process.argv[2] ?? "status";
 
-if (cmd === "shop") {
-  try { parseBugs(process.env.BUGS); } catch (e) { console.log((e as Error).message); process.exit(2); }
+async function startShop() {
+  // Check the switch first, so a typo gives a clear message and not a stack trace.
+  try {
+    parseBugs(process.env.BUGS);
+  } catch (error) {
+    console.log((error as Error).message);
+    process.exit(2);
+  }
   await import("./server");
-} else if (cmd === "reset") {
-  const S = await import("./store");
-  S.reset();
-  console.log(`World reset: ${S.products().length} products, ${S.shoppers().length} shoppers, 0 orders.`);
+}
+
+async function resetWorld() {
+  const store = await import("./store");
+  store.reset();
+  const productCount = store.products().length;
+  const shopperCount = store.shoppers().length;
+  console.log(`World reset: ${productCount} products, ${shopperCount} shoppers, 0 orders.`);
   process.exit(0);
-} else if (cmd === "bugs") {
+}
+
+function listBugs() {
   console.log("Planted bugs (switch one on with BUGS=<id> bun run shop):");
-  for (const b of BUGS) console.log(`  ${b.id.padEnd(20)} ${b.breaks.padEnd(14)} ${b.what}`);
-  console.log(`${BUGS.length} bugs. BUGS=none is the fixed build. BUGS=release turns every bug on.`);
+  for (const bug of BUGS) {
+    console.log(`  ${bug.id.padEnd(20)} ${bug.breaks.padEnd(14)} ${bug.what}`);
+  }
+  console.log(
+    `${BUGS.length} bugs. BUGS=none is the fixed build. BUGS=release turns every bug on.`,
+  );
   process.exit(0);
-} else if (cmd === "status") {
-  const S = await import("./store");
-  S.ensureSeeded();
-  const out = S.products().filter((p) => p.stock <= 0);
-  console.log(`Pantry Run, ${S.seed.store.city}. Store clock: ${S.now().toISOString()} (${S.seed.store.timeZone}).`);
-  console.log(`Shoppers: ${S.shoppers().map((s) => `${s.email} (allergens: ${s.allergens.join(", ") || "none"})`).join("; ")}. Password: pantry.`);
-  console.log(`Products: ${S.products().length}, out of stock: ${out.map((p) => p.sku).join(", ")}.`);
-  console.log(`Orders: ${S.orders().length}. Planted bugs: ${BUGS.length} (bun run world bugs).`);
+}
+
+async function showStatus() {
+  const store = await import("./store");
+  store.ensureSeeded();
+  const { city, timeZone } = store.seed.store;
+  const clock = store.now().toISOString();
+  console.log(`Pantry Run, ${city}. Store clock: ${clock} (${timeZone}).`);
+  const shopperTexts = store.shoppers().map((shopper) => {
+    const allergens = shopper.allergens.join(", ") || "none";
+    return `${shopper.email} (allergens: ${allergens})`;
+  });
+  console.log(`Shoppers: ${shopperTexts.join("; ")}. Password: pantry.`);
+  const products = store.products();
+  const outOfStock = products.filter((product) => product.stock <= 0);
+  const outOfStockSkus = outOfStock.map((product) => product.sku).join(", ");
+  console.log(`Products: ${products.length}, out of stock: ${outOfStockSkus}.`);
+  console.log(
+    `Orders: ${store.orders().length}. Planted bugs: ${BUGS.length} (bun run world bugs).`,
+  );
   process.exit(0);
+}
+
+if (command === "shop") {
+  await startShop();
+} else if (command === "reset") {
+  await resetWorld();
+} else if (command === "bugs") {
+  listBugs();
+} else if (command === "status") {
+  await showStatus();
 } else {
-  console.log(`Unknown command "${cmd}". Use: bun run world, bun run world reset, bun run world bugs, bun run shop.`);
+  const usage = "bun run world, bun run world reset, bun run world bugs, bun run shop";
+  console.log(`Unknown command "${command}". Use: ${usage}.`);
   process.exit(1);
 }
