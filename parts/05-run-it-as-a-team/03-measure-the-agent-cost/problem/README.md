@@ -4,7 +4,7 @@
 
 Every agent run costs tokens, and tokens cost money or plan limits. Nobody on the team knows how much a plan, a
 batch of tests or a heal really costs. So when a manager asks "was it worth it?", the only answer is "the agent
-wrote 21 tests". That number says nothing about value.
+wrote 21 tests".
 
 A better number is **cost per kept test**: what the runs cost, divided by the tests still in the suite after
 review. For example, if plan, generate and heal cost $1.70 together and 21 tests are kept, each kept test cost
@@ -39,7 +39,7 @@ bun run shop
 
 Expect: `Pantry Run ready on http://localhost:4173 (bugs: none)`
 
-Run the planner. The flags are the ones from `.claude/settings.json`:
+Run the planner:
 
 ```bash
 claude -p "Use the playwright-test-planner agent to plan the basket from requirements/basket.md, with tests/seed.spec.ts as the seed, following CLAUDE.md. Save the plan as specs/basket.md." --output-format json --permission-mode acceptEdits --max-turns 80 < /dev/null > qa/runs/plan.json
@@ -62,7 +62,7 @@ The shop is release v2. Use the playwright-test-healer agent to make tests/baske
 pass again. Fix locators only. Never change an expected value or remove an expect.
 ```
 
-Review the tests and delete any you would not keep. Then open `claude` and type:
+Delete any test you would not keep. Then open `claude` and type:
 
 ```text
 Fill in qa/cost.md from qa/runs/plan.json, generate.json and heal.json: Tokens is input +
