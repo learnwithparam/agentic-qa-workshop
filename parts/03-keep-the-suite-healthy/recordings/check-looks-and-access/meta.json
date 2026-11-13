@@ -1,0 +1,10 @@
+{
+  "step": "check-looks-and-access",
+  "folder": "the step's problem/ folder, copied to solution/ first",
+  "command": "claude -p \"<prompt>\" --output-format stream-json --verbose --permission-mode acceptEdits --allowedTools \"Read,Glob,Grep,Edit(tests/**),Write(tests/**),Bash(bunx playwright test),Bash(bunx playwright test *)\" --max-turns 80",
+  "prompt": "Pantry Run is running on http://localhost:4173. tests/seed.spec.ts shows how to reset the data and sign in.\nWrite two new test files:\n1. tests/visual.spec.ts: toHaveScreenshot of the \"Bananas, loose\" product card and of the slot picker on /slots, each at 375 px and at 1280 px wide. Reset the shop data before each test.\n2. tests/a11y.spec.ts: use @axe-core/playwright with the tags wcag2a, wcag2aa, wcag21a and wcag21aa on the shop page and on the slot picker, and expect no violations. Share the AxeBuilder setup through a makeAxeBuilder fixture, as the Playwright accessibility docs show.\nDo not turn any axe rule off. If you ever must, add a comment that names the ticket.\nRun bunx playwright test tests/visual.spec.ts --update-snapshots to make the baselines, then run both files twice more to show they are stable.",
+  "claudeCodeVersion": "2.1.323",
+  "ended": "success",
+  "turns": 21,
+  "durationMs": 57115
+}
