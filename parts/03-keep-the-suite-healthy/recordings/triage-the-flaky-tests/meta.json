@@ -1,0 +1,10 @@
+{
+  "step": "triage-the-flaky-tests",
+  "folder": "the step's problem/ folder, copied to solution/ first",
+  "command": "claude -p \"<prompt>\" --output-format stream-json --verbose --permission-mode acceptEdits --allowedTools \"Read,Glob,Grep,Edit(tests/**),Write(tests/**),Write(qa/**),Edit(qa/**),Bash(bunx playwright test),Bash(bunx playwright test *)\" --max-turns 80",
+  "prompt": "The legacy suite in tests/ fails now and then, and nobody trusts a red run any more.\nFind the flaky tests. Run bunx playwright test --repeat-each=20 --shuffle, and run single tests with --grep.\nFor each flaky test, find the cause. Use one of these words: race (the test does not wait for what it checks), shared-data (it needs another test to run first), or clock (it depends on the real time of day). Some causes do not show up in every run, so read each test too.\nFor each one, show me the cause, the evidence and the fix you propose. Do not change any file yet.\n\nApproved, with one change. For the clock test, 2026-03-10T21:59:00-06:00 is 22:59 in Larkford: on March 10 the store is on daylight time, -05:00. Use the shop's own seeded time instead, 2026-03-10T15:00:00-05:00.\nApply the three fixes. Rules: no retries, no waitForTimeout, no removed expect, and keep each test's title.\nThen write qa/triage.json: an array with one entry per flaky test, { \"test\", \"cause\", \"evidence\", \"fix\", \"approvedBy\" }. \"test\" is the exact test title, \"cause\" is race, shared-data or clock, and \"approvedBy\" is \"Priya Raman (QA lead)\".\nProve it: run bunx playwright test --repeat-each=20 --shuffle --grep on the three titles, and show me the result.",
+  "claudeCodeVersion": "2.1.323",
+  "ended": "success",
+  "turns": 14,
+  "durationMs": 309625
+}

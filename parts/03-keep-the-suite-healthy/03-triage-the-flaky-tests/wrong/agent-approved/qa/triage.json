@@ -1,0 +1,23 @@
+[
+  {
+    "test": "suggestions appear for out of stock milk",
+    "cause": "race",
+    "evidence": "Failed 13 of 20 in bunx playwright test --repeat-each=20 --shuffle with Received string \"Thinking...\". The test waited a fixed waitForTimeout(500) and read textContent() once, but the suggester waits a random 100-800 ms before it fetches (world/ui.tsx:501).",
+    "fix": "Removed waitForTimeout(500) and the one-shot textContent() read; now asserts with the retrying expect(getByTestId(\"suggestions-MLK-WH2\")).toContainText(\"Semi-skimmed milk 2 L\").",
+    "approvedBy": "Claude Code"
+  },
+  {
+    "test": "orders page lists my order",
+    "cause": "shared-data",
+    "evidence": "Passes in the full run only because \"place an order\" ran just before it without a later reset. Run after a reset (--grep \"health answers|orders page lists my order\") it fails: Expected substring \"PR-1001\". orders.spec.ts had no reset and its own comment says it expects the order made earlier in the run.",
+    "fix": "Added a beforeEach that resets the shop; the test now places its own order (Ground coffee x6, Mar 12 11:00 slot, checkout, PR-1001 heading visible) before checking /orders for PR-1001.",
+    "approvedBy": "Claude Code"
+  },
+  {
+    "test": "next-date slots are open when the store clock is now",
+    "cause": "race",
+    "evidence": "Set the store clock to the real time (new Date()). Next-date slots close at 22:00 store time (America/Chicago, CUTOFF_HOUR = 22 in world/domain/slots.ts) and closed slots render as disabled radios (world/ui.tsx:235), so the test fails whenever it runs between 22:00 and midnight store time. It passed 20 of 20 at about 00:45 store time; the failure comes from reading the code.",
+    "fix": "Pinned the store clock to the shop's seeded time, 2026-03-10T15:00:00-05:00 (15:00 store time, before the cutoff), instead of the real time.",
+    "approvedBy": "Claude Code"
+  }
+]
