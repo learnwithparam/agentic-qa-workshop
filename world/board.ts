@@ -8,31 +8,54 @@ import { hasSpecs } from "../checks/lib/suite";
 import { ROOT } from "../scripts/structure";
 import { BUGS } from "./bugs";
 
-const arg = process.argv[2];
-const dir = arg
-  ? isAbsolute(arg)
-    ? arg
-    : join(process.cwd(), arg)
-  : join(ROOT, "reference", "tests");
-const name = arg ? relative(ROOT, dir) : "Reference suite";
-if (!existsSync(dir) || !hasSpecs(dir)) {
+type Matrix = Awaited<ReturnType<typeof bugKillMatrix>>;
+type MatrixRow = Matrix["rows"][number];
+
+function testsFolder(argument: string | undefined): string {
+  if (!argument) {
+    return join(ROOT, "reference", "tests");
+  }
+  if (isAbsolute(argument)) {
+    return argument;
+  }
+  return join(process.cwd(), argument);
+}
+
+function groupOf(bugId: string): string | undefined {
+  const bug = BUGS.find((planted) => planted.id === bugId);
+  return bug?.group;
+}
+
+function groupLine(label: string, rows: MatrixRow[]): string {
+  const caughtCount = rows.filter((row) => row.caught).length;
+  const marks = rows.map((row) => `${row.caught ? "+" : "-"}${row.bug}`);
+  return `  ${label.padEnd(18)} ${caughtCount} of ${rows.length}   ${marks.join(" ")}`;
+}
+
+const argument = process.argv[2];
+const folder = testsFolder(argument);
+const name = argument ? relative(ROOT, folder) : "Reference suite";
+if (!existsSync(folder) || !hasSpecs(folder)) {
+  const shownFolder = relative(ROOT, folder) || folder;
   console.log(
-    `No .spec.ts files in ${relative(ROOT, dir) || dir}. Your board: 0 of ${BUGS.length} planted bugs caught.`,
+    `No .spec.ts files in ${shownFolder}. Your board: 0 of ${BUGS.length} planted bugs caught.`,
   );
   process.exit(1);
 }
 console.log(
   `Running ${name} once on the fixed build and once per planted bug (${BUGS.length} runs)...`,
 );
-const m = await bugKillMatrix(
-  dir,
-  BUGS.map((b) => b.id),
+const matrix = await bugKillMatrix(
+  folder,
+  BUGS.map((bug) => bug.id),
 );
-const green = m.baseline.ran && m.baseline.failed === 0;
+const baseline = matrix.baseline;
+const green = baseline.ran && baseline.failed === 0;
+const buildState = green ? "green" : "RED";
 console.log("");
 console.log("  GOAL BOARD");
 console.log(
-  `  fixed build      ${green ? "green" : "RED"}: ${m.baseline.passed} passed, ${m.baseline.failed} failed`,
+  `  fixed build      ${buildState}: ${baseline.passed} passed, ${baseline.failed} failed`,
 );
 const groups: [string, string][] = [
   ["requirement", "requirement bugs"],
@@ -41,15 +64,13 @@ const groups: [string, string][] = [
   ["unwritten", "found by exploring"],
   ["ai", "AI suggester"],
 ];
-for (const [g, label] of groups) {
-  const rows = m.rows.filter((r) => BUGS.find((b) => b.id === r.bug)!.group === g);
-  console.log(
-    `  ${label.padEnd(18)} ${rows.filter((r) => r.caught).length} of ${rows.length}   ${rows.map((r) => `${r.caught ? "+" : "-"}${r.bug}`).join(" ")}`,
-  );
+for (const [group, label] of groups) {
+  const rows = matrix.rows.filter((row) => groupOf(row.bug) === group);
+  console.log(groupLine(label, rows));
 }
 console.log("");
 const verdict = green
-  ? `${m.caught} of ${BUGS.length} planted bugs caught, fixed build green`
-  : `fixed build is red, so no catch counts`;
+  ? `${matrix.caught} of ${BUGS.length} planted bugs caught, fixed build green`
+  : "fixed build is red, so no catch counts";
 console.log(`${name}: ${verdict}.`);
-process.exit(green && m.caught === BUGS.length ? 0 : 1);
+process.exit(green && matrix.caught === BUGS.length ? 0 : 1);

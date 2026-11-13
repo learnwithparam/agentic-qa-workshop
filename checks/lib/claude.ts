@@ -1,4 +1,5 @@
-// Asks the claude CLI itself whether Claude Code is installed and signed in. It never reads a credentials file.
+// Asks the claude CLI itself whether Claude Code is installed and signed in.
+// It never reads a credentials file.
 export type ClaudeStatus = {
   installed: boolean;
   version: string | null;
@@ -9,37 +10,48 @@ export type ClaudeStatus = {
 // The oldest Claude Code release the course's recordings and checks were run on.
 export const TESTED_ON = "2.1.322";
 
+const NOT_INSTALLED: ClaudeStatus = { installed: false, version: null, signedIn: false, how: null };
+
 const run = (args: string[]) => {
   try {
-    const r = Bun.spawnSync(["claude", ...args], {
+    const finished = Bun.spawnSync(["claude", ...args], {
       stdout: "pipe",
       stderr: "pipe",
+      // biome-ignore lint/style/useNamingConvention: environment variable names are uppercase
       env: { ...process.env, NO_COLOR: "1" },
     });
-    return { ok: r.exitCode === 0, out: r.stdout.toString().trim() };
+    const output = finished.stdout.toString().trim();
+    return { ok: finished.exitCode === 0, out: output };
   } catch {
     return { ok: false, out: "" };
   }
 };
 
 export function claudeStatus(): ClaudeStatus {
-  const v = run(["--version"]);
-  if (!v.ok) return { installed: false, version: null, signedIn: false, how: null };
-  const version = v.out.match(/\d+\.\d+\.\d+/)?.[0] ?? null;
-  const a = run(["auth", "status", "--json"]);
+  const versionRun = run(["--version"]);
+  if (!versionRun.ok) return NOT_INSTALLED;
+  const version = versionRun.out.match(/\d+\.\d+\.\d+/)?.[0] ?? null;
+  const authRun = run(["auth", "status", "--json"]);
   let signedIn = false;
   let how: string | null = null;
   try {
-    const j = JSON.parse(a.out);
-    signedIn = j.loggedIn === true;
-    how = j.authMethod ?? null;
-  } catch {}
+    const authStatus = JSON.parse(authRun.out);
+    signedIn = authStatus.loggedIn === true;
+    how = authStatus.authMethod ?? null;
+  } catch {
+    // If the answer is not JSON, we cannot tell, so we keep "not signed in".
+  }
   return { installed: true, version, signedIn, how };
 }
 
-export function olderThan(v: string, floor: string): boolean {
-  const a = v.split(".").map(Number),
-    b = floor.split(".").map(Number);
-  for (let i = 0; i < 3; i++) if ((a[i] ?? 0) !== (b[i] ?? 0)) return (a[i] ?? 0) < (b[i] ?? 0);
+// Compares two "major.minor.patch" versions, one number at a time.
+export function olderThan(version: string, floor: string): boolean {
+  const versionParts = version.split(".").map(Number);
+  const floorParts = floor.split(".").map(Number);
+  for (let i = 0; i < 3; i++) {
+    const versionPart = versionParts[i] ?? 0;
+    const floorPart = floorParts[i] ?? 0;
+    if (versionPart !== floorPart) return versionPart < floorPart;
+  }
   return false;
 }

@@ -1,4 +1,5 @@
-// Reads test files without running them: the tests in a file, their titles and how many expects each has.
+// Reads test files without running them.
+// It finds the tests in a file, their titles and how many expects each one has.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -6,37 +7,51 @@ export type FoundTest = { title: string; body: string; expects: number; file: st
 
 export function specFiles(dir: string): string[] {
   if (!existsSync(dir)) return [];
-  return readdirSync(dir, { recursive: true })
-    .map(String)
-    .filter((f) => f.endsWith(".spec.ts"))
-    .map((f) => join(dir, f));
+  const names = readdirSync(dir, { recursive: true }).map(String);
+  const specNames = names.filter((name) => name.endsWith(".spec.ts"));
+  return specNames.map((name) => join(dir, name));
+}
+
+// Finds the start of a test: test('title', or test.only("title", with any quote mark.
+const TEST_START = /\btest(?:\.only)?\(\s*(['"`])((?:\\.|(?!\1).)*)\1\s*,/g;
+
+const EXPECT_CALL = /\bexpect(\.soft|\.poll)?\(/g;
+
+// Returns the position of the "}" that closes the "{" at the given position.
+// If the braces never close, it returns the end of the source.
+function closingBrace(source: string, open: number): number {
+  let depth = 0;
+  let i = open;
+  for (; i < source.length; i++) {
+    if (source[i] === "{") depth += 1;
+    if (source[i] === "}") {
+      depth -= 1;
+      if (depth === 0) break;
+    }
+  }
+  return i;
+}
+
+// Returns the position of the "{" that opens the test function after "from", or -1.
+function bodyStart(source: string, from: number): number {
+  const arrow = source.indexOf("=>", from);
+  if (arrow < 0) return -1;
+  return source.indexOf("{", arrow);
 }
 
 // Finds test('title', async (...) => { ... }) blocks and returns each body by matching braces.
 export function testsIn(file: string): FoundTest[] {
-  const src = readFileSync(file, "utf8");
-  const out: FoundTest[] = [];
-  const re = /\btest(?:\.only)?\(\s*(['"`])((?:\\.|(?!\1).)*)\1\s*,/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(src))) {
-    const arrow = src.indexOf("=>", re.lastIndex);
-    const open = arrow < 0 ? -1 : src.indexOf("{", arrow);
+  const source = readFileSync(file, "utf8");
+  const found: FoundTest[] = [];
+  const testStart = new RegExp(TEST_START);
+  for (let match = testStart.exec(source); match; match = testStart.exec(source)) {
+    const open = bodyStart(source, testStart.lastIndex);
     if (open < 0) break;
-    let depth = 0;
-    let i = open;
-    for (; i < src.length; i++) {
-      if (src[i] === "{") depth++;
-      else if (src[i] === "}" && --depth === 0) break;
-    }
-    const body = src.slice(open, i + 1);
-    out.push({
-      title: m[2],
-      body,
-      expects: (body.match(/\bexpect(\.soft|\.poll)?\(/g) ?? []).length,
-      file,
-    });
+    const body = source.slice(open, closingBrace(source, open) + 1);
+    const expects = (body.match(EXPECT_CALL) ?? []).length;
+    found.push({ title: match[2], body, expects, file });
   }
-  return out;
+  return found;
 }
 
 export const allTests = (dir: string) => specFiles(dir).flatMap(testsIn);

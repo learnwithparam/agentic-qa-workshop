@@ -14,7 +14,9 @@ export const BUGS: Bug[] = [
     breaks: "SLOT-3",
     group: "requirement",
     caughtIn: "catch-the-seeded-bugs",
-    what: "Next-date slots stay bookable after the 22:00 cutoff, because the cutoff reads the UTC hour, not the store hour.",
+    what:
+      "Next-date slots stay bookable after the 22:00 cutoff, " +
+      "because the cutoff reads the UTC hour, not the store hour.",
   },
   {
     id: "slot-capacity",
@@ -123,25 +125,32 @@ export const BUGS: Bug[] = [
   },
 ];
 
-export const BUG_IDS = BUGS.map((b) => b.id);
-export const bugById = (id: string) => BUGS.find((b) => b.id === id);
+export const BUG_IDS = BUGS.map((bug) => bug.id);
+export const bugById = (id: string) => BUGS.find((bug) => bug.id === id);
 
 // Read the switch once per process. "none" or empty: no bugs. "release": all of them.
 export function parseBugs(raw: string | undefined): Set<string> {
-  const v = (raw ?? "none").trim();
-  if (v === "" || v === "none") return new Set();
-  if (v === "release") return new Set(BUG_IDS);
-  const ids = v
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-  for (const id of ids)
-    if (!bugById(id)) throw new Error(`Unknown bug "${id}". Known bugs: ${BUG_IDS.join(", ")}`);
+  const setting = (raw ?? "none").trim();
+  if (setting === "" || setting === "none") {
+    return new Set();
+  }
+  if (setting === "release") {
+    return new Set(BUG_IDS);
+  }
+  const names = setting.split(",");
+  const ids = names.map((name) => name.trim()).filter(Boolean);
+  for (const id of ids) {
+    if (!bugById(id)) {
+      throw new Error(`Unknown bug "${id}". Known bugs: ${BUG_IDS.join(", ")}`);
+    }
+  }
   return new Set(ids);
 }
 
 let active = parseBugs(process.env.BUGS);
-export const on = (id: string) => active.has(id);
+export const bugIsOn = (id: string) => active.has(id);
+// The old name, kept so world/app.tsx and world/ui.tsx still work until they use bugIsOn.
+export { bugIsOn as on };
 export const activeBugs = () => [...active];
 export const setBugs = (raw: string) => {
   active = parseBugs(raw);
