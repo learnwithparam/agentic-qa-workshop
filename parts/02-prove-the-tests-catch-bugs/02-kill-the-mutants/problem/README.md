@@ -30,9 +30,7 @@ Start Claude Code in this folder:
 claude
 ```
 
-Expect: Claude Code opens in this folder.
-
-Give it the job:
+Expect: Claude Code opens in this folder. Give it the job:
 
 ```text
 Write Vitest unit tests for the shop rules in domain/slots.ts, domain/basket.ts and domain/substitutions.ts. Put one test file next to each: domain/slots.test.ts, domain/basket.test.ts and domain/substitutions.test.ts.
@@ -52,9 +50,9 @@ own copy of the domain code.
 ## Done when
 
 - `stryker.config.json` uses `vitest`, mutates the three files, and has `"break"` of 70 or more.
-- Your unit tests pass on the fixed domain code.
+- Your tests pass on the fixed domain code.
 - The mutation score on the three files is at least 70.
-- Every test file kills at least one mutant.
+- Each test file kills a mutant.
 
 ```bash
 bun run verify kill-the-mutants
@@ -68,11 +66,11 @@ Expect: `mutation score:` with a number of 70 or more, then `Done. All 4 rules p
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
 | `mutation score: 17.0`                               | The tests run the code but check little. Ask for exact values: `toBe(104)`, not `toBeDefined()`. |
 | `FAIL your unit tests pass on the fixed domain code` | A test expects a wrong number. Ask Claude Code to explain that test against the rule.            |
-| A mutant nobody can kill                             | Some mutants change nothing a caller sees. Skip it. 70 leaves room for these.                    |
+| A mutant nobody can kill                             | It changes nothing a caller sees. Skip it; 70 leaves room.                                       |
 
 ## Words you will use
 
 - **Mutant**: a copy of the code with one small change, like `>=` turned into `>`.
 - **Killed**: at least one test went red on the mutant.
 - **Survived**: every test stayed green. Your tests would miss that bug.
-- **Mutation score**: killed mutants divided by all mutants, as a percent.
+- **Mutation score**: the percent of mutants killed.
