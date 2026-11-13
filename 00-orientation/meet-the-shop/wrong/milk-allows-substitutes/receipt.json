@@ -1,0 +1,47 @@
+{
+  "shop": "Pantry Run",
+  "order": {
+    "orderId": "PR-1001",
+    "shopper": "ana",
+    "slotId": "2026-03-12T10",
+    "status": "placed",
+    "placedAt": "2026-03-10T20:00:00.000Z",
+    "lines": [
+      {
+        "sku": "BAN-LOOSE",
+        "qty": 1,
+        "grams": 1000,
+        "substitutes": true,
+        "name": "Bananas, loose",
+        "totalCents": 139,
+        "status": "packed"
+      },
+      {
+        "sku": "MLK-WH2",
+        "qty": 1,
+        "grams": 0,
+        "substitutes": true,
+        "name": "Whole milk 2 L",
+        "totalCents": 289,
+        "status": "substituted",
+        "substituteSku": "MLK-SS2",
+        "substituteName": "Semi-skimmed milk 2 L"
+      },
+      {
+        "sku": "COF-GRD",
+        "qty": 5,
+        "grams": 0,
+        "substitutes": true,
+        "name": "Ground coffee 227 g",
+        "totalCents": 2245,
+        "status": "packed"
+      }
+    ],
+    "subtotalCents": 2673,
+    "discountCents": 0,
+    "deliveryCents": 299,
+    "totalCents": 2972,
+    "voucher": null
+  },
+  "signature": "74d3274d026a7e00b0296c197311f6e28bad158f530f26d6d584e5ff6dc5d1bd"
+}

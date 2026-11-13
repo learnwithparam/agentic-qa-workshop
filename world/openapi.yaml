@@ -1,0 +1,181 @@
+openapi: 3.1.0
+info:
+  title: Pantry Run partner API
+  version: 1.0.0
+  description: Partner apps place and read grocery orders. Money is in US cents. Times are store time.
+servers:
+  - url: http://localhost:4173
+components:
+  securitySchemes:
+    partnerKey:
+      type: http
+      scheme: bearer
+      description: "The test partner key is pantry-partner-key."
+  schemas:
+    Error:
+      type: object
+      required: [error, message]
+      properties:
+        error: { type: string }
+        message: { type: string }
+    Slot:
+      type: object
+      required: [slotId, date, start, end, feeCents, remaining, status]
+      properties:
+        slotId: { type: string, example: 2026-03-11T08 }
+        date: { type: string, format: date }
+        start: { type: string, example: "08:00" }
+        end: { type: string, example: "09:00" }
+        feeCents: { type: integer }
+        remaining: { type: integer }
+        status: { type: string, enum: [open, full, closed] }
+    OrderLineIn:
+      type: object
+      required: [sku]
+      properties:
+        sku: { type: string }
+        qty: { type: integer, minimum: 1, maximum: 20 }
+        grams: { type: integer, minimum: 250, maximum: 5000 }
+        substitutes: { type: boolean, default: true }
+    OrderIn:
+      type: object
+      required: [shopper, slotId, lines]
+      properties:
+        shopper: { type: string, example: ana }
+        slotId: { type: string }
+        voucher: { type: string }
+        lines: { type: array, minItems: 1, items: { $ref: "#/components/schemas/OrderLineIn" } }
+    OrderLine:
+      type: object
+      required: [sku, name, qty, grams, substitutes, totalCents, status]
+      properties:
+        sku: { type: string }
+        name: { type: string }
+        qty: { type: integer }
+        grams: { type: integer }
+        substitutes: { type: boolean }
+        totalCents: { type: integer }
+        status: { type: string, enum: [packed, substituted, unavailable] }
+        substituteSku: { type: string }
+        substituteName: { type: string }
+    Order:
+      type: object
+      required:
+        [
+          orderId,
+          shopper,
+          slotId,
+          status,
+          placedAt,
+          lines,
+          subtotalCents,
+          discountCents,
+          deliveryCents,
+          totalCents,
+        ]
+      additionalProperties: false
+      properties:
+        orderId: { type: string, example: PR-1001 }
+        shopper: { type: string }
+        slotId: { type: string }
+        status: { type: string, enum: [placed] }
+        placedAt: { type: string, format: date-time }
+        lines: { type: array, items: { $ref: "#/components/schemas/OrderLine" } }
+        subtotalCents: { type: integer }
+        discountCents: { type: integer }
+        deliveryCents: { type: integer }
+        totalCents: { type: integer }
+paths:
+  /api/slots:
+    get:
+      summary: List delivery slots
+      responses:
+        "200":
+          {
+            description: Slots,
+            content:
+              {
+                application/json:
+                  { schema: { type: array, items: { $ref: "#/components/schemas/Slot" } } },
+              },
+          }
+  /api/orders:
+    post:
+      summary: Place an order
+      security: [{ partnerKey: [] }]
+      requestBody:
+        {
+          required: true,
+          content: { application/json: { schema: { $ref: "#/components/schemas/OrderIn" } } },
+        }
+      responses:
+        "201":
+          {
+            description: Placed,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Order" } } },
+          }
+        "400":
+          {
+            description: Bad request,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+        "401":
+          {
+            description: No or wrong partner key,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+        "404":
+          {
+            description: No such slot,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+        "409":
+          {
+            description: The slot is full or closed,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+        "422":
+          {
+            description: Below the minimum order,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+    get:
+      summary: List orders, optionally for one shopper
+      security: [{ partnerKey: [] }]
+      parameters: [{ name: shopper, in: query, schema: { type: string } }]
+      responses:
+        "200":
+          {
+            description: Orders,
+            content:
+              {
+                application/json:
+                  { schema: { type: array, items: { $ref: "#/components/schemas/Order" } } },
+              },
+          }
+        "401":
+          {
+            description: No or wrong partner key,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+  /api/orders/{orderId}:
+    get:
+      summary: Read one order
+      security: [{ partnerKey: [] }]
+      parameters: [{ name: orderId, in: path, required: true, schema: { type: string } }]
+      responses:
+        "200":
+          {
+            description: The order,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Order" } } },
+          }
+        "401":
+          {
+            description: No or wrong partner key,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+        "404":
+          {
+            description: No such order,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
