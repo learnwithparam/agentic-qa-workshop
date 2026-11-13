@@ -1,9 +1,14 @@
 # Part 5: Run it as a team
 
+This part moves the goal: one pull request gate that reports four numbers.
+
 ## The problem
 
 One person's strong suite is not a team practice. Agent runs cost money per run, and nobody has budgeted for
 them. Unless the team picks better numbers, leadership will count "tests written by AI" and call it quality.
+
+For example, "the agent wrote 120 tests" says nothing. "The agent's tests catch 15 of 16 planted bugs, and each
+kept test cost this much" tells a manager what they paid for.
 
 ## Why it matters
 
@@ -26,13 +31,15 @@ flowchart LR
   G1 & G2 & G3 & G4 & G5 -.fail.-> X[blocked, with the reason]
 ```
 
-| Step | Minutes | You produce | The check reads |
-|---|---|---|---|
-| compare-mcp-and-cli | 20 | `qa/mcp-vs-cli.md`: tokens, time and findings for one task both ways | both columns have numbers, and a choice with a reason |
-| fuzz-the-api-from-the-schema | 20 | a Schemathesis run on `openapi.yaml`, or a TypeScript property test | finds `api-status` on `BUGS=release`, zero failures on the fixed build |
-| measure-the-agent-cost | 15 | `qa/cost.md`: tokens and minutes for plan, generate and heal, and a cost per kept test | numbers for the three agents; kept tests counted from git |
-| gate-the-pull-request | 25 | `bun run gate` and a CI file that calls it | fails on 4 planted bad pull requests, passes on a clean one |
-| write-the-team-playbook | 20 | `qa/playbook.md` | sections Agents may, Agents may not, Human gates, Numbers we report; each number is one the gate computes |
+In every step you type prompts and review. Claude Code makes each file below. The check reads what it made.
+
+| Step                         | Minutes | Claude Code makes                                                                      | The check reads                                                                                           |
+| ---------------------------- | ------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| compare-mcp-and-cli          | 20      | `qa/mcp-vs-cli.md`: tokens, time and findings for one task both ways                   | both columns have numbers, and a choice with a reason                                                     |
+| fuzz-the-api-from-the-schema | 20      | a Schemathesis run on `openapi.yaml`, or a TypeScript property test                    | finds `api-status` on `BUGS=release`, zero failures on the fixed build                                    |
+| measure-the-agent-cost       | 15      | `qa/cost.md`: tokens and minutes for plan, generate and heal, and a cost per kept test | numbers for the three agents; kept tests counted from git                                                 |
+| gate-the-pull-request        | 25      | `bun run gate` and a CI file that calls it                                             | fails on 4 planted bad pull requests, passes on a clean one                                               |
+| write-the-team-playbook      | 20      | `qa/playbook.md`                                                                       | sections Agents may, Agents may not, Human gates, Numbers we report; each number is one the gate computes |
 
 ## Walkthrough
 

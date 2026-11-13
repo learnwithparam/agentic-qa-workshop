@@ -1,5 +1,5 @@
 // Delivery slots: SLOT-1 to SLOT-8 in world/requirements/slots.md.
-import { on } from "../bugs";
+import { bugIsOn } from "../bugs";
 import { addDays, dateLabel, localParts } from "./clock";
 
 export type SlotStatus = "open" | "full" | "closed";
@@ -29,41 +29,85 @@ export function slotFee(hour: number): number {
 
 // SLOT-3: next-date slots close at 22:00 store time the evening before.
 export function cutoffPassed(now: Date, timeZone: string): boolean {
-  const hour = on("slot-cutoff") ? now.getUTCHours() : localParts(now, timeZone).hour;
+  let hour = localParts(now, timeZone).hour;
+  if (bugIsOn("slot-cutoff")) {
+    hour = now.getUTCHours();
+  }
   return hour >= CUTOFF_HOUR;
 }
 
 // SLOT-2: a slot takes at most `capacity` orders.
 export function isFull(booked: number, capacity: number): boolean {
-  return on("slot-capacity") ? booked > capacity : booked >= capacity;
+  if (bugIsOn("slot-capacity")) {
+    return booked > capacity;
+  }
+  return booked >= capacity;
 }
 
-const hh = (h: number) => String(h).padStart(2, "0");
+// Turns 8 into "08", so every hour has two digits.
+const twoDigits = (hour: number) => String(hour).padStart(2, "0");
 
-export function listSlots(now: Date, timeZone: string, booked: Record<string, number>, capacity: number): Slot[] {
+function slotStatus(isFirstDate: boolean, closedFirst: boolean, full: boolean): SlotStatus {
+  if (isFirstDate && closedFirst) {
+    return "closed";
+  }
+  if (full) {
+    return "full";
+  }
+  return "open";
+}
+
+type SlotPlace = { date: string; hour: number; bookedCount: number; capacity: number };
+
+function makeSlot(place: SlotPlace, status: SlotStatus): Slot {
+  const { date, hour, bookedCount, capacity } = place;
+  const start = `${twoDigits(hour)}:00`;
+  const end = `${twoDigits(hour + 1)}:00`;
+  const dateText = dateLabel(date);
+  return {
+    slotId: `${date}T${twoDigits(hour)}`,
+    date,
+    start,
+    end,
+    dateText,
+    label: `${dateText}, ${start} to ${end}`,
+    feeCents: slotFee(hour),
+    capacity,
+    booked: bookedCount,
+    remaining: Math.max(0, capacity - bookedCount),
+    status,
+  };
+}
+
+export function listSlots(
+  now: Date,
+  timeZone: string,
+  booked: Record<string, number>,
+  capacity: number,
+): Slot[] {
   const today = localParts(now, timeZone).date;
   const closedFirst = cutoffPassed(now, timeZone);
-  const out: Slot[] = [];
-  for (let d = 1; d <= DATES_SHOWN; d++) {
-    const date = addDays(today, d);
-    for (let h = FIRST_HOUR; h <= LAST_HOUR; h++) {
-      const slotId = `${date}T${hh(h)}`;
-      const n = booked[slotId] ?? 0;
-      const status: SlotStatus = d === 1 && closedFirst ? "closed" : isFull(n, capacity) ? "full" : "open";
-      out.push({
-        slotId, date, start: `${hh(h)}:00`, end: `${hh(h + 1)}:00`,
-        dateText: dateLabel(date), label: `${dateLabel(date)}, ${hh(h)}:00 to ${hh(h + 1)}:00`,
-        feeCents: slotFee(h), capacity, booked: n, remaining: Math.max(0, capacity - n), status,
-      });
+  const slots: Slot[] = [];
+  for (let dayNumber = 1; dayNumber <= DATES_SHOWN; dayNumber++) {
+    const date = addDays(today, dayNumber);
+    for (let hour = FIRST_HOUR; hour <= LAST_HOUR; hour++) {
+      const bookedCount = booked[`${date}T${twoDigits(hour)}`] ?? 0;
+      const full = isFull(bookedCount, capacity);
+      const status = slotStatus(dayNumber === 1, closedFirst, full);
+      slots.push(makeSlot({ date, hour, bookedCount, capacity }, status));
     }
   }
-  return out;
+  return slots;
 }
 
 export function parseSlotId(id: string): { date: string; hour: number } | null {
-  const m = /^(\d{4}-\d{2}-\d{2})T(\d{2})$/.exec(id);
-  if (!m) return null;
-  const hour = Number(m[2]);
-  if (hour < FIRST_HOUR || hour > LAST_HOUR) return null;
-  return { date: m[1], hour };
+  const match = /^(\d{4}-\d{2}-\d{2})T(\d{2})$/.exec(id);
+  if (!match) {
+    return null;
+  }
+  const hour = Number(match[2]);
+  if (hour < FIRST_HOUR || hour > LAST_HOUR) {
+    return null;
+  }
+  return { date: match[1], hour };
 }

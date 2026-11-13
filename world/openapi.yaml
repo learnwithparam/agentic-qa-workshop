@@ -60,7 +60,19 @@ components:
         substituteName: { type: string }
     Order:
       type: object
-      required: [orderId, shopper, slotId, status, placedAt, lines, subtotalCents, discountCents, deliveryCents, totalCents]
+      required:
+        [
+          orderId,
+          shopper,
+          slotId,
+          status,
+          placedAt,
+          lines,
+          subtotalCents,
+          discountCents,
+          deliveryCents,
+          totalCents,
+        ]
       additionalProperties: false
       properties:
         orderId: { type: string, example: PR-1001 }
@@ -78,32 +90,92 @@ paths:
     get:
       summary: List delivery slots
       responses:
-        "200": { description: Slots, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Slot" } } } } }
+        "200":
+          {
+            description: Slots,
+            content:
+              {
+                application/json:
+                  { schema: { type: array, items: { $ref: "#/components/schemas/Slot" } } },
+              },
+          }
   /api/orders:
     post:
       summary: Place an order
       security: [{ partnerKey: [] }]
-      requestBody: { required: true, content: { application/json: { schema: { $ref: "#/components/schemas/OrderIn" } } } }
+      requestBody:
+        {
+          required: true,
+          content: { application/json: { schema: { $ref: "#/components/schemas/OrderIn" } } },
+        }
       responses:
-        "201": { description: Placed, content: { application/json: { schema: { $ref: "#/components/schemas/Order" } } } }
-        "400": { description: Bad request, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
-        "401": { description: No or wrong partner key, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
-        "404": { description: No such slot, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
-        "409": { description: The slot is full or closed, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
-        "422": { description: Below the minimum order, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "201":
+          {
+            description: Placed,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Order" } } },
+          }
+        "400":
+          {
+            description: Bad request,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+        "401":
+          {
+            description: No or wrong partner key,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+        "404":
+          {
+            description: No such slot,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+        "409":
+          {
+            description: The slot is full or closed,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+        "422":
+          {
+            description: Below the minimum order,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
     get:
       summary: List orders, optionally for one shopper
       security: [{ partnerKey: [] }]
       parameters: [{ name: shopper, in: query, schema: { type: string } }]
       responses:
-        "200": { description: Orders, content: { application/json: { schema: { type: array, items: { $ref: "#/components/schemas/Order" } } } } }
-        "401": { description: No or wrong partner key, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "200":
+          {
+            description: Orders,
+            content:
+              {
+                application/json:
+                  { schema: { type: array, items: { $ref: "#/components/schemas/Order" } } },
+              },
+          }
+        "401":
+          {
+            description: No or wrong partner key,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
   /api/orders/{orderId}:
     get:
       summary: Read one order
       security: [{ partnerKey: [] }]
       parameters: [{ name: orderId, in: path, required: true, schema: { type: string } }]
       responses:
-        "200": { description: The order, content: { application/json: { schema: { $ref: "#/components/schemas/Order" } } } }
-        "401": { description: No or wrong partner key, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
-        "404": { description: No such order, content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } } }
+        "200":
+          {
+            description: The order,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Order" } } },
+          }
+        "401":
+          {
+            description: No or wrong partner key,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }
+        "404":
+          {
+            description: No such order,
+            content: { application/json: { schema: { $ref: "#/components/schemas/Error" } } },
+          }

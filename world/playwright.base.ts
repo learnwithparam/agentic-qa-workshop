@@ -1,7 +1,8 @@
 // The Playwright settings every suite in this course uses. A suite's own playwright.config.ts calls
 // pantryConfig("./tests"). Tests share one shop and reset it, so they run one at a time.
-import { defineConfig } from "@playwright/test";
+
 import { join } from "node:path";
+import { defineConfig } from "@playwright/test";
 
 const ROOT = join(import.meta.dirname, "..");
 
@@ -18,18 +19,21 @@ export function pantryConfig(testDir: string) {
     reporter: process.env.PW_JSON ? [["json", { outputFile: process.env.PW_JSON }]] : [["list"]],
     outputDir: process.env.PW_OUT ?? join(ROOT, ".runs", "test-results"),
     use: {
+      // biome-ignore lint/style/useNamingConvention: baseURL is the name Playwright reads
       baseURL: process.env.BASE_URL ?? "http://localhost:4173",
       launchOptions: process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
       trace: "off",
       actionTimeout: 5_000,
       navigationTimeout: 10_000,
     },
-    webServer: external ? undefined : {
-      command: "bun world/cli.ts shop",
-      cwd: ROOT,
-      url: "http://localhost:4173/health",
-      reuseExistingServer: true,
-      timeout: 20_000,
-    },
+    webServer: external
+      ? undefined
+      : {
+          command: "bun world/cli.ts shop",
+          cwd: ROOT,
+          url: "http://localhost:4173/health",
+          reuseExistingServer: true,
+          timeout: 20_000,
+        },
   });
 }

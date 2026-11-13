@@ -1,5 +1,5 @@
 // seed: every test starts here. Fresh shop data, Ana signed in, an empty basket on screen.
-import { expect, test } from "@playwright/test";
+import { test } from "@playwright/test";
 
 test.describe("Pantry Run", () => {
   test("seed", async ({ page, request }) => {

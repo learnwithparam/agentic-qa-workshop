@@ -30,15 +30,21 @@ test.describe("Seeing slots", () => {
 
   test("A slot with three or fewer places shows how many are left", async ({ page }) => {
     await page.goto("/slots");
-    await expect(page.getByRole("radio", { name: /Mar 11 17:00 to 18:00, \$4\.99, 1 left/ })).toBeEnabled();
-    await expect(page.getByRole("radio", { name: /Mar 11 10:00 to 11:00, \$2\.99, 3 left/ })).toBeEnabled();
+    await expect(
+      page.getByRole("radio", { name: /Mar 11 17:00 to 18:00, \$4\.99, 1 left/ }),
+    ).toBeEnabled();
+    await expect(
+      page.getByRole("radio", { name: /Mar 11 10:00 to 11:00, \$2\.99, 3 left/ }),
+    ).toBeEnabled();
   });
 });
 
 test.describe("Booking rules", () => {
   test("A full slot shows Full and cannot be booked", async ({ page }) => {
     await page.goto("/slots");
-    await expect(page.getByRole("radio", { name: /Mar 11 18:00 to 19:00, \$4\.99, Full/ })).toBeDisabled();
+    await expect(
+      page.getByRole("radio", { name: /Mar 11 18:00 to 19:00, \$4\.99, Full/ }),
+    ).toBeDisabled();
   });
 
   test("Next-date slots close at 22:00 store time", async ({ page, request }) => {
@@ -49,7 +55,9 @@ test.describe("Booking rules", () => {
     // 2. Set the store clock to 22:00.
     await request.post("/__test/clock", { data: { at: "2026-03-10T22:00:00-05:00" } });
     await page.goto("/slots");
-    await expect(page.getByRole("radio", { name: /Mar 11 08:00 to 09:00, \$2\.99, Closed/ })).toBeDisabled();
+    await expect(
+      page.getByRole("radio", { name: /Mar 11 08:00 to 09:00, \$2\.99, Closed/ }),
+    ).toBeDisabled();
     await expect(page.getByRole("radio", { name: /Mar 12 08:00/ })).toBeEnabled();
   });
 
@@ -63,11 +71,16 @@ test.describe("Booking rules", () => {
 
   test("Checkout needs a booked slot", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("article", { name: "Ground coffee 227 g" }).getByRole("button", { name: "Add" }).click();
+    await page
+      .getByRole("article", { name: "Ground coffee 227 g" })
+      .getByRole("button", { name: "Add" })
+      .click();
     await page.goto("/basket");
     await page.getByLabel("Quantity of Ground coffee 227 g").fill("6");
     await page.getByRole("button", { name: "Update Ground coffee 227 g" }).click();
     await expect(page.getByRole("button", { name: "Checkout" })).toBeDisabled();
-    await expect(page.getByTestId("checkout-blocked")).toHaveText("Book a delivery slot to check out.");
+    await expect(page.getByTestId("checkout-blocked")).toHaveText(
+      "Book a delivery slot to check out.",
+    );
   });
 });

@@ -1,69 +1,93 @@
-// Reads test files without running them: the tests in a file, their titles and how many expects each has.
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+// Reads test files without running them.
+// It finds the tests in a file, their titles and how many expects each one has.
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 export type FoundTest = { title: string; body: string; expects: number; file: string };
 
 export function specFiles(dir: string): string[] {
   if (!existsSync(dir)) return [];
-  return readdirSync(dir, { recursive: true }).map(String).filter((f) => f.endsWith(".spec.ts")).map((f) => join(dir, f));
+  const names = readdirSync(dir, { recursive: true }).map(String);
+  const specNames = names.filter((name) => name.endsWith(".spec.ts"));
+  return specNames.map((name) => join(dir, name));
 }
 
-// The body of the block that opens at src[open], found by matching braces.
-function block(src: string, open: number): string {
+// Finds the start of a test: test('title', or test.only("title", with any quote mark.
+const TEST_START = /\btest(?:\.only)?\(\s*(['"`])((?:\\.|(?!\1).)*)\1\s*,/g;
+
+const EXPECT_CALL = /\bexpect(\.soft|\.poll)?\(/g;
+
+// Returns the position of the "}" that closes the "{" at the given position.
+// If the braces never close, it returns the end of the source.
+function closingBrace(source: string, open: number): number {
   let depth = 0;
-  for (let i = open; i < src.length; i++) {
-    if (src[i] === "{") depth++;
-    else if (src[i] === "}" && --depth === 0) return src.slice(open, i + 1);
+  let i = open;
+  for (; i < source.length; i++) {
+    if (source[i] === "{") depth += 1;
+    if (source[i] === "}") {
+      depth -= 1;
+      if (depth === 0) break;
+    }
   }
-  return src.slice(open);
+  return i;
 }
 
-const EXPECT = /\bexpect(\.soft|\.poll)?\(/g;
+// Returns the position of the "{" that opens the test function after "from", or -1.
+function bodyStart(source: string, from: number): number {
+  const arrow = source.indexOf("=>", from);
+  if (arrow < 0) return -1;
+  return source.indexOf("{", arrow);
+}
 
-// Helpers in the same file that assert, such as `async function expectTotals(page, want) { await expect(...) }`.
-// A test that calls one checks something, even with no expect of its own.
-export function assertingHelpers(src: string): string[] {
+// Finds a helper's name: "function expectTotals(" or "const expectTotals = async (page) =>".
+const NAME = "([A-Za-z_$][\\w$]*)";
+const FUNCTION_HELPER = `\\bfunction\\s+${NAME}\\s*\\(`;
+const ARROW_PARAMS = "(?:async\\s*)?(?:\\([^)]*\\)|[A-Za-z_$][\\w$]*)";
+const ARROW_HELPER = `\\b(?:const|let)\\s+${NAME}\\s*=\\s*${ARROW_PARAMS}\\s*=>`;
+const HELPER_START = new RegExp(`(?:${FUNCTION_HELPER}|${ARROW_HELPER})`, "g");
+
+// Returns the names of helpers in this source that call expect.
+// Claude Code often puts the checks for a total or a message in a helper such as expectTotals.
+export function assertingHelpers(source: string): string[] {
   const names: string[] = [];
-  const re = /(?:\bfunction\s+([A-Za-z_$][\w$]*)\s*\(|\b(?:const|let)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?(?:\([^)]*\)|[A-Za-z_$][\w$]*)\s*=>)/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(src))) {
-    const open = src.indexOf("{", re.lastIndex);
+  const helperStart = new RegExp(HELPER_START);
+  for (let match = helperStart.exec(source); match; match = helperStart.exec(source)) {
+    const open = source.indexOf("{", helperStart.lastIndex);
     if (open < 0) continue;
-    const body = block(src, open);
-    if (EXPECT.test(body)) names.push(m[1] ?? m[2]);
-    EXPECT.lastIndex = 0;
+    const body = source.slice(open, closingBrace(source, open) + 1);
+    if (new RegExp(EXPECT_CALL).test(body)) names.push(match[1] ?? match[2]);
   }
   return names;
 }
 
-// Finds test('title', async (...) => { ... }) blocks and returns each body by matching braces.
-// expects counts expect calls plus calls to asserting helpers in the same file.
-export function testsIn(file: string): FoundTest[] {
-  const src = readFileSync(file, "utf8");
-  const helpers = assertingHelpers(src);
-  const out: FoundTest[] = [];
-  const re = /\btest(?:\.only)?\(\s*(['"`])((?:\\.|(?!\1).)*)\1\s*,/g;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(src))) {
-    const arrow = src.indexOf("=>", re.lastIndex);
-    const open = arrow < 0 ? -1 : src.indexOf("{", arrow);
-    if (open < 0) break;
-    let depth = 0;
-    let i = open;
-    for (; i < src.length; i++) {
-      if (src[i] === "{") depth++;
-      else if (src[i] === "}" && --depth === 0) break;
-    }
-    const body = src.slice(open, i + 1);
-    const own = (body.match(EXPECT) ?? []).length;
-    const viaHelpers = helpers.reduce((n, h) => n + (body.match(new RegExp(`\\b${h.replace(/\$/g, "\\$")}\\(`, "g")) ?? []).length, 0);
-    out.push({ title: m[2], body, expects: own + viaHelpers, file });
+// Counts how many times the body calls one of the asserting helpers.
+function helperCalls(body: string, helpers: string[]): number {
+  let calls = 0;
+  for (const name of helpers) {
+    const call = new RegExp(`\\b${name.replace(/\$/g, "\\$")}\\(`, "g");
+    calls += (body.match(call) ?? []).length;
   }
-  return out;
+  return calls;
+}
+
+// Finds test('title', async (...) => { ... }) blocks and returns each body by matching braces.
+// A call to an asserting helper counts as an expect, because the test checks something through it.
+export function testsIn(file: string): FoundTest[] {
+  const source = readFileSync(file, "utf8");
+  const helpers = assertingHelpers(source);
+  const found: FoundTest[] = [];
+  const testStart = new RegExp(TEST_START);
+  for (let match = testStart.exec(source); match; match = testStart.exec(source)) {
+    const open = bodyStart(source, testStart.lastIndex);
+    if (open < 0) break;
+    const body = source.slice(open, closingBrace(source, open) + 1);
+    const expects = (body.match(EXPECT_CALL) ?? []).length + helperCalls(body, helpers);
+    found.push({ title: match[2], body, expects, file });
+  }
+  return found;
 }
 
 export const allTests = (dir: string) => specFiles(dir).flatMap(testsIn);
 
 // Locators that tie a test to markup instead of what a shopper sees.
-export const CSS_OR_XPATH = /\b(locator|\$|\$\$)\(\s*(['"`])\s*(?:xpath=|\/\/|[.#\[]|[a-z]+[.#\[>])/;
+export const CSS_OR_XPATH = /\b(locator|\$|\$\$)\(\s*(['"`])\s*(?:xpath=|\/\/|[.#[]|[a-z]+[.#[>])/;

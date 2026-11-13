@@ -1,50 +1,135 @@
 // Runs a folder of Playwright tests against one shop and returns what passed and failed.
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { ROOT } from "../../scripts/structure";
 import { browserEnv } from "./browser";
 
-export type TestResult = { title: string; file: string; status: "passed" | "failed" | "skipped" | "flaky"; error?: string };
-export type SuiteResult = { ran: boolean; exitCode: number; tests: TestResult[]; passed: number; failed: number; output: string };
+export type TestResult = {
+  title: string;
+  file: string;
+  status: "passed" | "failed" | "skipped" | "flaky";
+  error?: string;
+};
+export type SuiteResult = {
+  ran: boolean;
+  exitCode: number;
+  tests: TestResult[];
+  passed: number;
+  failed: number;
+  output: string;
+};
+
+type SuiteOptions = { repeatEach?: number; grep?: string; args?: string[] };
+
+// The parts of Playwright's JSON report that we read.
+type ReportRun = { status: string; error?: { message?: string } };
+type ReportTest = { status: string; results?: ReportRun[] };
+type ReportSpec = { title: string; file?: string; tests?: ReportTest[] };
+type ReportSuite = { file?: string; specs?: ReportSpec[]; suites?: ReportSuite[] };
 
 export function hasSpecs(testsDir: string): boolean {
   if (!existsSync(testsDir)) return false;
-  return readdirSync(testsDir, { recursive: true }).some((f) => String(f).endsWith(".spec.ts"));
+  const names = readdirSync(testsDir, { recursive: true });
+  return names.some((name) => String(name).endsWith(".spec.ts"));
 }
 
-export async function runSuite(testsDir: string, baseURL: string, opts: { repeatEach?: number; grep?: string; args?: string[] } = {}): Promise<SuiteResult> {
-  if (!hasSpecs(testsDir)) return { ran: false, exitCode: 1, tests: [], passed: 0, failed: 0, output: "no .spec.ts files" };
-  const work = mkdtempSync(join(tmpdir(), "pw-"));
-  const json = join(work, "report.json");
-  const args = ["x", "playwright", "test", "--config", join(ROOT, "checks", "lib", "playwright.config.ts")];
-  if (opts.repeatEach) args.push(`--repeat-each=${opts.repeatEach}`);
-  if (opts.grep) args.push("--grep", opts.grep);
-  args.push(...(opts.args ?? []));
-  const proc = Bun.spawn(["bun", ...args], {
+function playwrightArgs(options: SuiteOptions): string[] {
+  const config = join(ROOT, "checks", "lib", "playwright.config.ts");
+  const args = ["x", "playwright", "test", "--config", config];
+  if (options.repeatEach) args.push(`--repeat-each=${options.repeatEach}`);
+  if (options.grep) args.push("--grep", options.grep);
+  args.push(...(options.args ?? []));
+  return args;
+}
+
+function statusOf(test: ReportTest, failedRun: ReportRun | undefined): TestResult["status"] {
+  if (test.status === "skipped") return "skipped";
+  if (test.status === "flaky") return "flaky";
+  if (failedRun) return "failed";
+  return "passed";
+}
+
+function resultsOfSpec(spec: ReportSpec, file: string): TestResult[] {
+  const results: TestResult[] = [];
+  for (const test of spec.tests ?? []) {
+    const runs = test.results ?? [];
+    const failedRun = runs.find((run) => run.status !== "passed" && run.status !== "skipped");
+    const firstErrorLine = failedRun?.error?.message?.split("\n")[0];
+    results.push({
+      title: spec.title,
+      file: spec.file ?? file,
+      status: statusOf(test, failedRun),
+      error: firstErrorLine,
+    });
+  }
+  return results;
+}
+
+// Suites can hold more suites, so this walks the whole tree and collects every test.
+function resultsOfSuite(suite: ReportSuite, file: string): TestResult[] {
+  const results: TestResult[] = [];
+  for (const spec of suite.specs ?? []) results.push(...resultsOfSpec(spec, file));
+  for (const child of suite.suites ?? []) {
+    results.push(...resultsOfSuite(child, child.file ?? file));
+  }
+  return results;
+}
+
+function readReport(reportPath: string): TestResult[] {
+  if (!existsSync(reportPath)) return [];
+  const report: { suites?: ReportSuite[] } = JSON.parse(readFileSync(reportPath, "utf8"));
+  const results: TestResult[] = [];
+  for (const suite of report.suites ?? []) {
+    results.push(...resultsOfSuite(suite, suite.file as string));
+  }
+  return results;
+}
+
+async function runPlaywright(args: string[], environment: Record<string, string>) {
+  const child = Bun.spawn(["bun", ...args], {
     cwd: ROOT,
-    env: { ...process.env, ...browserEnv(), TESTS_DIR: testsDir, BASE_URL: baseURL, PW_JSON: json, PW_OUT: join(work, "out"), CI: "1" },
+    env: { ...process.env, ...browserEnv(), ...environment },
     stdout: "pipe",
     stderr: "pipe",
   });
-  const output = (await new Response(proc.stdout).text()) + (await new Response(proc.stderr).text());
-  const exitCode = await proc.exited;
-  const tests: TestResult[] = [];
-  if (existsSync(json)) {
-    const report = JSON.parse(readFileSync(json, "utf8"));
-    const walk = (suite: any, file: string) => {
-      for (const spec of suite.specs ?? []) {
-        for (const t of spec.tests ?? []) {
-          const results = t.results ?? [];
-          const failedRun = results.find((r: any) => r.status !== "passed" && r.status !== "skipped");
-          const status: TestResult["status"] = t.status === "skipped" ? "skipped" : t.status === "flaky" ? "flaky" : failedRun ? "failed" : "passed";
-          tests.push({ title: spec.title, file: spec.file ?? file, status, error: failedRun?.error?.message?.split("\n")[0] });
-        }
-      }
-      for (const s of suite.suites ?? []) walk(s, s.file ?? file);
+  const standardOutput = await new Response(child.stdout).text();
+  const standardError = await new Response(child.stderr).text();
+  const exitCode = await child.exited;
+  return { output: standardOutput + standardError, exitCode };
+}
+
+export async function runSuite(
+  testsDir: string,
+  baseUrl: string,
+  options: SuiteOptions = {},
+): Promise<SuiteResult> {
+  if (!hasSpecs(testsDir)) {
+    return {
+      ran: false,
+      exitCode: 1,
+      tests: [],
+      passed: 0,
+      failed: 0,
+      output: "no .spec.ts files",
     };
-    for (const s of report.suites ?? []) walk(s, s.file);
   }
+  const work = mkdtempSync(join(tmpdir(), "pw-"));
+  const reportPath = join(work, "report.json");
+  // The config in checks/lib reads these to find the tests, the shop and where to write.
+  // biome-ignore-start lint/style/useNamingConvention: environment variable names are uppercase
+  const environment = {
+    TESTS_DIR: testsDir,
+    BASE_URL: baseUrl,
+    PW_JSON: reportPath,
+    PW_OUT: join(work, "out"),
+    CI: "1",
+  };
+  // biome-ignore-end lint/style/useNamingConvention: environment variable names are uppercase
+  const { output, exitCode } = await runPlaywright(playwrightArgs(options), environment);
+  const tests = readReport(reportPath);
   rmSync(work, { recursive: true, force: true });
-  return { ran: tests.length > 0, exitCode, tests, passed: tests.filter((t) => t.status === "passed").length, failed: tests.filter((t) => t.status === "failed" || t.status === "flaky").length, output };
+  const passed = tests.filter((test) => test.status === "passed").length;
+  const failedTests = tests.filter((test) => test.status === "failed" || test.status === "flaky");
+  return { ran: tests.length > 0, exitCode, tests, passed, failed: failedTests.length, output };
 }

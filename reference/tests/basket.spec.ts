@@ -1,6 +1,6 @@
 // spec: world/requirements/basket.md
 import { expect, test } from "@playwright/test";
-import { addItem, bookSlot, freshShop, line, setQuantity, signIn } from "./shop";
+import { addItem, basketLine, bookSlot, freshShop, setQuantity, signIn } from "./shop";
 
 test.beforeEach(async ({ page, request }) => {
   await freshShop(request);
@@ -13,13 +13,13 @@ test("adding the same item twice raises its quantity", async ({ page }) => {
   await expect(page.getByTestId("basket-count")).toHaveText("1");
   await page.goto("/basket");
   await expect(page.getByLabel("Quantity of Penne 500 g")).toHaveValue("2");
-  await expect(line(page, "Penne 500 g").getByTestId("line-total")).toHaveText("$1.90");
+  await expect(basketLine(page, "Penne 500 g").getByTestId("line-total")).toHaveText("$1.90");
 });
 
 test("the quantity box changes a line", async ({ page }) => {
   await addItem(page, "Penne 500 g");
   await setQuantity(page, "Penne 500 g", 4);
-  await expect(line(page, "Penne 500 g").getByTestId("line-total")).toHaveText("$3.80");
+  await expect(basketLine(page, "Penne 500 g").getByTestId("line-total")).toHaveText("$3.80");
 });
 
 test("removing the last unit removes the line", async ({ page }) => {
@@ -34,8 +34,9 @@ test("removing the last unit removes the line", async ({ page }) => {
 test("750 g of bananas at $1.39 per kg costs $1.04", async ({ page }) => {
   await addItem(page, "Bananas, loose", "750 g");
   await page.goto("/basket");
-  await expect(line(page, "Bananas, loose").getByTestId("line-weight")).toHaveText("750 g");
-  await expect(line(page, "Bananas, loose").getByTestId("line-total")).toHaveText("$1.04");
+  const bananas = basketLine(page, "Bananas, loose");
+  await expect(bananas.getByTestId("line-weight")).toHaveText("750 g");
+  await expect(bananas.getByTestId("line-total")).toHaveText("$1.04");
 });
 
 test("the third yoghurt in a 3 for 2 is free", async ({ page }) => {

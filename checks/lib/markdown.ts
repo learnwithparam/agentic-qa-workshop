@@ -1,37 +1,78 @@
 // Small Markdown readers for the files learners write: plans, reviews, notes.
 import { existsSync, readFileSync } from "node:fs";
 
-export const readText = (p: string) => (existsSync(p) ? readFileSync(p, "utf8") : "");
+export const readText = (path: string) => (existsSync(path) ? readFileSync(path, "utf8") : "");
 
 export type Scenario = { title: string; covers: string[]; kind: string; body: string };
 
-// A scenario heading is either "## Scenario: <title>" or the Playwright planner's "#### 1.2 <title>".
+type OpenScenario = { title: string; body: string[] };
+
+// A scenario heading is either "## Scenario: <title>"
+// or the Playwright planner's "#### 1.2 <title>".
 const HEADING = /^(?:#{2,4}\s+Scenario:\s*|####\s+\d+(?:\.\d+)*\.?\s+)(.+)$/;
 
-// Each scenario carries "Covers: ID, ID" and "Kind: happy | boundary | negative". Bold markers are fine.
-export function scenarios(md: string): Scenario[] {
-  const lines = md.split("\n");
-  const out: Scenario[] = [];
-  let cur: { title: string; body: string[] } | null = null;
-  const flush = () => {
-    if (!cur) return;
-    const body = cur.body.join("\n").replace(/\*\*/g, "");
-    const covers = (body.match(/^\s*[-*]?\s*Covers:\s*(.+)$/im)?.[1] ?? "").split(/[,\s]+/).filter((x) => /^[A-Z]+-\d+$/.test(x));
-    const kind = (body.match(/^\s*[-*]?\s*Kind:\s*(\w+)/im)?.[1] ?? "").toLowerCase();
-    out.push({ title: cur.title, covers, kind, body });
-  };
-  for (const l of lines) {
-    const m = HEADING.exec(l);
-    if (m) { flush(); cur = { title: m[1].replace(/\*\*/g, "").trim(), body: [] }; }
-    else if (/^#{1,3}\s/.test(l) && cur) { flush(); cur = null; }
-    else if (cur) cur.body.push(l);
+// Any heading of level 1 to 3 ends the scenario before it.
+const BIGGER_HEADING = /^#{1,3}\s/;
+
+const REQUIREMENT_ID = /^[A-Z]+-\d+$/;
+
+const removeBold = (text: string) => text.replace(/\*\*/g, "");
+
+// Reads "Covers: ID, ID" from a scenario body and keeps only the requirement ids.
+function coveredIds(body: string): string[] {
+  const coversLine = body.match(/^\s*[-*]?\s*Covers:\s*(.+)$/im)?.[1] ?? "";
+  const words = coversLine.split(/[,\s]+/);
+  return words.filter((word) => REQUIREMENT_ID.test(word));
+}
+
+// Reads "Kind: happy | boundary | negative" from a scenario body.
+function scenarioKind(body: string): string {
+  const kind = body.match(/^\s*[-*]?\s*Kind:\s*(\w+)/im)?.[1] ?? "";
+  return kind.toLowerCase();
+}
+
+function finishScenario(open: OpenScenario): Scenario {
+  const body = removeBold(open.body.join("\n"));
+  return { title: open.title, covers: coveredIds(body), kind: scenarioKind(body), body };
+}
+
+// Reads one line and returns the scenario that is open after it.
+// A finished scenario is added to "found".
+function readLine(
+  line: string,
+  current: OpenScenario | null,
+  found: Scenario[],
+): OpenScenario | null {
+  const heading = HEADING.exec(line);
+  const endsScenario = heading !== null || BIGGER_HEADING.test(line);
+  if (current && endsScenario) found.push(finishScenario(current));
+  if (heading) return { title: removeBold(heading[1]).trim(), body: [] };
+  if (endsScenario) return null;
+  current?.body.push(line);
+  return current;
+}
+
+// Each scenario carries "Covers: ID, ID" and "Kind: happy | boundary | negative".
+// Bold markers are fine.
+export function scenarios(markdown: string): Scenario[] {
+  const found: Scenario[] = [];
+  let current: OpenScenario | null = null;
+  for (const line of markdown.split("\n")) {
+    current = readLine(line, current, found);
   }
-  flush();
-  return out;
+  if (current) found.push(finishScenario(current));
+  return found;
 }
 
-export function requirementIds(md: string): string[] {
-  return [...new Set([...md.matchAll(/\|\s*([A-Z]+-\d+)\s*\|/g)].map((m) => m[1]))];
+// Reads every requirement id that sits alone in a Markdown table cell, like "| SLOT-1 |".
+export function requirementIds(markdown: string): string[] {
+  const matches = [...markdown.matchAll(/\|\s*([A-Z]+-\d+)\s*\|/g)];
+  const ids = matches.map((match) => match[1]);
+  return [...new Set(ids)];
 }
 
-export const norm = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+// Makes two texts easy to compare: lower case, and only letters, digits and single spaces.
+export const norm = (text: string) => {
+  const lowerCase = text.toLowerCase();
+  return lowerCase.replace(/[^a-z0-9]+/g, " ").trim();
+};
