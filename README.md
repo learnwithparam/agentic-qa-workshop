@@ -37,6 +37,7 @@ bun run setup
 ```
 
 Expect: `Ready: Bun 1.4.4, Playwright 1.65.0, Chromium installed. Shop data seeded.`
+If the course finds a Chromium already on your computer, the line says `Chromium at <path>` instead.
 
 ```bash
 bun run board

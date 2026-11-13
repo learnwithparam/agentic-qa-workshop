@@ -31,17 +31,10 @@ BUGS=release bun run shop
 
 Expect: `Pantry Run ready on http://localhost:4173 (bugs: 16 on)`
 
-Open a second terminal in this folder. First make the folder that keeps the runs. The shell cannot save a file into a folder that is not there.
+In a second terminal, in this folder, make the folder for the runs and run the task with Playwright MCP only:
 
 ```bash
 mkdir -p qa/runs
-```
-
-Expect: no output.
-
-Then run the task with Playwright MCP only:
-
-```bash
 claude -p "$(cat qa/task.md) Use only the playwright MCP browser tools." --output-format stream-json --verbose --max-turns 40 --strict-mcp-config --mcp-config .mcp.json --allowedTools "mcp__playwright__*" < /dev/null > qa/runs/mcp.jsonl
 ```
 
