@@ -79,11 +79,11 @@ Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
-| What you see                              | Fix                                                                       |
-| ----------------------------------------- | ------------------------------------------------------------------------- |
-| `flaky-test` merges                       | The new test ran once. Ask for `--repeat-each=10` on one shop.            |
-| `clean-pull` is blocked at `suite`        | The gate ran no tests. Check that it sets `TESTS_DIR` and `BASE_URL`.     |
-| The gate takes minutes                    | Run the cheap stages first, and stop at the first block.                  |
+| What you see                       | Fix                                                                   |
+| ---------------------------------- | --------------------------------------------------------------------- |
+| `flaky-test` merges                | The new test ran once. Ask for `--repeat-each=10` on one shop.        |
+| `clean-pull` is blocked at `suite` | The gate ran no tests. Check that it sets `TESTS_DIR` and `BASE_URL`. |
+| The gate takes minutes             | Run the cheap stages first, and stop at the first block.              |
 
 ## Words you will use
 
