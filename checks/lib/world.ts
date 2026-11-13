@@ -19,12 +19,25 @@ type ShopOptions = { bugs?: string; release?: "v1" | "v2" };
 // How many times we ask the shop if it is ready, with 100 milliseconds between tries.
 const READY_TRIES = 100;
 
-// Asks the system for a port nobody uses, then lets it go so the shop can take it.
-function freePort(): number {
-  const listener = Bun.listen({ hostname: "127.0.0.1", port: 0, socket: { data() {} } });
-  const port = listener.port;
-  listener.stop(true);
-  return port;
+// The shop starts on port 0, so the system gives it a free port and nobody can take that port
+// first. The shop prints "Pantry Run ready on http://localhost:<port> ...", and we read the port.
+async function readPort(output: ReadableStream<Uint8Array>): Promise<number> {
+  const reader = output.getReader();
+  const decoder = new TextDecoder();
+  let printed = "";
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      printed += decoder.decode(value);
+      const found = printed.match(/ready on http:\/\/localhost:(\d+)/);
+      if (found) return Number(found[1]);
+    }
+  } finally {
+    // Let go of the output without closing it, so the shop can keep running.
+    reader.releaseLock();
+  }
+  throw new Error(`The shop stopped before it was ready: ${printed.trim()}`);
 }
 
 async function isHealthy(url: string): Promise<boolean> {
@@ -57,22 +70,25 @@ function removeFolder(folder: string) {
 export async function startShop(options: ShopOptions = {}): Promise<Shop> {
   ensurePackages();
   const dataDir = mkdtempSync(join(tmpdir(), "pantry-"));
-  const port = freePort();
   const server = Bun.spawn(["bun", join(ROOT, "world", "server.ts")], {
     cwd: ROOT,
     // biome-ignore-start lint/style/useNamingConvention: environment variable names are uppercase
     env: {
       ...process.env,
-      PORT: String(port),
+      PORT: "0",
       BUGS: options.bugs ?? "none",
       RELEASE: options.release ?? "v1",
       PANTRY_DATA: dataDir,
     },
     // biome-ignore-end lint/style/useNamingConvention: environment variable names are uppercase
-    stdout: "ignore",
+    stdout: "pipe",
     stderr: "ignore",
   });
-  const url = `http://localhost:${port}`;
+  // A shop that never says it is ready is stopped, so a check never waits forever.
+  const giveUp = setTimeout(() => server.kill(), READY_TRIES * 100);
+  const port = await readPort(server.stdout);
+  clearTimeout(giveUp);
+  const url = `http://127.0.0.1:${port}`;
   await waitUntilReady(url, server);
   return {
     url,
