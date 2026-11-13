@@ -5,3 +5,4 @@ world/.data
 **/test-results
 **/playwright-report
 .runs
+assignment/result.json
