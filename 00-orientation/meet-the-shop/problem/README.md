@@ -9,7 +9,7 @@ For example:
 - Bananas are priced by weight.
 - A shopper can say "no substitutes" for one item.
 
-Skip this, and your tests click buttons but check nothing a shopper cares about.
+Skip this, and your tests click buttons but check nothing that matters.
 
 ```mermaid
 sequenceDiagram
@@ -48,7 +48,7 @@ Now give Claude Code its first job. Start it in this folder:
 claude
 ```
 
-Expect: Claude Code opens and asks if you trust this folder. Say yes.
+Expect: Claude Code asks if you trust this folder. Say yes.
 
 Type this prompt:
 
