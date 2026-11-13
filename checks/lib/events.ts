@@ -2,9 +2,12 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-export type Event = { type: string; at: string; [k: string]: unknown };
+export type Event = { type: string; at: string; [field: string]: unknown };
+
 export function readEvents(dataDir: string): Event[] {
-  const p = join(dataDir, "events.jsonl");
-  if (!existsSync(p)) return [];
-  return readFileSync(p, "utf8").split("\n").filter(Boolean).map((l) => JSON.parse(l));
+  const logPath = join(dataDir, "events.jsonl");
+  if (!existsSync(logPath)) return [];
+  const lines = readFileSync(logPath, "utf8").split("\n");
+  const filledLines = lines.filter(Boolean);
+  return filledLines.map((line) => JSON.parse(line));
 }

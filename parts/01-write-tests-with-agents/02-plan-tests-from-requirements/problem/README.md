@@ -2,10 +2,12 @@
 
 ## The problem
 
-An agent can write forty tests before you finish reading the requirements. Writing is cheap; knowing what to
-write is not. Playwright's own planner prompt asks for happy paths, edge cases and error handling, but nothing
-checks that every written rule got a scenario. A plan that skips SLOT-3 (the 22:00 cutoff) gives you a suite that
-can never catch a cutoff bug, however many tests it has.
+An agent can write forty tests before you finish reading the rules. Writing tests is cheap. Knowing what to test
+is not.
+
+Playwright's planner agent is asked for happy paths, edge cases and error handling. But nothing checks that every
+written rule got a scenario. For example, a plan that skips SLOT-3 (slots close at 22:00) gives a suite that can
+never catch a cutoff bug, however many tests it has.
 
 ```mermaid
 flowchart LR
@@ -17,23 +19,42 @@ flowchart LR
 
 ## Your challenge
 
-Write two test plans in `specs/`: `slots.md` and `basket.md`. Each scenario has a heading, numbered steps, an
-Expected part, and two extra lines the course checks:
+Get Claude Code to write two test plans in `specs/`: `slots.md` and `basket.md`. You write no plan text. You
+write the prompt, read the plan, and send Claude Code back for what is missing.
 
-```markdown
-#### 2.1 A full slot shows Full and cannot be booked
-**Covers:** SLOT-2
-**Kind:** boundary
+Every scenario needs a heading, numbered steps, an Expected part, and two lines the course checks:
+
+- **Covers:** the requirement IDs, such as `SLOT-2`.
+- **Kind:** `happy`, `boundary` (where a rule flips: 20 orders, 22:00, $25.00) or `negative` (what must not work).
+
+First add Playwright's agents to this folder, then start Claude Code here:
+
+```bash
+bunx playwright init-agents --loop=claude
+claude
 ```
 
-`Kind` is `happy`, `boundary` (where a rule flips: 20 orders, 22:00, $25.00) or `negative` (what must not work).
+Expect: `init-agents` writes `.claude/agents/` and `.mcp.json`, then Claude Code opens.
 
-With an agent: from this folder run `bunx playwright init-agents --loop=claude` (or `vscode`, `codex`,
-`opencode`), then ask the planner agent:
-`Plan tests for Pantry Run from ../../../../world/requirements/slots.md and basket.md. Use tests/seed.spec.ts. Save specs/slots.md and specs/basket.md. Under every scenario add **Covers:** with the requirement IDs and **Kind:** happy, boundary or negative.`
+Type this prompt:
 
-Then read the plan against the requirements. Agents often skip the rule that needs a clock or a weight.
-No agent? Write the plan by hand from the two requirement files. The check reads the same thing.
+```text
+Use the playwright-test-planner agent to plan tests for Pantry Run from
+../../../../world/requirements/slots.md and basket.md. Use tests/seed.spec.ts as the seed.
+Save specs/slots.md and specs/basket.md. Under every scenario heading add two lines, like this:
+**Covers:** SLOT-2
+**Kind:** boundary
+Kind is happy, boundary or negative. Every SLOT and BASK ID must be covered at least once,
+and each file needs at least one boundary or negative scenario.
+```
+
+Then read the plans next to the requirements. Agents often skip the rule that needs a clock or a weight. When a
+rule is missing, do not edit the plan. Send Claude Code back with a prompt like this:
+
+```text
+specs/slots.md has no scenario for SLOT-3, the 22:00 cutoff. Add a boundary scenario
+at 21:59 and at 22:00, with Covers and Kind lines.
+```
 
 ## Done when
 
@@ -50,16 +71,16 @@ Expect: `Done. All 7 rules pass.`
 
 ## If you get stuck
 
-| What you see | Fix |
-|---|---|
-| `FAIL every SLOT requirement is covered` | List the IDs in your Covers lines and compare with `world/requirements/slots.md`. |
-| `FAIL every scenario has a Covers line` | The planner does not add Covers by itself. Add it to the prompt, or by hand. |
-| `FAIL each plan has at least one boundary` | For each number in a rule, plan a scenario just below and just at it. |
-| `init-agents` overwrote `.mcp.json` | It writes one in this folder. Keep your own copy elsewhere if you have one. |
+| What you see                               | Fix                                                                                                              |
+| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `FAIL every SLOT requirement is covered`   | Compare the IDs in the Covers lines with `world/requirements/slots.md`. Ask Claude Code to add the missing ones. |
+| `FAIL every scenario has a Covers line`    | The planner does not add Covers on its own. Put the Covers rule in your prompt and ask again.                    |
+| `FAIL each plan has at least one boundary` | Ask for a scenario just below and just at each number in a rule.                                                 |
+| `init-agents` replaced `.mcp.json`         | It writes one in this folder. Keep your own copy elsewhere.                                                      |
 
 ## Words you will use
 
 - **Test plan**: scenarios in plain words, before any code. Agents and people both read it.
 - **Requirement ID**: the label on one written rule, such as SLOT-3. It ties a test to a rule.
-- **Boundary case**: a test at the point where a rule changes its answer.
+- **Boundary case**: a test at the point where a rule changes its answer. For example, 21:59 and 22:00.
 - **Coverage (of requirements)**: every written rule has at least one scenario. It is not code coverage.

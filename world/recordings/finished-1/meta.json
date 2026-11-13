@@ -1,0 +1,8 @@
+{
+  "command": "claude -p \"<PROMPT>\" --output-format stream-json --verbose --permission-mode acceptEdits --allowedTools \"mcp__playwright-test,Bash(bunx playwright test),Bash(bunx playwright test *),Write(specs/**),Edit(specs/**),Write(tests/**),Edit(tests/**)\" --max-turns 200",
+  "prompt": "Plan and write the Pantry Run test suite, following CLAUDE.md. First use the playwright-test-planner agent to plan from requirements/slots.md and requirements/basket.md with tests/seed.spec.ts as the seed, and save specs/slots.md and specs/basket.md. Then use the playwright-test-generator agent to write tests/slots.spec.ts and tests/basket.spec.ts from those plans. Run bunx playwright test until every test passes, then say how many tests you wrote.",
+  "folder": "a fresh copy of world/finished/template, with world/requirements copied in and bunx playwright init-agents --loop=claude run first",
+  "claudeCode": "2.1.322",
+  "result": "success",
+  "turns": 12
+}

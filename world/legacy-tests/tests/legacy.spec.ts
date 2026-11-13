@@ -1,5 +1,6 @@
-// Hand-written by the previous tester. Most of it is fine. Some of it fails now and then, and nobody knows why.
-import { expect, test, type Page } from "@playwright/test";
+// Hand-written by the previous tester. Most of it is fine.
+// Some of it fails now and then, and nobody knows why.
+import { expect, type Page, test } from "@playwright/test";
 
 async function login(page: Page, email = "ana@pantryrun.test") {
   await page.goto("/signin");
@@ -9,11 +10,14 @@ async function login(page: Page, email = "ana@pantryrun.test") {
 }
 async function add(page: Page, name: string) {
   await page.goto("/");
-  await page.getByRole("article", { name, exact: true }).getByRole("button", { name: "Add" }).click();
+  await page
+    .getByRole("article", { name, exact: true })
+    .getByRole("button", { name: "Add" })
+    .click();
 }
-async function qty(page: Page, name: string, n: number) {
+async function qty(page: Page, name: string, quantity: number) {
   await page.goto("/basket");
-  await page.getByLabel(`Quantity of ${name}`).fill(String(n));
+  await page.getByLabel(`Quantity of ${name}`).fill(String(quantity));
   await page.getByRole("button", { name: `Update ${name}` }).click();
 }
 async function book(page: Page, slot: RegExp) {
@@ -23,8 +27,16 @@ async function book(page: Page, slot: RegExp) {
   await expect(page).toHaveURL(/basket/);
 }
 
+// Every test starts from fresh shop data.
+function resetShopBeforeEachTest() {
+  test.beforeEach(async ({ request }) => {
+    await request.post("/__test/reset");
+  });
+}
+
+// The tests sit in a few short groups that share one title, so every test keeps its full name.
 test.describe("legacy: shop", () => {
-  test.beforeEach(async ({ request }) => { await request.post("/__test/reset"); });
+  resetShopBeforeEachTest();
 
   test("home page lists products", async ({ page }) => {
     await page.goto("/");
@@ -53,13 +65,22 @@ test.describe("legacy: shop", () => {
     await page.goto("/basket");
     await expect(page).toHaveURL(/signin/);
   });
+});
+
+test.describe("legacy: shop", () => {
+  resetShopBeforeEachTest();
+
   test("out of stock items say so", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("article", { name: "Whole milk 2 L" })).toContainText("Out of stock");
+    await expect(page.getByRole("article", { name: "Whole milk 2 L" })).toContainText(
+      "Out of stock",
+    );
   });
   test("3 for 2 badge shows", async ({ page }) => {
     await page.goto("/");
-    await expect(page.getByRole("article", { name: "Greek yoghurt 500 g" }).getByText("3 for 2")).toBeVisible();
+    await expect(
+      page.getByRole("article", { name: "Greek yoghurt 500 g" }).getByText("3 for 2"),
+    ).toBeVisible();
   });
   test("loose produce shows price per kg", async ({ page }) => {
     await page.goto("/");
@@ -95,6 +116,11 @@ test.describe("legacy: shop", () => {
     await qty(page, "Penne 500 g", 21);
     await expect(page.getByRole("alert")).toContainText("Quantity must be from 1 to 20");
   });
+});
+
+test.describe("legacy: shop", () => {
+  resetShopBeforeEachTest();
+
   test("bad voucher is refused", async ({ page }) => {
     await login(page);
     await add(page, "Penne 500 g");
@@ -129,6 +155,11 @@ test.describe("legacy: shop", () => {
     await login(page, "chloe@pantryrun.test");
     await expect(page.getByText("allergens: gluten")).toBeVisible();
   });
+});
+
+test.describe("legacy: shop", () => {
+  resetShopBeforeEachTest();
+
   test("suggestions appear for out of stock milk", async ({ page }) => {
     await login(page);
     await add(page, "Whole milk 2 L");
