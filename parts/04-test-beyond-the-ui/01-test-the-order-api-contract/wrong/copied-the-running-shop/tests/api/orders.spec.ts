@@ -39,6 +39,7 @@ const OrderLine = z.object({
 const Order = z.strictObject({
   orderId: z.string(),
   shopper: z.string(),
+  // biome-ignore lint/style/useNamingConvention: the buggy shop sent this spelling
   slot_id: z.string(),
   status: z.literal("placed"),
   placedAt: z.string(),

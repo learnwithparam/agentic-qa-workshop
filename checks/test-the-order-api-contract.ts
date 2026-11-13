@@ -101,8 +101,8 @@ function namesTheContract(folder: string): boolean {
 
 function usesOnlyTheRequestFixture(folder: string): boolean {
   const files = specFiles(apiTests(folder));
-  const opensAPage = (file: string) => /\bpage\./.test(readFileSync(file, "utf8"));
-  return files.length > 0 && !files.some(opensAPage);
+  const opensBrowserPage = (file: string) => /\bpage\./.test(readFileSync(file, "utf8"));
+  return files.length > 0 && !files.some(opensBrowserPage);
 }
 
 export default [
