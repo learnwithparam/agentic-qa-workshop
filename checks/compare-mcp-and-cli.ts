@@ -6,58 +6,57 @@ import type { Rule } from "../scripts/verify";
 import { readText } from "./lib/markdown";
 
 type ToolUse = { name: string; command: string };
-type Run = {
-  tools: ToolUse[];
-  tokens: number;
-  turns: number;
-  seconds: number;
-  findings: number;
-} | null;
+type Numbers = { tokens: number; turns: number; seconds: number; findings: number };
+type Run = (Numbers & { tools: ToolUse[] }) | null;
 
-type Usage = Record<string, number | undefined>;
 type ContentBlock = { type?: string; name?: string; input?: { command?: string } };
-type Line = {
+// One line of a stream-json transcript. Field names are Claude Code's own.
+type Line = Record<string, unknown> & {
   type?: string;
-  usage?: Usage;
-  num_turns?: number;
-  duration_ms?: number;
+  usage?: Record<string, number>;
   result?: string;
   message?: { content?: ContentBlock[] };
 };
 
 const RUNS = ["mcp", "cli"] as const;
 const FEWEST_WORDS_IN_CHOICE = 12;
+const TABLE_ROWS: Record<keyof Numbers, string> = {
+  tokens: "Tokens",
+  turns: "Turns",
+  seconds: "Seconds",
+  findings: "Findings",
+};
+const TOKEN_PARTS = [
+  "input_tokens",
+  "output_tokens",
+  "cache_creation_input_tokens",
+  "cache_read_input_tokens",
+];
 
-function parseLines(text: string): Line[] {
-  const lines: Line[] = [];
-  for (const line of text.split("\n")) {
-    if (!line.trim()) continue;
-    try {
-      lines.push(JSON.parse(line));
-    } catch {
-      // A broken line is skipped. A run with no result line fails below.
-    }
+function parseLine(text: string): Line[] {
+  try {
+    return [JSON.parse(text)];
+  } catch {
+    // A broken line is skipped. A run with no result line fails below.
+    return [];
   }
-  return lines;
 }
 
-function toolUsesIn(lines: Line[]): ToolUse[] {
-  const uses: ToolUse[] = [];
-  for (const line of lines) {
-    if (line.type !== "assistant") continue;
-    for (const block of line.message?.content ?? []) {
-      if (block.type !== "tool_use") continue;
-      uses.push({ name: block.name ?? "", command: block.input?.command ?? "" });
-    }
-  }
-  return uses;
+const parseLines = (text: string) => text.split("\n").filter(Boolean).flatMap(parseLine);
+
+function toolUsesOf(line: Line): ToolUse[] {
+  if (line.type !== "assistant") return [];
+  const blocks = line.message?.content ?? [];
+  const toolBlocks = blocks.filter((block) => block.type === "tool_use");
+  return toolBlocks.map((block) => ({
+    name: block.name ?? "",
+    command: block.input?.command ?? "",
+  }));
 }
 
 // Every token the run used: new input, output, and input written to or read from the cache.
-function totalTokens(usage: Usage): number {
-  const parts = ["input_tokens", "output_tokens", "cache_creation_input_tokens"];
-  parts.push("cache_read_input_tokens");
-  return parts.reduce((total, part) => total + (usage[part] ?? 0), 0);
+function totalTokens(usage: Record<string, number>): number {
+  return TOKEN_PARTS.reduce((total, part) => total + (usage[part] ?? 0), 0);
 }
 
 export function readRun(folder: string, name: string): Run {
@@ -65,62 +64,63 @@ export function readRun(folder: string, name: string): Run {
   const result = lines.findLast((line) => line.type === "result");
   if (!result?.usage) return null;
   const findingLines = (result.result ?? "").match(/^FINDING:/gm) ?? [];
+  const durationInMilliseconds = Number(result.duration_ms ?? 0);
   return {
-    tools: toolUsesIn(lines),
+    tools: lines.flatMap(toolUsesOf),
     tokens: totalTokens(result.usage),
-    turns: result.num_turns ?? 0,
-    seconds: Math.round((result.duration_ms ?? 0) / 1000),
+    turns: Number(result.num_turns ?? 0),
+    seconds: Math.round(durationInMilliseconds / 1000),
     findings: findingLines.length,
   };
 }
 
-const usedMcpBrowser = (run: Run) =>
-  run !== null && run.tools.some((tool) => tool.name.startsWith("mcp__playwright__"));
+const isMcpBrowserTool = (tool: ToolUse) => tool.name.startsWith("mcp__playwright__");
+const isCliBrowserCommand = (tool: ToolUse) =>
+  tool.name === "Bash" && /playwright[ -]cli/.test(tool.command);
 
-const usedCliBrowser = (run: Run) =>
-  run !== null &&
-  run.tools.some((tool) => tool.name === "Bash" && /playwright[ -]cli/.test(tool.command));
+const usedMcpBrowser = (run: Run) => run?.tools.some(isMcpBrowserTool) ?? false;
+const usedCliBrowser = (run: Run) => run?.tools.some(isCliBrowserCommand) ?? false;
 
-// Reads the row of the comparison table that starts with this label, as numbers per column.
+function cellsOf(line: string): string[] {
+  const cells = line.split("|").slice(1, -1);
+  return cells.map((cell) => cell.trim());
+}
+
+// Reads the row of the comparison table that starts with this label, as one number per column.
 function tableRow(markdown: string, label: string): Record<string, number> {
-  const tableLines = markdown.split("\n").filter((line) => line.trim().startsWith("|"));
-  const cellsOf = (line: string) =>
-    line
-      .split("|")
-      .slice(1, -1)
-      .map((cell) => cell.trim());
-  const header = tableLines.map(cellsOf).find((cells) => cells.some((cell) => /^MCP$/i.test(cell)));
-  const row = tableLines
-    .map(cellsOf)
-    .find((cells) => cells[0].toLowerCase() === label.toLowerCase());
+  const allLines = markdown.split("\n");
+  const lines = allLines.filter((line) => line.trim().startsWith("|"));
+  const rows = lines.map(cellsOf);
+  const header = rows.find((cells) => cells.some((cell) => /^MCP$/i.test(cell)));
+  const row = rows.find((cells) => cells[0]?.toLowerCase() === label.toLowerCase());
   if (!header || !row) return {};
   const values: Record<string, number> = {};
-  header.forEach((name, index) => {
-    const number = Number((row[index] ?? "").replace(/[,$\s]/g, ""));
-    if (index > 0 && Number.isFinite(number)) values[name.toLowerCase()] = number;
-  });
+  for (let column = 1; column < header.length; column++) {
+    const cell = (row[column] ?? "").replace(/[,$\s]/g, "");
+    if (cell !== "") values[header[column].toLowerCase()] = Number(cell);
+  }
   return values;
 }
 
 const comparison = (folder: string) => readText(join(folder, "qa", "mcp-vs-cli.md"));
 
-function numbersMatchTheRuns(folder: string): boolean {
-  const markdown = comparison(folder);
-  const rows = { tokens: "Tokens", turns: "Turns", seconds: "Seconds", findings: "Findings" };
-  for (const name of RUNS) {
-    const run = readRun(folder, name);
-    if (!run) return false;
-    for (const [field, label] of Object.entries(rows)) {
-      const written = tableRow(markdown, label)[name];
-      if (written !== run[field as keyof typeof rows]) {
-        console.log(
-          `        ${label} for ${name.toUpperCase()}: the run says ${run[field as keyof typeof rows]}`,
-        );
-        return false;
-      }
+function runMatchesTable(markdown: string, name: string, run: Numbers): boolean {
+  for (const [field, label] of Object.entries(TABLE_ROWS)) {
+    const fromRun = run[field as keyof Numbers];
+    if (tableRow(markdown, label)[name] !== fromRun) {
+      console.log(`        ${label} for ${name.toUpperCase()}: the run says ${fromRun}`);
+      return false;
     }
   }
   return true;
+}
+
+function numbersMatchTheRuns(folder: string): boolean {
+  const markdown = comparison(folder);
+  return RUNS.every((name) => {
+    const run = readRun(folder, name);
+    return run !== null && runMatchesTable(markdown, name, run);
+  });
 }
 
 function realFindingsWereJudged(folder: string): boolean {
@@ -132,34 +132,34 @@ function realFindingsWereJudged(folder: string): boolean {
   });
 }
 
-function choiceHasAReason(folder: string): boolean {
-  const choice =
-    comparison(folder)
-      .split(/^##\s+Choice\s*$/im)[1]
-      ?.split(/^##\s/m)[0] ?? "";
+function choiceHasReason(folder: string): boolean {
+  const afterHeading = comparison(folder).split(/^##\s+Choice\s*$/im)[1] ?? "";
+  const choice = afterHeading.split(/^##\s/m)[0];
   const namesOne = /\b(MCP|CLI)\b/.test(choice);
   const words = choice.split(/\s+/).filter(Boolean).length;
   return namesOne && words >= FEWEST_WORDS_IN_CHOICE;
+}
+
+function cliRunUsedOnlyTheCli(folder: string): boolean {
+  const run = readRun(folder, "cli");
+  return usedCliBrowser(run) && !usedMcpBrowser(run);
 }
 
 export default [
   {
     says: "qa/runs/mcp.jsonl is a finished claude -p run that used the Playwright MCP browser",
     test: (folder) => usedMcpBrowser(readRun(folder, "mcp")),
-    tryNext:
-      "run the task with --output-format stream-json --verbose and save it as qa/runs/mcp.jsonl",
+    tryNext: "run the MCP command from the README and save it as qa/runs/mcp.jsonl",
   },
   {
     says: "qa/runs/cli.jsonl is a finished claude -p run that used the Playwright CLI",
-    test: (folder) =>
-      usedCliBrowser(readRun(folder, "cli")) && !usedMcpBrowser(readRun(folder, "cli")),
-    tryNext:
-      "run the task again with only Bash(bunx playwright cli:*) allowed, saved as qa/runs/cli.jsonl",
+    test: cliRunUsedOnlyTheCli,
+    tryNext: "run the CLI command from the README and save it as qa/runs/cli.jsonl",
   },
   {
     says: "tokens, turns, seconds and findings in qa/mcp-vs-cli.md match the two runs",
     test: numbersMatchTheRuns,
-    tryNext: "ask Claude Code to read the result line of each run; never type a number yourself",
+    tryNext: "ask Claude Code to read the result line of each run, and never type numbers yourself",
   },
   {
     says: "a Real findings row says how many findings you checked were real",
@@ -168,7 +168,7 @@ export default [
   },
   {
     says: "## Choice names MCP or CLI for the team, with a reason",
-    test: choiceHasAReason,
+    test: choiceHasReason,
     tryNext: "write which one the team will use for exploring, and the number that decided it",
   },
 ] satisfies Rule[];
