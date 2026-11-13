@@ -37,6 +37,23 @@ async function rulePasses(rule: Rule, dir: string): Promise<boolean> {
   }
 }
 
+// Some checks print a grid as they run. When we only count passes (Progress, --all),
+// we hide that grid, so the learner never sees another step's output under their own.
+async function quietly<T>(work: () => Promise<T>): Promise<T> {
+  const log = console.log;
+  console.log = () => {};
+  try {
+    return await work();
+  } finally {
+    console.log = log;
+  }
+}
+
+function checkRule(rule: Rule, dir: string, print: boolean): Promise<boolean> {
+  if (print) return rulePasses(rule, dir);
+  return quietly(() => rulePasses(rule, dir));
+}
+
 function printRule(rule: Rule, ok: boolean) {
   if (ok) {
     console.log(`  PASS  ${rule.says}`);
@@ -58,7 +75,7 @@ async function run(step: Step, dir: string, print = false): Promise<Result> {
   }
   const failed: string[] = [];
   for (const rule of rules) {
-    const ok = await rulePasses(rule, dir);
+    const ok = await checkRule(rule, dir, print);
     if (!ok) failed.push(rule.says);
     if (print) printRule(rule, ok);
   }
@@ -202,6 +219,7 @@ function findStepOrExit(stepName: string | undefined): Step {
 
 async function printProgress() {
   // Done is recomputed from the checks every time, never read from a saved flag.
+  console.log("Counting the steps that pass. This runs every check, so it can take a few minutes.");
   const results: Result[] = [];
   for (const step of allSteps()) results.push(await run(step, work(step)));
   console.log(`Progress: ${countPassing(results)}/${results.length} steps pass.`);

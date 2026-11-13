@@ -96,6 +96,7 @@ export default [
     says: "no number counts tests written by an agent",
     test: reportsNoVanityNumber,
     tryNext:
-      "drop tests written; it grows when the suite gets worse as easily as when it gets better",
+      "remove the count of tests written: it goes up when the suite gets worse, " +
+      "just as when it gets better",
   },
 ] satisfies Rule[];

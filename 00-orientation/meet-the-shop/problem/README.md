@@ -53,7 +53,7 @@ Expect: Claude Code asks if you trust this folder. Say yes.
 Type this prompt:
 
 ```text
-Run bun run board from the repo root (two folders up). When it ends, put its last line
+Run bun run board from the repo root (three folders up: ../../..). When it ends, put its last line
 under the heading in goal.md. Change nothing else.
 ```
 
