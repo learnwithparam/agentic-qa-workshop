@@ -115,3 +115,10 @@ test("no model API in the repo: Claude Code is the only way the course reaches a
   walk(ROOT);
   expect(hits).toEqual([]);
 });
+
+test("a test that asserts through a helper in its file counts as checking something", () => {
+  const { assertingHelpers } = require("../checks/lib/static");
+  const src = `async function expectTotals(page, want) { await expect(page.getByTestId("total")).toHaveText(want.total); }
+const goTo = async (page) => { await page.goto("/basket"); };`;
+  expect(assertingHelpers(src)).toEqual(["expectTotals"]);
+});

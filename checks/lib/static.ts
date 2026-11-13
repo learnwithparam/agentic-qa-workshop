@@ -9,9 +9,39 @@ export function specFiles(dir: string): string[] {
   return readdirSync(dir, { recursive: true }).map(String).filter((f) => f.endsWith(".spec.ts")).map((f) => join(dir, f));
 }
 
+// The body of the block that opens at src[open], found by matching braces.
+function block(src: string, open: number): string {
+  let depth = 0;
+  for (let i = open; i < src.length; i++) {
+    if (src[i] === "{") depth++;
+    else if (src[i] === "}" && --depth === 0) return src.slice(open, i + 1);
+  }
+  return src.slice(open);
+}
+
+const EXPECT = /\bexpect(\.soft|\.poll)?\(/g;
+
+// Helpers in the same file that assert, such as `async function expectTotals(page, want) { await expect(...) }`.
+// A test that calls one checks something, even with no expect of its own.
+export function assertingHelpers(src: string): string[] {
+  const names: string[] = [];
+  const re = /(?:\bfunction\s+([A-Za-z_$][\w$]*)\s*\(|\b(?:const|let)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?(?:\([^)]*\)|[A-Za-z_$][\w$]*)\s*=>)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(src))) {
+    const open = src.indexOf("{", re.lastIndex);
+    if (open < 0) continue;
+    const body = block(src, open);
+    if (EXPECT.test(body)) names.push(m[1] ?? m[2]);
+    EXPECT.lastIndex = 0;
+  }
+  return names;
+}
+
 // Finds test('title', async (...) => { ... }) blocks and returns each body by matching braces.
+// expects counts expect calls plus calls to asserting helpers in the same file.
 export function testsIn(file: string): FoundTest[] {
   const src = readFileSync(file, "utf8");
+  const helpers = assertingHelpers(src);
   const out: FoundTest[] = [];
   const re = /\btest(?:\.only)?\(\s*(['"`])((?:\\.|(?!\1).)*)\1\s*,/g;
   let m: RegExpExecArray | null;
@@ -26,7 +56,9 @@ export function testsIn(file: string): FoundTest[] {
       else if (src[i] === "}" && --depth === 0) break;
     }
     const body = src.slice(open, i + 1);
-    out.push({ title: m[2], body, expects: (body.match(/\bexpect(\.soft|\.poll)?\(/g) ?? []).length, file });
+    const own = (body.match(EXPECT) ?? []).length;
+    const viaHelpers = helpers.reduce((n, h) => n + (body.match(new RegExp(`\\b${h.replace(/\$/g, "\\$")}\\(`, "g")) ?? []).length, 0);
+    out.push({ title: m[2], body, expects: own + viaHelpers, file });
   }
   return out;
 }

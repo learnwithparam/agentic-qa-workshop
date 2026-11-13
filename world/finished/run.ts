@@ -122,7 +122,7 @@ function save(n: string, dir: string, lines: string[]) {
   mkdirSync(join(out, "files"), { recursive: true });
   writeFileSync(join(out, "transcript.jsonl"), lines.map((l) => redact(l, dir)).join("\n") + "\n");
   for (const p of PRODUCED) if (existsSync(join(dir, p))) cpSync(join(dir, p), join(out, "files", p), { recursive: true });
-  const result = lines.map((l) => { try { return JSON.parse(l); } catch { return {}; } }).find((e) => e.type === "result") ?? {};
+  const result = lines.map((l) => { try { return JSON.parse(l); } catch { return {}; } }).filter((e) => e.type === "result").at(-1) ?? {};
   writeFileSync(join(out, "meta.json"), JSON.stringify({
     command: COMMAND,
     prompt: PROMPT,

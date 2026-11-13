@@ -49,6 +49,8 @@ Expect: `Signed in: yes. Claude Code is ready for this course.`, then one line p
 signed-in Claude Code (or in CI) the first line says `Replay:` and it replays a recorded real run from
 `world/recordings/`.
 
+![A recorded Claude Code run planning and writing the suite, then the bug-kill matrix scoring it](images/finished-claude-code.png)
+
 Open the shop itself:
 
 ```bash
