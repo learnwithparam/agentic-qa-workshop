@@ -1,0 +1,10 @@
+{
+  "step": "catch-the-seeded-bugs",
+  "folder": "the step's problem/ folder, copied to solution/ first",
+  "command": "claude -p \"<prompt>\" --output-format stream-json --verbose --add-dir ../../../../world --permission-mode acceptEdits --allowedTools \"Read,Glob,Grep,Write(specs/**),Edit(specs/**),Write(tests/**),Edit(tests/**),Bash(bunx playwright test),Bash(bunx playwright test *)\" --max-turns 80",
+  "prompt": "The suite in tests/ is green, but it never checks the substitution rules, so planted substitution bugs go through.\nRead ../../../../world/requirements/substitutions.md.\nFirst plan: write specs/substitutions.md in the same format as specs/basket.md, with a scenario for each of SUB-1 to SUB-6. Each scenario has **Covers:** and **Kind:** lines.\nThen write tests/substitutions.spec.ts from that plan, in the style of tests/basket.spec.ts.\nEach test must check what the shopper sees, for example the exact packing note on the order page (\"Not available\" or \"Substituted with ...\"), never only that the order was placed.\nAna (ana@pantryrun.test) declared tree nuts.\nRun bunx playwright test and make sure every test passes on the fixed build. Do not change the existing tests.",
+  "claudeCodeVersion": "2.1.323",
+  "ended": "success",
+  "turns": 28,
+  "durationMs": 209734
+}

@@ -1,0 +1,9 @@
+--- a/tests/visual.spec.ts
++++ b/tests/visual.spec.ts
+@@ -12,7 +12,7 @@ test("the product card looks right on a 375 px phone", async ({ page }) => {
+   await page.setViewportSize({ width: 375, height: 800 });
+   await page.goto("/");
+   const card = page.getByRole("article", { name: "Bananas, loose" });
+-  await expect(card).toHaveScreenshot("bananas-375.png", { maxDiffPixels: 0 });
++  await expect(card).toHaveScreenshot("bananas-375.png", { maxDiffPixels: 900 });
+ });

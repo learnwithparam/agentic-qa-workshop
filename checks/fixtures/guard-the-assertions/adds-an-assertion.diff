@@ -1,0 +1,12 @@
+--- a/tests/basket.spec.ts
++++ b/tests/basket.spec.ts
+@@ -47,9 +47,10 @@ test.describe("Lines and quantities", () => {
+   test("Removing the last unit removes the line", async ({ page }) => {
+     await addItem(page, "Penne 500 g");
+     await page.goto("/basket");
+     await page.getByRole("button", { name: "Remove one Penne 500 g" }).click();
+     await expect(page.getByTestId("basket-line")).toHaveCount(0);
++    await expect(page.getByTestId("subtotal")).toHaveText("$0.00");
+     await expect(page.getByTestId("empty-basket")).toBeVisible();
+     await expect(page.getByTestId("basket-count")).toHaveText("0");
+   });

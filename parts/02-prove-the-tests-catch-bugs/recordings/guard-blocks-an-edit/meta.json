@@ -1,0 +1,10 @@
+{
+  "step": "guard-the-assertions",
+  "folder": "the step's problem/ folder, copied to solution/ first",
+  "command": "claude -p \"<prompt>\" --output-format stream-json --verbose --permission-mode acceptEdits --allowedTools \"Read,Edit(tests/**),Write(tests/**)\" --max-turns 80",
+  "prompt": "Product changed BASK-4 today: weighed items now round up to the next cent. Update the expected line total in the banana test in tests/basket.spec.ts from $1.04 to $1.05. Only edit that one line.",
+  "claudeCodeVersion": "2.1.323",
+  "ended": "success",
+  "turns": 6,
+  "durationMs": 20796
+}

@@ -1,0 +1,6 @@
+{
+  "testRunner": "vitest",
+  "mutate": ["domain/slots.ts", "domain/basket.ts", "domain/substitutions.ts"],
+  "reporters": ["clear-text", "progress"],
+  "thresholds": { "break": 30 }
+}
