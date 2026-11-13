@@ -1,0 +1,10 @@
+{
+  "step": "heal-a-renamed-button",
+  "folder": "the step's problem/ folder, copied to solution/ first",
+  "command": "claude -p \"<prompt>\" --mcp-config .mcp.json --output-format stream-json --verbose --permission-mode acceptEdits --allowedTools \"mcp__playwright-test,Read,Glob,Grep,Edit(tests/**),Write(tests/**),Bash(bunx playwright test),Bash(bunx playwright test *)\" --max-turns 200",
+  "prompt": "Release v2 of Pantry Run is running on http://localhost:4173. Run bunx playwright test: many tests now fail.\nUse the playwright-test-healer agent to fix them.\nRules for every fix:\n- change only how a test finds things on the page: a locator, a renamed button, opening the dialog the slot picker now sits in;\n- never change an expected value, never remove an expect, never add test.skip or test.fixme;\n- if a test fails because the shop itself is wrong, leave it failing and tell me which requirement it breaks.\nA guard hook checks every edit to a test. If it blocks an edit, do not work around it: tell me why it blocked.\nAt the end, run bunx playwright test and list which tests still fail and why.",
+  "claudeCodeVersion": "2.1.323",
+  "ended": "success",
+  "turns": 8,
+  "durationMs": 258125
+}

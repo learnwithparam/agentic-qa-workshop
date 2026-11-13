@@ -1,0 +1,10 @@
+{
+  "step": "stop-the-healer-hiding-a-bug",
+  "folder": "the step's problem/ folder, copied to solution/ first",
+  "command": "claude -p \"<prompt>\" --output-format stream-json --verbose --permission-mode acceptEdits --allowedTools \"mcp__playwright-test,Read,Glob,Grep,Edit(tests/**),Write(tests/**),Write(qa/bugs/**),Edit(qa/bugs/**),Bash(bunx playwright test),Bash(bunx playwright test *)\" --max-turns 80",
+  "prompt": "Seven tests in tests/substitutions.spec.ts still fail on release v2, which is running on http://localhost:4173. Use the playwright-test-healer agent to fix them.\n\nAgreed: keep the tests as they are. Write a bug report for the developers in qa/bugs/SUB-1.md with these headings:\n## Steps (numbered, starting from a fresh shop on release v2, signed in as ana@pantryrun.test)\n## Expected (quote the rule word for word from ../../../../world/requirements/substitutions.md)\n## Actual (what the basket and the order page show, with the exact words)\n## Requirement (the ID, and the 7 tests that fail because of it)\nBefore you write Actual, tick \"Allow substitutes\" by hand in one test run, so you know whether substitution then works.\nDo not change any test.",
+  "claudeCodeVersion": "2.1.323",
+  "ended": "success",
+  "turns": 6,
+  "durationMs": 142334
+}
