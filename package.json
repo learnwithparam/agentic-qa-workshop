@@ -4,7 +4,7 @@
   "type": "module",
   "packageManager": "bun@1.4.4",
   "scripts": {
-    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all",
+    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all && bun checks/assignment.ts --prove",
     "readable": "bun scripts/readable.ts",
     "plain-english": "bun scripts/plain-english.ts",
     "format": "biome check --write .",
@@ -15,7 +15,8 @@
     "board": "bun world/board.ts",
     "shots": "bun images/shots.ts",
     "doctor": "bun scripts/doctor.ts",
-    "finished": "bun world/finished/run.ts"
+    "finished": "bun world/finished/run.ts",
+    "assignment": "bun checks/assignment.ts"
   },
   "dependencies": {
     "hono": "4.13.18",

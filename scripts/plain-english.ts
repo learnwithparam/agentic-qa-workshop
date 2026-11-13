@@ -11,8 +11,10 @@ import { ROOT } from "./structure";
 const DEFAULT_READING_GRADE = 8;
 const LONGEST_SENTENCE = 25;
 
+// ".claude" holds the agent files Playwright generates. We keep them as the tool wrote them.
 const SKIPPED_FOLDERS = new Set([
   "node_modules",
+  ".claude",
   ".git",
   ".venv",
   "recordings",
