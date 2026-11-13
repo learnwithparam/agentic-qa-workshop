@@ -39,6 +39,14 @@ bun run shop
 
 Expect: `Pantry Run ready on http://localhost:4173 (bugs: none)`
 
+First make the folder that keeps the runs. The shell cannot save a file into a folder that is not there.
+
+```bash
+mkdir -p qa/runs
+```
+
+Expect: no output.
+
 Run the planner:
 
 ```bash
