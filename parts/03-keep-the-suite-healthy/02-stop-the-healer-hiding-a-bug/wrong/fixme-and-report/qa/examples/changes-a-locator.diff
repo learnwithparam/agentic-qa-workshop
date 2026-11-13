@@ -1,0 +1,11 @@
+--- a/tests/slots.spec.ts
++++ b/tests/slots.spec.ts
+@@ -64,7 +64,7 @@ test.describe("Booking rules", () => {
+   test("The basket shows the booked slot and its fee", async ({ page }) => {
+     await page.goto("/slots");
+     await page.getByRole("radio", { name: /Mar 12 09:00 to 10:00/ }).check();
+-    await page.getByRole("button", { name: "Book slot" }).click();
++    await page.getByRole("button", { name: "Reserve" }).click();
+     await expect(page).toHaveURL(/\/basket/);
+     await expect(page.getByTestId("held-slots")).toHaveText("Thu, Mar 12, 09:00 to 10:00 ($2.99)");
+   });
