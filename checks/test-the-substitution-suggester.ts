@@ -130,7 +130,9 @@ export default [
   {
     says: "qa/ai-thresholds.json: 20+ seeds, a pass rate from 0.9 to below 1, allergen in hardFail",
     test: thresholdsAreSound,
-    tryNext: 'write {"seeds": 20, "minPassRate": 0.95, "hardFail": ["allergen"]}',
+    tryNext:
+      "ask Claude Code to write qa/ai-thresholds.json with seeds, minPassRate and hardFail, " +
+      'for example {"seeds": 20, "minPassRate": 0.95, "hardFail": ["allergen"]}',
   },
   {
     says: "the suite in tests/ai/ reads its limits from qa/ai-thresholds.json",
