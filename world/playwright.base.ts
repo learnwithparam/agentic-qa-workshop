@@ -19,6 +19,7 @@ export function pantryConfig(testDir: string) {
     reporter: process.env.PW_JSON ? [["json", { outputFile: process.env.PW_JSON }]] : [["list"]],
     outputDir: process.env.PW_OUT ?? join(ROOT, ".runs", "test-results"),
     use: {
+      // biome-ignore lint/style/useNamingConvention: baseURL is the name Playwright reads
       baseURL: process.env.BASE_URL ?? "http://localhost:4173",
       launchOptions: process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {},
       trace: "off",

@@ -1,11 +1,16 @@
 // PreToolUse hook on Write and Edit. Claude Code sends the tool call as JSON on stdin.
-// For a test file (*.spec.ts) it blocks text that hides a failure or a race: waitForTimeout, test.skip,
-// test.fixme. Exit 2 blocks the call and Claude reads the reason on stderr. Exit 0 lets it through.
+// For a test file (*.spec.ts) it blocks text that hides a failure or a race: waitForTimeout,
+// test.skip, test.fixme. Exit 2 blocks the call and Claude reads the reason on stderr.
+// Exit 0 lets it through.
+
+// The fields keep the snake_case names Claude Code sends.
+// biome-ignore-start lint/style/useNamingConvention: Claude Code's hook fields are snake_case
 type HookInput = {
   hook_event_name?: string;
   tool_name?: string;
   tool_input?: { file_path?: string; content?: string; new_string?: string };
 };
+// biome-ignore-end lint/style/useNamingConvention: Claude Code's hook fields are snake_case
 
 export const RULES: [RegExp, string][] = [
   [
@@ -22,14 +27,21 @@ export const RULES: [RegExp, string][] = [
   ],
 ];
 
-export function verdict(input: HookInput): string | null {
-  if (input.hook_event_name !== "PreToolUse") return null;
-  if (input.tool_name !== "Write" && input.tool_name !== "Edit") return null;
+function isTestFileWrite(input: HookInput): boolean {
+  if (input.hook_event_name !== "PreToolUse") return false;
+  if (input.tool_name !== "Write" && input.tool_name !== "Edit") return false;
   const file = input.tool_input?.file_path ?? "";
-  if (!file.endsWith(".spec.ts")) return null;
+  return file.endsWith(".spec.ts");
+}
+
+export function verdict(input: HookInput): string | null {
+  if (!isTestFileWrite(input)) return null;
+  const file = input.tool_input?.file_path ?? "";
+  const fileName = file.split("/").pop();
   const text = input.tool_input?.content ?? input.tool_input?.new_string ?? "";
-  for (const [re, why] of RULES)
-    if (re.test(text)) return `Blocked by test-rules: ${why} (${file.split("/").pop()}).`;
+  for (const [pattern, why] of RULES) {
+    if (pattern.test(text)) return `Blocked by test-rules: ${why} (${fileName}).`;
+  }
   return null;
 }
 
@@ -38,6 +50,7 @@ if (import.meta.main) {
   try {
     input = JSON.parse(await Bun.stdin.text());
   } catch {
+    // A payload that is not JSON must never block Claude Code, so it is let through.
     process.exit(0);
   }
   const why = verdict(input);
