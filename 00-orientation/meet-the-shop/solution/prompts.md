@@ -8,7 +8,7 @@ line. This page shows the prompt, the plan Claude Code showed, and what you chec
 You started `claude` in `00-orientation/meet-the-shop/problem/` and typed:
 
 ```text
-Run bun run board from the repo root (two folders up). When it ends, put its last line
+Run bun run board from the repo root (three folders up: ../../..). When it ends, put its last line
 under the heading in goal.md. Change nothing else.
 ```
 

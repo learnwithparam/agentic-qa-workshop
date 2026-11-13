@@ -1,3 +1,4 @@
+// biome-ignore-all lint/suspicious/noIdenticalTestTitle: the groups below share one title on purpose.
 // Hand-written by the previous tester. Most of it is fine.
 // Some of it fails now and then, and nobody knows why.
 import { expect, type Page, test } from "@playwright/test";
