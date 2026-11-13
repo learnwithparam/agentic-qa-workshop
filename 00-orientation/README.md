@@ -32,8 +32,8 @@ flowchart LR
 - Claude Code, signed in with your own Claude account (Pro, Max or a Console account). You use it in a
   terminal (`claude`), in your editor through the Claude Code extension, or in the Code tab of Claude Desktop.
   The course is tested on Claude Code 2.1.322 and newer.
-- No API key. Claude Code uses your Claude sign-in, and the shop's one AI feature, the substitution suggester,
-  answers from a stand-in model with recorded replies, so it costs nothing.
+- No API key. Claude Code uses your Claude sign-in. The shop has one AI feature, the substitution suggester.
+  It answers from a stand-in model with recorded replies, so it costs nothing.
 
 ## Walkthrough
 

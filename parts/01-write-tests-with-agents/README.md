@@ -52,9 +52,9 @@ Total: 55 minutes. Each step's folder is self-contained: work in its `problem/` 
 ## The agents, in Claude Code
 
 You run Playwright's own agents inside Claude Code. In a step's `problem/` folder,
-`bunx playwright init-agents --loop=claude` writes three Claude Code subagents to `.claude/agents/`
-(`playwright-test-planner`, `playwright-test-generator`, `playwright-test-healer`) and a `.mcp.json` that gives
-them a browser through Playwright's test MCP server. Open `claude` in that folder and ask for an agent by name. The
+`bunx playwright init-agents --loop=claude` writes three Claude Code subagents to `.claude/agents/`:
+`playwright-test-planner`, `playwright-test-generator` and `playwright-test-healer`. It also writes a `.mcp.json`.
+That file gives the agents a browser through Playwright's test MCP server. Open `claude` in that folder and ask for an agent by name. The
 first time, Claude Code asks you to trust the folder and to allow the `playwright-test` MCP server: say yes to both.
 The checks read the files the agents leave behind and run the tests, never the chat.
 
