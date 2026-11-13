@@ -1,0 +1,10 @@
+{
+  "step": "kill-the-mutants",
+  "folder": "the step's problem/ folder, copied to solution/ first",
+  "command": "claude -p \"<prompt>\" --output-format stream-json --verbose --permission-mode acceptEdits --allowedTools \"Read,Glob,Grep,Write(domain/*.test.ts),Edit(domain/*.test.ts),Write(stryker.config.json),Edit(stryker.config.json),Bash(bunx vitest *),Bash(bunx stryker *)\" --max-turns 80",
+  "prompt": "Write Vitest unit tests for the shop rules in domain/slots.ts, domain/basket.ts and domain/substitutions.ts. Put one test file next to each: domain/slots.test.ts, domain/basket.test.ts and domain/substitutions.test.ts.\nEvery expect compares an exact value, such as a price in cents or a slot status. Test the edges of each rule, for example 21:59 and 22:00 for the cutoff, and 19 and 20 orders booked in a 20-order slot.\nThen write stryker.config.json: the vitest test runner, mutate only those three files, and \"thresholds\": { \"break\": 70 }.\nRun bunx vitest run, then bunx stryker run. For each survived mutant, add or fix a test that goes red on that change, until the score is 70 or more.\nDo not change the domain code itself, only the .test.ts files and stryker.config.json.",
+  "claudeCodeVersion": "2.1.323",
+  "ended": "success",
+  "turns": 28,
+  "durationMs": 184594
+}
