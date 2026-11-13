@@ -406,7 +406,14 @@ function BasketRow({ line }: { line: PricedLine }) {
 }
 
 function BasketTable({ lines }: { lines: PricedLine[] }) {
-  if (lines.length === 0) return <p data-testid="empty-basket">Your basket is empty.</p>;
+  if (lines.length === 0) {
+    return (
+      <div data-empty-state>
+        <p data-testid="empty-basket">Your basket is empty.</p>
+        <a href="/">Browse the shop</a>
+      </div>
+    );
+  }
   return (
     <table>
       <thead>
@@ -487,11 +494,12 @@ function BasketTotals({ totals, checkout }: { totals: Totals; checkout: Checkout
 function suggestScript(shopperId: string): string {
   return `
 const showPrice = (cents) => '$' + (cents / 100).toFixed(2);
+const noneFound = 'No replacement found. If substitutes are on, the picker chooses one.';
 const suggestionItems = (reply) => {
   const items = reply.suggestions.map(
     (pick) => '<li>' + pick.name + ' (' + showPrice(pick.priceCents) + ')</li>',
   );
-  return items.join('') || '<li>No suggestion</li>';
+  return items.join('') || '<li>' + noneFound + '</li>';
 };
 const askForSuggestions = async (button) => {
   const sku = button.dataset.suggest;
@@ -503,7 +511,7 @@ const askForSuggestions = async (button) => {
   const response = await fetch('/api/suggest?sku=' + sku + '&shopper=${shopperId}&seed=1');
   const reply = await response.json();
   if (response.ok) list.innerHTML = suggestionItems(reply);
-  else list.innerHTML = '<li>' + (reply.message || 'No suggestion') + '</li>';
+  else list.innerHTML = '<li>' + (reply.message || noneFound) + '</li>';
 };
 document.querySelectorAll('[data-suggest]').forEach((button) => {
   button.addEventListener('click', () => askForSuggestions(button));
@@ -529,7 +537,7 @@ export function BasketView(props: {
         <label>
           Voucher code <input type="text" name="code" value={props.voucher ?? ""} />
         </label>{" "}
-        <button type="submit">Apply</button>
+        <button type="submit">Apply voucher</button>
       </form>
       <BasketTotals totals={props.totals} checkout={checkout} />
       <script>{raw(suggestScript(props.shopperId))}</script>
