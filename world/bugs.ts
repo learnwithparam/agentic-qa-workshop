@@ -149,8 +149,6 @@ export function parseBugs(raw: string | undefined): Set<string> {
 
 let active = parseBugs(process.env.BUGS);
 export const bugIsOn = (id: string) => active.has(id);
-// The old name, kept so world/app.tsx and world/ui.tsx still work until they use bugIsOn.
-export { bugIsOn as on };
 export const activeBugs = () => [...active];
 export const setBugs = (raw: string) => {
   active = parseBugs(raw);

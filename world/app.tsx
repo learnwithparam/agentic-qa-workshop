@@ -2,7 +2,7 @@
 import { type Context, Hono } from "hono";
 import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { z } from "zod";
-import { activeBugs, on } from "./bugs";
+import { activeBugs, bugIsOn } from "./bugs";
 import {
   addToLines,
   type Line,
@@ -371,7 +371,7 @@ app.post("/api/slots/:id/book", (context) => {
   if (problem) {
     return context.json({ error: problem.error, message: problem.message }, problem.status);
   }
-  if (!on("double-book")) store.dropHolds(shopper.id);
+  if (!bugIsOn("double-book")) store.dropHolds(shopper.id);
   store.addHold(shopper.id, slotId);
   store.logEvent("slot_booked", { shopper: shopper.id, slotId });
   return context.json({ ok: true, slotId });
@@ -427,13 +427,13 @@ app.post("/checkout", async (context) => {
   const form = await context.req.parseBody();
   const token = String(form.token ?? "");
   const current = priced(shopper.id);
-  if (!on("back-resubmit") && token !== current.basket.token) {
+  if (!bugIsOn("back-resubmit") && token !== current.basket.token) {
     return redirectStaleCheckout(context, token);
   }
   if (!current.canCheckout) return redirectWithError(context, "/basket", current.reason);
   const order = orderFromBasket(shopper, token, current);
   store.saveOrder(order);
-  if (!on("back-resubmit")) {
+  if (!bugIsOn("back-resubmit")) {
     store.useHolds(shopper.id, order.orderId);
     store.clearBasket(shopper.id);
   }
@@ -513,7 +513,7 @@ function invalidRequest(context: Context, message: string) {
 
 function shapeOrder(order: store.Order) {
   const { token, voucher, ...rest } = order;
-  if (!on("api-field-rename")) return rest;
+  if (!bugIsOn("api-field-rename")) return rest;
   const { slotId, ...others } = rest;
   // Partners on the old field name expect snake case here, so the key keeps its outside spelling.
   const renamed: Record<string, unknown> = { ...others };
@@ -568,7 +568,7 @@ function partnerSlotProblem(context: Context, slotId: string) {
     return context.json({ error: "slot_not_found", message: "There is no such slot." }, 404);
   }
   const problem = bookingProblem(slotId);
-  if (problem?.error === "slot_full" && on("api-status")) throw new Error("capacity exceeded");
+  if (problem?.error === "slot_full" && bugIsOn("api-status")) throw new Error("capacity exceeded");
   if (problem) {
     return context.json({ error: problem.error, message: problem.message }, problem.status);
   }

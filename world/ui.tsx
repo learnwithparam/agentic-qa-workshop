@@ -2,7 +2,7 @@
 
 import { raw } from "hono/html";
 import type { Child } from "hono/jsx";
-import { on } from "./bugs";
+import { bugIsOn } from "./bugs";
 import type { PricedLine, Product, Totals } from "./domain/basket";
 import type { Slot } from "./domain/slots";
 import type { Order, Shopper } from "./store";
@@ -115,7 +115,7 @@ const BUG_CSS = `@media (max-width: 400px) {
 }`;
 
 function pageStyles(): string {
-  if (on("price-overlap")) return CSS + BUG_CSS;
+  if (bugIsOn("price-overlap")) return CSS + BUG_CSS;
   return CSS;
 }
 
@@ -235,7 +235,7 @@ function SlotOption({ slot, held }: { slot: Slot; held: string[] }) {
         disabled={!isOpen}
         checked={held.includes(slot.slotId)}
       />
-      {on("missing-label") ? (
+      {bugIsOn("missing-label") ? (
         <span>{text}</span>
       ) : (
         <label for={inputId}>{`${slot.dateText} ${text}`}</label>
@@ -259,7 +259,7 @@ function SlotDay({ slots, held }: { slots: Slot[]; held: string[] }) {
 
 // In the correct build the button ignores a second click while the first booking is on its way.
 function slotPickerScript(): string {
-  const guard = on("double-book")
+  const guard = bugIsOn("double-book")
     ? ""
     : "if (busy) return; busy = true; document.getElementById('book').disabled = true;";
   return `
