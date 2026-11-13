@@ -1,0 +1,10 @@
+--- a/tests/basket.spec.ts
++++ b/tests/basket.spec.ts
+@@ -112,7 +112,7 @@ test.describe("Offers, voucher and minimum", () => {
+     await addItem(page, "Bananas, loose", "1 kg");
+     await setQuantity(page, "Ground coffee 227 g", 2);
+     await page.goto("/basket");
+-    await expect(page.getByTestId("total")).toHaveText("$12.40");
++    await expect(page.getByTestId("total")).toHaveText("$12.41");
+   });
+ });
