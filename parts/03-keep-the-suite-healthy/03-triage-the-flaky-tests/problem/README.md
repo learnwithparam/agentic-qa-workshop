@@ -17,8 +17,14 @@ flowchart LR
 
 ## Your challenge
 
-Get Claude Code to find the three flaky tests, name each cause, and fix them after you approve. Run the shop
-on release v1.
+Get Claude Code to find the three flaky tests, name each cause, and fix them after you approve. Start the
+shop on release v1 and leave it running:
+
+```bash
+bun run shop
+```
+
+Expect: `Pantry Run ready on http://localhost:4173 (bugs: none)`
 
 Start Claude Code in this folder:
 
@@ -58,7 +64,7 @@ Prove it: run bunx playwright test --repeat-each=20 --shuffle --grep on the thre
 bun run verify triage-the-flaky-tests
 ```
 
-Expect: `Done. All 8 rules pass.`
+Expect: `Done. All 8 rules pass.` Then it counts your progress on every step, which can take a few minutes.
 
 ## If you get stuck
 

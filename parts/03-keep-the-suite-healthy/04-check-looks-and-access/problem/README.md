@@ -69,7 +69,7 @@ so it works on any machine.
 bun run verify check-looks-and-access
 ```
 
-Expect: `Done. All 7 rules pass.`
+Expect: `Done. All 7 rules pass.` Then it counts your progress on every step, which can take a few minutes.
 
 ## If you get stuck
 
