@@ -12,6 +12,10 @@ tests notice? For example, `BUGS=slot-cutoff` lets shoppers book a slot after th
 In this orientation you set up the repo and place one order in the browser. Then you give Claude Code its first
 job, and run the finished suite to see the goal. You write no code.
 
+**Before the commands.** A terminal is a window where you type a command and press Enter. The root
+[Start here](../README.md#start-here) shows how to open one and how to get this folder. After you install
+Claude Code, the habits you will use are on [one page](claude-code-ways-of-working.md).
+
 ```mermaid
 flowchart LR
   R[Requirements<br/>world/requirements] --> P[Plan<br/>specs/*.md]
@@ -47,14 +51,16 @@ claude --version
 Expect: a version such as `2.1.322 (Claude Code)`. On Windows PowerShell run `irm https://claude.ai/install.ps1 | iex`
 instead, and Homebrew users can run `brew install --cask claude-code`.
 
-Sign in. Open Claude Code in this repo. It asks if you trust the folder: say yes. Type `/login` and follow the
-steps in the browser with your Claude account. Then type `/exit`.
+Sign in. In the terminal, in this folder, type `claude`.
 
 ```bash
 claude
 ```
 
-Expect: Claude Code opens in the terminal and, after `/login`, says you are signed in.
+Expect: Claude Code opens in the terminal. It asks if you trust the folder: say yes. Type `/login` and follow the
+steps in the browser with your Claude account. It then says you are signed in. Type `/exit` to leave.
+
+The habits you will use with Claude Code are on [one page](claude-code-ways-of-working.md).
 
 Set up. This installs packages, finds or downloads Chromium for Playwright, and seeds the shop.
 
@@ -83,7 +89,7 @@ bun run world bugs
 
 Expect: `Products: 40, out of stock: MLK-WH2, GRN-OAT, PB-SMOOTH, JUI-ORA, EGG-6.` and then `16 bugs. BUGS=none is the fixed build. BUGS=release turns every bug on.`
 
-Open the shop. Leave this terminal running and use a second one for the rest.
+Open the shop. Leave this terminal running. Open a second terminal in the same folder for the rest: open a new terminal window, then type `cd agentic-qa-workshop`.
 
 ```bash
 bun run shop
