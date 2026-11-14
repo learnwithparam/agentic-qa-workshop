@@ -17,7 +17,7 @@
 **Expected:**
 
 - Three date groups and 36 slots.
-- The first slot is Mar 11 08:00 to 09:00 and the last is Mar 13 19:00 to 20:00, in store time.
+- The first slot is day one 08:00 to 09:00 and the last is day three 19:00 to 20:00, in store time.
 
 #### 1.2 Peak slots cost $4.99 and others $2.99
 
@@ -30,8 +30,8 @@
 
 **Expected:**
 
-- Mar 12 17:00 shows $4.99.
-- Mar 12 16:00 and 19:00, the slots either side of peak, show $2.99.
+- day two 17:00 shows $4.99.
+- day two 16:00 and 19:00, the slots either side of peak, show $2.99.
 
 #### 1.3 A slot with three or fewer places shows how many are left
 
@@ -44,8 +44,8 @@
 
 **Expected:**
 
-- Mar 11 17:00 shows "1 left" and can be chosen.
-- Mar 11 10:00 shows "3 left".
+- day one 17:00 shows "1 left" and can be chosen.
+- day one 10:00 shows "3 left".
 
 ### 2. Booking rules
 
@@ -60,7 +60,7 @@
 
 **Expected:**
 
-- Mar 11 18:00 (20 of 20 booked) shows "Full" and its radio button is disabled.
+- day one 18:00 (20 of 20 booked) shows "Full" and its radio button is disabled.
 
 #### 2.2 Next-date slots close at 22:00 store time
 
@@ -74,8 +74,8 @@
 
 **Expected:**
 
-- At 21:59, Mar 11 08:00 can be chosen.
-- At 22:00, Mar 11 slots show "Closed" and are disabled. Mar 12 slots stay open.
+- At 21:59, day one 08:00 can be chosen.
+- At 22:00, day one slots show "Closed" and are disabled. day two slots stay open.
 
 #### 2.3 The basket shows the booked slot and its fee
 
@@ -84,11 +84,11 @@
 
 **Steps:**
 
-1. Choose Mar 12 09:00 and press Book slot.
+1. Choose day two 09:00 and press Book slot.
 
 **Expected:**
 
-- The basket page lists "Thu, Mar 12, 09:00 to 10:00 ($2.99)" under Delivery.
+- The basket page lists the second day at 09:00 to 10:00 ($2.99) under Delivery.
 
 #### 2.4 Checkout needs a booked slot
 

@@ -47,7 +47,7 @@ In every step you type prompts and review. Claude Code makes each file below. Th
 | [generate-tests-from-the-plan](03-generate-tests-from-the-plan/problem/README.md) | 15      | `tests/slots.spec.ts`, `tests/basket.spec.ts` | one test per scenario, no CSS or sleeps, green on the fixed build |
 | [review-the-agent-tests](04-review-the-agent-tests/problem/README.md)             | 10      | `qa/review.md` and fixed tests                | a verdict per test, and the fixed suite catching 3 planted bugs   |
 
-Total: 55 minutes. Each step's folder is self-contained: work in its `problem/` folder.
+Total: a short session. Each step's folder is self-contained: work in its `problem/` folder.
 
 ## The agents, in Claude Code
 

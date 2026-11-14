@@ -55,7 +55,7 @@ In every step you type prompts and review. Claude Code makes each file below. Th
 | [triage-the-flaky-tests](03-triage-the-flaky-tests/problem/README.md)             | 20      | the fixes and `qa/triage.json`                   | 20 shuffled runs of each flaky test: 0 failures, no retries or sleeps; right causes; a person approved |
 | [check-looks-and-access](04-check-looks-and-access/problem/README.md)             | 15      | `tests/visual.spec.ts` and `tests/a11y.spec.ts`  | fresh baselines, then green on the fixed build, red on `price-overlap` and on `missing-label`          |
 
-Total: 60 minutes. Each step's folder is self-contained: work in its `problem/` folder. The first two steps start
+Total: a short session. Each step's folder is self-contained: work in its `problem/` folder. The first two steps start
 with the Part 2 guard hook already on.
 
 Every sample solution here is a real Claude Code run. The recordings are in `recordings/`, and

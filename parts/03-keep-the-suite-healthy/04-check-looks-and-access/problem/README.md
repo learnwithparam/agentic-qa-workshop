@@ -15,7 +15,7 @@ disabilities.
 ```mermaid
 flowchart LR
   V[visual.spec.ts<br/>375 px and 1280 px] --> S[screenshot vs baseline]
-  A[a11y.spec.ts<br/>axe, WCAG 2.1 AA] --> X[list of violations]
+  A[a11y.spec.ts<br/>axe, WCAG AA] --> X[list of violations]
   S -->|price-overlap| R1[red]
   X -->|missing-label| R2[red]
 ```
@@ -60,7 +60,7 @@ Playwright's container, `mcr.microsoft.com/playwright:v1.65.0-noble`.
 ## Done when
 
 - The visual test uses `toHaveScreenshot` at 375 px, passes on the fixed build, and fails on `price-overlap`.
-- The accessibility test runs axe with the WCAG 2.1 AA tags, passes on the fixed build, and fails on
+- The accessibility test runs axe with the WCAG AA tags, passes on the fixed build, and fails on
   `missing-label`.
 - Any axe rule turned off has a comment that names a ticket.
 
@@ -90,4 +90,4 @@ Expect: `Done. All 7 rules pass.`
 
 - **Baseline**: the saved screenshot a visual test compares with.
 - **Axe**: a tool that lists accessibility problems.
-- **WCAG 2.1 AA**: the usual accessibility rules.
+- **WCAG AA**: the usual accessibility rules.

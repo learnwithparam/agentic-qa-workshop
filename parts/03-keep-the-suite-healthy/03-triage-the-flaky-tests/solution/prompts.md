@@ -20,7 +20,7 @@ For each one, show me the cause, the evidence and the fix you propose. Do not ch
 After you read the diagnosis:
 
 ```text
-Approved, with one change. For the clock test, 2026-03-10T21:59:00-06:00 is 22:59 in Larkford: on March 10 the store is on daylight time, -05:00. Use the shop's own seeded time instead, 2026-03-10T15:00:00-05:00.
+Approved, with one change. For the clock test, 2026-03-10T21:59:00-06:00 is 22:59 in Larkford: on that day the store is on daylight time, -05:00. Use the shop's own seeded time instead, 2026-03-10T15:00:00-05:00.
 Apply the three fixes. Rules: no retries, no waitForTimeout, no removed expect, and keep each test's title.
 Then write qa/triage.json: an array with one entry per flaky test, { "test", "cause", "evidence", "fix", "approvedBy" }. "test" is the exact test title, "cause" is race, shared-data or clock, and "approvedBy" is "Priya Raman (QA lead)".
 Prove it: run bunx playwright test --repeat-each=20 --shuffle --grep on the three titles, and show me the result.

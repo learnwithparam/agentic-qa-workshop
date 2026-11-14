@@ -165,7 +165,7 @@ flowchart LR
 | [5. Run it as a team](parts/05-run-it-as-a-team/README.md)                                               | compare-mcp-and-cli, fuzz-the-api-from-the-schema, measure-the-agent-cost, gate-the-pull-request, write-the-team-playbook | 100     | one gate, measured cost, and the team's rules for agents                                                |
 | [6. Redo a flow with Playwright Test Agents](parts/06-redo-a-flow-with-playwright-test-agents/README.md) | redo-the-flow-with-agents                                                                                                 | 15      | you can generate a plan and a spec with Playwright Test Agents and heal a renamed button                |
 
-Orientation and parts 1 to 4 are the core (250 minutes). Part 5 is the extension for a full day or a cohort. Part 6 is optional homework.
+Orientation and parts 1 to 4 are the core, about an evening and a half. Part 5 is the extension for a full day or a cohort. Part 6 is optional homework.
 `schedules.toml` maps the parts onto a one-day format, four evenings and a weekly cohort.
 
 ## How a step works
@@ -221,7 +221,7 @@ You build Claude Code's setup and the work it does with it. For example: `CLAUDE
 
 | Command                         | What it does                                                                                                                             |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `bun run doctor`                | Asks `claude` for its version and whether it is signed in. Tested on Claude Code 2.1.322 and newer.                                      |
+| `bun run doctor`                | Asks `claude` for its version and whether it is signed in. Tested on a recent Claude Code.                                      |
 | `bun run finished`              | A live `claude -p` run on a fresh copy of `world/finished/template` when Claude Code is signed in; otherwise a replay of a recorded run. |
 | `bun run finished --replay all` | Replays every recorded run and scores each, so you see how much one run differs from the next.                                           |
 | `bun test`                      | Tests the course's hook with the exact JSON Claude Code sends it, and checks the recordings. No model needed.                            |

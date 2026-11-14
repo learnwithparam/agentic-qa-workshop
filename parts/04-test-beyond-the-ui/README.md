@@ -41,7 +41,7 @@ In every step you type prompts and review. Claude Code makes each file below. Th
 | [explore-with-an-agent](02-explore-with-an-agent/problem/README.md)                     | 15      | `qa/explore/charter.md` and one repro test per finding                   | each repro green on the fixed build and red with its bug on; at least 2 of the 3 unwritten bugs found       |
 | [test-the-substitution-suggester](03-test-the-substitution-suggester/problem/README.md) | 25      | `qa/ai-notes.md`, `qa/ai-thresholds.json`, `tests/ai/suggester.spec.ts`  | notes against real answers; red on `ai-allergen` and on a single allergen; green on a reordered good answer |
 
-Total: 60 minutes. Each step's folder is self-contained: work in its `problem/` folder.
+Total: a short session. Each step's folder is self-contained: work in its `problem/` folder.
 
 ## How the checks see your tests
 

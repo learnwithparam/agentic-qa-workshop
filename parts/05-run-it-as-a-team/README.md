@@ -43,7 +43,7 @@ what it made.
 | [gate-the-pull-request](04-gate-the-pull-request/problem/README.md)               | 25      | `qa/gate.ts` and `ci/pull-request.yml`             | the gate merges 1 planted pull request and blocks 4                                        |
 | [write-the-team-playbook](05-write-the-team-playbook/problem/README.md)           | 20      | `qa/playbook.md`                                   | four sections; every reported number is one the gate or the cost step computes             |
 
-Total: 100 minutes. Each step's folder is self-contained: work in its `problem/` folder.
+Total: a short session. Each step's folder is self-contained: work in its `problem/` folder.
 
 ## Real runs, and replays
 

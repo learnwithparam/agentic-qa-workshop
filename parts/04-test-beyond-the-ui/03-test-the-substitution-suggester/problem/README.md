@@ -68,7 +68,7 @@ Expect: `1 passed`
 
 ## Write the spec first
 
-Before you write any test, let Claude Code interview you. Ask it to question you about what must never happen and what a good answer is, and to save your answers as `SPEC.md` with a Goal, an Out of scope part, a Questions part and a Stop condition. The stop condition is a line you can give to `/goal`, so Claude Code keeps working until the check is true.
+Before you write any test, let Claude Code interview you. Ask it to question you about what must never happen and what a good answer is. Then have it save your answers as `SPEC.md` with a Goal, an Out of scope part, a Questions part and a Stop condition. The stop condition is a line you can give to `/goal`, so Claude Code keeps working until the check is true.
 
 ## Done when
 

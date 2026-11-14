@@ -16,8 +16,8 @@
 
 **Expected:**
 
-- The Mar 11 18:00 slot shows "Full" and is disabled.
-- The Mar 12 08:00 slot can be chosen.
+- The day one 18:00 slot shows "Full" and is disabled.
+- The day two 08:00 slot can be chosen.
 
 #### 1.2 The basket shows the booked slot and its fee
 
@@ -27,13 +27,13 @@
 **Steps:**
 
 1. Open Delivery slots.
-2. Choose Mar 12 09:00 to 10:00.
+2. Choose day two 09:00 to 10:00.
 3. Select Book slot.
 
 **Expected:**
 
 - The basket page opens.
-- Under Delivery it shows "Thu, Mar 12, 09:00 to 10:00 ($2.99)".
+- Under Delivery it shows the second day at 09:00 to 10:00 ($2.99).
 
 #### 1.3 Checkout needs a booked slot
 

@@ -14,7 +14,7 @@ shopper ticks the switch by hand, every line is substituted correctly.
 4. Open the basket (`/basket`). Leave the "Allow substitutes" switch alone.
 5. Add Ground coffee 227 g, set its quantity to 6 and click "Update Ground coffee 227 g". This
    brings the order above the $25.00 minimum.
-6. Go to `/slots`. Click "Choose a delivery time", pick "Mar 12 09:00 to 10:00", then click
+6. Go to `/slots`. Click "Choose a delivery time", pick "day two 09:00 to 10:00", then click
    "Reserve".
 7. On the basket, click "Checkout".
 

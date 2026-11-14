@@ -47,7 +47,7 @@ In every step you type prompts and review. Claude Code makes each file below. Th
 | [kill-the-mutants](02-kill-the-mutants/problem/README.md)           | 25      | `domain/*.test.ts` (Vitest) and `stryker.config.json` with `"break": 70` | Stryker's JSON report on a fixed copy of the domain code: score at least 70, each file kills one |
 | [guard-the-assertions](03-guard-the-assertions/problem/README.md)   | 15      | `qa/guard.ts` and a PreToolUse hook in `.claude/settings.json`           | 8 planted diffs and 4 real hook payloads: weakening edits blocked, safe ones let through         |
 
-Total: 60 minutes. Each step's folder is self-contained: work in its `problem/` folder.
+Total: a short session. Each step's folder is self-contained: work in its `problem/` folder.
 
 Every sample solution here is a real Claude Code run. The recordings are in `recordings/`, and
 `recordings/RECORD.md` says how to make them again.

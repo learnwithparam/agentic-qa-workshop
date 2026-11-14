@@ -4,7 +4,7 @@
 **Source:** `world/requirements/substitutions.md`
 
 Ana declared tree nuts. Each order uses six Ground coffee 227 g ($26.94, in stock) to clear the $25.00
-minimum, and the Mar 12 09:00 slot. Stock is checked at packing, so every check reads the Packing
+minimum, and the day two 09:00 slot. Stock is checked at packing, so every check reads the Packing
 column on the order page.
 
 ### 1. The shopper's choice
@@ -18,7 +18,7 @@ column on the order page.
 
 1. Add Whole milk 2 L (out of stock) and Penne 500 g.
 2. Open the basket. Leave the switches alone.
-3. Add six Ground coffee 227 g, book Mar 12 09:00 and check out.
+3. Add six Ground coffee 227 g, book day two 09:00 and check out.
 
 **Expected:**
 
@@ -35,7 +35,7 @@ column on the order page.
 
 1. Add Whole milk 2 L (out of stock, chilled).
 2. Switch "Allow substitutes" off for it.
-3. Add six Ground coffee 227 g, book Mar 12 09:00 and check out.
+3. Add six Ground coffee 227 g, book day two 09:00 and check out.
 
 **Expected:**
 
@@ -51,7 +51,7 @@ column on the order page.
 
 1. Add Oat granola 500 g (out of stock, not chilled).
 2. Switch "Allow substitutes" off for it.
-3. Add six Ground coffee 227 g, book Mar 12 09:00 and check out.
+3. Add six Ground coffee 227 g, book day two 09:00 and check out.
 
 **Expected:**
 
@@ -67,7 +67,7 @@ column on the order page.
 **Steps:**
 
 1. Add Smooth peanut butter 340 g ($2.79, spreads, out of stock).
-2. Add six Ground coffee 227 g, book Mar 12 09:00 and check out.
+2. Add six Ground coffee 227 g, book day two 09:00 and check out.
 
 **Expected:**
 
@@ -82,7 +82,7 @@ column on the order page.
 **Steps:**
 
 1. Add Oat granola 500 g ($3.49, out of stock).
-2. Add six Ground coffee 227 g, book Mar 12 09:00 and check out.
+2. Add six Ground coffee 227 g, book day two 09:00 and check out.
 
 **Expected:**
 
@@ -97,7 +97,7 @@ column on the order page.
 **Steps:**
 
 1. Add Orange juice 1 L ($2.25, out of stock). The 15% limit is $2.58.
-2. Add six Ground coffee 227 g, book Mar 12 09:00 and check out.
+2. Add six Ground coffee 227 g, book day two 09:00 and check out.
 
 **Expected:**
 
@@ -112,7 +112,7 @@ column on the order page.
 **Steps:**
 
 1. Add Free range eggs, 6 (out of stock).
-2. Add six Ground coffee 227 g, book Mar 12 09:00 and check out.
+2. Add six Ground coffee 227 g, book day two 09:00 and check out.
 3. Open the shop.
 
 **Expected:**
