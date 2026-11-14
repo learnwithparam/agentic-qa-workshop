@@ -64,11 +64,18 @@ Expect: `MERGE: every stage passed.`
 
 Run it on the four others. Each must print `BLOCKED`, with the stage that caught it.
 
+## Stop Claude Code when the gate says no
+
+Add a Stop hook in `.claude/settings.json`. It runs `bun qa/gate.ts` when Claude Code thinks it is done, and if the gate blocks, Claude Code keeps working.
+
+Then add a reviewer. Save `.claude/agents/test-reviewer.md` with `tools: Read, Grep, Glob, Bash` and no tool that edits. Ask Claude Code to run `/code-review` through this subagent on your diff, so a fresh pair of eyes checks it.
+
 ## Done when
 
 - The gate merges `clean-pull` and blocks the four bad pull requests.
 - `ci/pull-request.yml` runs `bun run gate` on every pull request.
 - The CI file shards the suite and keeps traces of a red run. A flake policy limits the quarantine. Steps: [the second half](MORE.md).
+- `.claude/settings.json` has a Stop hook that runs the gate, and `test-reviewer` can read but not edit.
 
 Ask Claude Code:
 
@@ -82,7 +89,7 @@ Or run it yourself:
 bun run verify gate-the-pull-request
 ```
 
-Expect: `Done. All 11 rules pass.`
+Expect: `Done. All 13 rules pass.`
 
 ![The gate blocking a flaky test](../images/expected.png)
 

@@ -1,105 +1,41 @@
-# The Claude Code ladder from STANDARD-v2, section 7: each feature a learner must use, and the step
-# that uses it. checks/ladder.ts fails when a mapped step is missing, has no check, or never shows the
-# feature (the "shows" pattern must appear in the step's problem or solution files).
-# A feature with no step yet is listed under [[todo]]. Each one needs a step or a new part before this
-# course reaches that level. Nothing is mapped to a step that does not teach it.
-
-[[feature]]
-level = "L0"
-name = "plan mode"
-step = "write-the-seed-test"
-shows = "show me your plan first"
-
-[[feature]]
-level = "L0"
-name = "a specific prompt"
-step = "write-the-seed-test"
-shows = "Fill in tests/seed\\.spec\\.ts"
-
-[[feature]]
-level = "L0"
-name = "screenshots"
-step = "check-looks-and-access"
-shows = "screenshot"
-
-[[feature]]
-level = "L2"
-name = "CLAUDE.md"
-step = "test-the-order-api-contract"
-shows = "CLAUDE\\.md"
-
-[[feature]]
-level = "L2"
-name = "a check to run"
-step = "write-the-seed-test"
-shows = "bun run verify"
-
-[[feature]]
-level = "L3"
-name = "hooks"
-step = "stop-the-healer-hiding-a-bug"
-shows = "hook"
-
-[[feature]]
-level = "L3"
-name = "deny rules"
-step = "measure-the-agent-cost"
-shows = "\"deny\""
-
-[[feature]]
-level = "L3"
-name = "MCP or CLI tools"
-step = "compare-mcp-and-cli"
-shows = "MCP"
-
-[[feature]]
-level = "L5"
-name = "subagents"
-step = "redo-the-flow-with-agents"
-shows = "\\.claude/agents"
-
-[[feature]]
-level = "L5"
-name = "a reviewer agent"
-step = "write-the-team-playbook"
-shows = "reviewer"
-
-[[feature]]
-level = "L6"
-name = "a GitHub Action"
-step = "gate-the-pull-request"
-shows = "pull_request"
-
-[[feature]]
-level = "L6"
-name = "metrics"
-step = "measure-the-agent-cost"
-shows = "cost per"
-
-[[todo]]
-level = "L0"
-names = ["@ files"]
-
-[[todo]]
-level = "L1"
-names = ["permission modes", "diff review", "Esc", "/rewind", "/clear"]
-
-[[todo]]
-level = "L2"
-names = ["/init", "CLAUDE.md under 200 lines", ".claude/rules"]
-
-[[todo]]
-level = "L3"
-names = ["sandbox", "skills"]
-
-[[todo]]
-level = "L4"
-names = ["/goal", "interview to SPEC.md", "Stop hook gate", "/code-review in a subagent"]
-
-[[todo]]
-level = "L5"
-names = ["worktrees (claude -w)", "/batch"]
-
-[[todo]]
-level = "L6"
-names = ["claude -p", "/loop", "/schedule", "a run contract"]
+# Maps each Claude Code feature a learner must use to the step that teaches it.
+# Levels come from standard section 7. Every step named here has a check script.
+[features]
+# L0 Ask
+plan-mode = "write-the-seed-test"
+at-files = "plan-tests-from-requirements"
+screenshots = "check-looks-and-access"
+specific-prompt = "write-the-seed-test"
+# L1 Supervise
+permission-modes = "review-the-agent-tests"
+diff-review = "review-the-agent-tests"
+esc = "review-the-agent-tests"
+rewind = "review-the-agent-tests"
+clear = "review-the-agent-tests"
+# L2 Teach the repo
+init = "test-the-order-api-contract"
+claude-md = "test-the-order-api-contract"
+rules = "test-the-order-api-contract"
+check-to-run = "write-the-seed-test"
+# L3 Fence it
+hooks = "stop-the-healer-hiding-a-bug"
+deny-rules = "measure-the-agent-cost"
+sandbox = "measure-the-agent-cost"
+skills = "compare-mcp-and-cli"
+mcp-or-cli-tools = "compare-mcp-and-cli"
+# L4 Spec and verify
+spec-interview = "test-the-substitution-suggester"
+goal = "test-the-substitution-suggester"
+stop-hook-gate = "gate-the-pull-request"
+code-review-subagent = "gate-the-pull-request"
+# L5 Parallel
+subagents = "redo-the-flow-with-agents"
+worktrees = "write-the-team-playbook"
+batch = "write-the-team-playbook"
+reviewer-agent = "gate-the-pull-request"
+# L6 Unattended
+headless = "measure-the-agent-cost"
+loop = "write-the-team-playbook"
+schedule = "write-the-team-playbook"
+github-action = "gate-the-pull-request"
+run-contract-and-metrics = "write-the-team-playbook"

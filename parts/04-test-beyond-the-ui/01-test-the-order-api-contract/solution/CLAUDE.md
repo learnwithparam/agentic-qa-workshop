@@ -1,5 +1,6 @@
 # Pantry Run API tests
 
+- Run tests with `bunx playwright test`. Run one file with `bunx playwright test tests/api/<file>`.
 - The contract is `../../../../world/openapi.yaml`. It is the source of truth, not the running shop.
 - API tests live in `tests/api/` and start with `// spec: world/openapi.yaml`.
 - Use Playwright's `request` fixture. Never open a page in an API test.

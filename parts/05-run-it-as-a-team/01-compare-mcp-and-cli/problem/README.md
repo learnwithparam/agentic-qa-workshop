@@ -59,11 +59,16 @@ number of FINDING: lines. Leave Real findings and Choice to me. List each findin
 
 Try each finding in the shop yourself. Fill in Real findings, then write the choice.
 
+## Save the winner as a skill
+
+A skill is a small folder Claude Code loads when its description fits the job. Ask Claude Code to save the way you chose as `.claude/skills/<name>/SKILL.md`. The file starts with a `name` that matches the folder and a `description` that says when to use it. Then it lists the steps.
+
 ## Done when
 
 - Each run is a finished `claude -p` transcript that used its own browser.
 - The table's tokens, turns, seconds and findings match the runs.
 - You counted the real findings and wrote a choice with a reason.
+- A skill in `.claude/skills` has a name, a description of when to use it, and three steps.
 
 Ask Claude Code:
 
@@ -77,7 +82,7 @@ Or run it yourself:
 bun run verify compare-mcp-and-cli
 ```
 
-Expect: `Done. All 5 rules pass.`
+Expect: `Done. All 6 rules pass.`
 
 ![The check passing](../images/expected.png)
 

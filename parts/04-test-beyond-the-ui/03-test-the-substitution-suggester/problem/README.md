@@ -66,12 +66,17 @@ bunx playwright test tests/ai
 
 Expect: `1 passed`
 
+## Write the spec first
+
+Before you write any test, let Claude Code interview you. Ask it to question you about what must never happen and what a good answer is, and to save your answers as `SPEC.md` with a Goal, an Out of scope part, a Questions part and a Stop condition. The stop condition is a line you can give to `/goal`, so Claude Code keeps working until the check is true.
+
 ## Done when
 
 - `qa/ai-notes.md` has 20 rows that match the real answers, and names 2 failure kinds.
 - `qa/ai-thresholds.json` has 20 seeds, a pass rate from 0.9 to below 1, and `allergen` in `hardFail`.
 - The test passes on the fixed build, goes red on `ai-allergen`, and goes red on a single allergen.
 - It stays green when a good answer comes back in another order.
+- `SPEC.md` has a goal, what is out of scope, three answered questions and a stop condition for `/goal`.
 
 Ask Claude Code:
 
@@ -85,7 +90,7 @@ Or run it yourself:
 bun run verify test-the-substitution-suggester
 ```
 
-Expect: `Done. All 10 rules pass.`
+Expect: `Done. All 11 rules pass.`
 
 ![The check passing](../images/expected.png)
 

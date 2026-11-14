@@ -4,6 +4,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import type { Rule } from "../scripts/verify";
+import { readSettings } from "./lib/claude-files";
 import { readText } from "./lib/markdown";
 import { allTests } from "./lib/static";
 
@@ -95,6 +96,12 @@ function costPerKeptTestIsRight(folder: string): boolean {
   return written !== null && Math.abs(written - totalCost / kept) <= HALF_A_CENT;
 }
 
+// The sandbox fences what Bash can touch, so a stray command cannot leave the project.
+function sandboxIsOn(folder: string): boolean {
+  const sandbox = readSettings(folder).sandbox as { enabled?: boolean } | undefined;
+  return sandbox?.enabled === true;
+}
+
 export default [
   {
     says: "qa/runs/ has the claude -p results for plan, generate and heal",
@@ -115,5 +122,10 @@ export default [
     says: "Cost per kept test is the total cost of the three runs over the kept tests",
     test: costPerKeptTestIsRight,
     tryNext: "add the three costs, divide by Kept tests, and round to the cent",
+  },
+  {
+    says: ".claude/settings.json turns the sandbox on",
+    test: sandboxIsOn,
+    tryNext: 'add "sandbox": { "enabled": true } to .claude/settings.json',
   },
 ] satisfies Rule[];

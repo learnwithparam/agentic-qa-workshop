@@ -60,12 +60,19 @@ Expect: `Pantry Run ready on http://localhost:4173 (bugs: weighted-price)`
 
 Then switch the bug off and watch the test pass.
 
+## Keep your hand on the wheel
+
+You are the reviewer, so set the pace. Start Claude Code in plan mode, where it can read and explain but not edit. Read the diff of every fix before you accept it. If Claude Code starts a change you did not ask for, press Esc. If it already made one, run `/rewind` to go back. Run `/clear` before a new review so old talk does not bend it.
+
+Then add a "How I reviewed" part at the end of `qa/review.md`. Fill each line with a few words of your own: the permission mode, the diff, Esc, Rewind and Clear.
+
 ## Done when
 
 - `qa/review.md` gives every agent test a verdict (keep, fix or drop), and every fix or drop says why.
 - At least one test is marked fix or drop.
 - Every test marked fix was changed; every test marked drop is gone.
 - The suite passes on the fixed build and now catches `weighted-price`, `ghost-line` and `promo-stacking`.
+- "How I reviewed" names your permission mode, your diff check, Esc, `/rewind` and `/clear`.
 
 Ask Claude Code:
 
@@ -79,7 +86,7 @@ Or run it yourself:
 bun run verify review-the-agent-tests
 ```
 
-Expect: `Done. All 6 rules pass.`
+Expect: `Done. All 9 rules pass.`
 
 ## If you get stuck
 

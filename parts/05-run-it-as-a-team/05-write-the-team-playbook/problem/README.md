@@ -45,12 +45,19 @@ Do not report tests written. Show me the draft.
 Read every rule. Would your team follow it? Change any rule you do not agree with, in your own words or by asking
 Claude Code.
 
+## Parallel and unattended work
+
+Add two more sections to the playbook. Under Parallel work, say each agent gets its own worktree with `claude -w <name>`, and when to use `/batch`. Under Unattended runs, say what `/loop` and `/schedule` are for.
+
+Then write `qa/run-contract.md` for one scheduled run, with five parts: Goal, Stop condition, Tools allowed, Budget and Report to. A run with no one watching must know when to stop.
+
 ## Done when
 
 - The four sections each have at least two rules.
 - Agents may not forbids weakening an expect and skipping a test.
 - Every human gate names who approves.
 - At least 4 numbers, each one the gate or the cost step computes, and none counts tests written.
+- The playbook has Parallel work and Unattended runs, and `qa/run-contract.md` has all five parts.
 
 Ask Claude Code:
 
@@ -64,7 +71,7 @@ Or run it yourself:
 bun run verify write-the-team-playbook
 ```
 
-Expect: `Done. All 5 rules pass.`
+Expect: `Done. All 8 rules pass.`
 
 ## If you get stuck
 

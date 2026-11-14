@@ -19,3 +19,11 @@ One line per test in `tests/slots.spec.ts` and `tests/basket.spec.ts`:
 - The SAVE10 voucher skips 3 for 2 lines: fix: only checked the voucher row is visible; now checks it is -$0.33
 - The total adds delivery and takes off offers and voucher: keep: checks the rule it names
 - Checkout closes again when the basket drops below $25.00: keep: checks the rule it names
+
+## How I reviewed
+
+- Permission mode: I started in plan mode so Claude Code could read and explain but not edit
+- Diff: I read the diff of each fix before I accepted it, and I undid one that touched two tests
+- Esc: I pressed Esc when Claude Code began to rewrite a test I had marked keep
+- Rewind: I used /rewind to go back to the step before that rewrite and kept my own edit
+- Clear: I used /clear before the next review so old talk did not bend the new verdicts

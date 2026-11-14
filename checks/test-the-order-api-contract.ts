@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { openDoor, pathPattern } from "../parts/04-test-beyond-the-ui/helpers/traffic";
 import { ROOT } from "../scripts/structure";
 import type { Rule } from "../scripts/verify";
+import { frontmatter, lineCount, readFile } from "./lib/claude-files";
 import { once } from "./lib/memo";
 import { specFiles } from "./lib/static";
 import { runSuite, type SuiteResult } from "./lib/suite";
@@ -130,6 +131,24 @@ function mockedTestPasses(folder: string): Promise<boolean> {
   );
 }
 
+const MOST_LINES = 200;
+
+const claudeMd = (folder: string) => join(folder, "CLAUDE.md");
+
+function claudeMdIsShortAndRunsTheTests(folder: string): boolean {
+  const text = readFile(claudeMd(folder));
+  return (
+    text !== "" && lineCount(claudeMd(folder)) < MOST_LINES && /bunx playwright test/.test(text)
+  );
+}
+
+// A rule file in .claude/rules that loads only for the API tests.
+function apiRuleLoadsOnlyForApiTests(folder: string): boolean {
+  const file = join(folder, ".claude", "rules", "api-tests.md");
+  const header = frontmatter(readFile(file));
+  return /tests\/api/.test(header.paths ?? "") && readFile(file).split("\n").length > 5;
+}
+
 export default [
   {
     says: "tests/api/ has spec files, and each names the contract in a // spec: line",
@@ -171,5 +190,17 @@ export default [
     says: "the mocked test passes on the fixed build",
     test: async (folder) => mocksFailedCall(folder) && (await mockedTestPasses(folder)),
     tryNext: "run bunx playwright test tests/mocked and fix the first red line",
+  },
+  {
+    says: "CLAUDE.md is under 200 lines and says how to run the tests",
+    test: claudeMdIsShortAndRunsTheTests,
+    tryNext:
+      "run /init, keep the short file, and add the line: Run tests with bunx playwright test",
+  },
+  {
+    says: ".claude/rules/api-tests.md loads only for files in tests/api",
+    test: apiRuleLoadsOnlyForApiTests,
+    tryNext:
+      "move the API rules into .claude/rules/api-tests.md with paths: tests/api/** at the top",
   },
 ] satisfies Rule[];

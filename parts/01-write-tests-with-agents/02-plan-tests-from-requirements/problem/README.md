@@ -35,12 +35,13 @@ claude
 
 Expect: `init-agents` writes `.claude/agents/` and `.mcp.json`, then Claude Code opens.
 
-Type this prompt:
+Type this prompt. The `@` before a path makes Claude Code read that real file, so it does not guess what the file says:
 
 ```text
 Use the playwright-test-planner agent to plan tests for Pantry Run from
-../../../../world/requirements/slots.md and basket.md. Use tests/seed.spec.ts as the seed.
-Save specs/slots.md and specs/basket.md. Under every scenario heading add two lines, like this:
+@../../../../world/requirements/slots.md and @../../../../world/requirements/basket.md. Use tests/seed.spec.ts as the seed.
+Save specs/slots.md and specs/basket.md. Under each plan title add a Source line
+with the requirements file. Under every scenario heading add two lines, like this:
 **Covers:** SLOT-2
 **Kind:** boundary
 Kind is happy, boundary or negative. Every SLOT and BASK ID must be covered at least once,
@@ -60,6 +61,7 @@ at 21:59 and at 22:00, with Covers and Kind lines.
 - Every scenario has a Covers line with real IDs, a Kind, numbered steps and an expected result.
 - Every SLOT and every BASK requirement is covered at least once.
 - Each plan has at least one boundary or negative scenario.
+- Each plan has a Source line that names the requirements file you gave Claude Code with `@`.
 
 Ask Claude Code:
 
@@ -73,7 +75,7 @@ Or run it yourself:
 bun run verify plan-tests-from-requirements
 ```
 
-Expect: `Done. All 7 rules pass.`
+Expect: `Done. All 8 rules pass.`
 
 ## If you get stuck
 

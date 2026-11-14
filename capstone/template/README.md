@@ -53,10 +53,10 @@ Fill in `MY-APP.md` and `evidence.json` in your own words. Put your own name in 
 The check reads your files only. To check a folder outside this repo:
 
 ```bash
-MY_APP_DIR=../my-app-tests bun run verify run-agents-on-your-own-app
+bun capstone/check.ts ../my-app-tests
 ```
 
-Expect: `Done. All 9 rules pass.`
+Expect: `Done. All rules pass.`
 
 ## Done when
 
@@ -67,10 +67,10 @@ Expect: `Done. All 9 rules pass.`
 - `evidence/report.json` shows every test passed, for the tests you have now.
 
 ```bash
-bun run verify run-agents-on-your-own-app
+bun capstone/check.ts ./capstone/template
 ```
 
-Expect: `Done. All 9 rules pass.`
+Expect: `Done. All rules pass.`
 
 ## If you get stuck
 

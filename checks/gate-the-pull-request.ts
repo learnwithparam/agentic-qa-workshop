@@ -7,6 +7,7 @@ import { join } from "node:path";
 import { ROOT } from "../scripts/structure";
 import type { Rule } from "../scripts/verify";
 import { browserEnv } from "./lib/browser";
+import { frontmatter, readFile, readSettings } from "./lib/claude-files";
 import { readText } from "./lib/markdown";
 import { once } from "./lib/memo";
 import { withShop } from "./lib/world";
@@ -112,6 +113,28 @@ const blocks = (pull: string) => async (folder: string) => {
   return !run.merged;
 };
 
+// A Stop hook runs when Claude Code thinks it is done. If the gate says no, it keeps working.
+function stopHookRunsTheGate(folder: string): boolean {
+  // biome-ignore lint/style/useNamingConvention: Stop is the event name Claude Code uses
+  type Settings = { Stop?: { hooks?: { command?: string }[] }[] };
+  const hooks = readSettings(folder).hooks as Settings | undefined;
+  const commands = (hooks?.Stop ?? []).flatMap((entry) => entry.hooks ?? []);
+  return commands.some((hook) => /qa\/gate\.ts|bun run gate/.test(hook.command ?? ""));
+}
+
+// The reviewer agent reads and reports. It has no tool that edits a file.
+function reviewerCannotEdit(folder: string): boolean {
+  const text = readFile(join(folder, ".claude", "agents", "test-reviewer.md"));
+  const header = frontmatter(text);
+  const tools = header.tools ?? "";
+  return (
+    header.name === "test-reviewer" &&
+    tools !== "" &&
+    !/\b(Edit|Write|MultiEdit)\b/.test(tools) &&
+    /\/code-review|expect/i.test(text)
+  );
+}
+
 export default [
   {
     says: "ci/pull-request.yml runs bun run gate on every pull request",
@@ -168,5 +191,16 @@ export default [
     says: "the sharded job leaves quarantined tests out with --grep-invert @quarantine",
     test: ciSkipsQuarantine,
     tryNext: "tag quarantined tests @quarantine and skip that tag in the sharded job",
+  },
+  {
+    says: ".claude/settings.json has a Stop hook that runs the gate",
+    test: stopHookRunsTheGate,
+    tryNext: "add a Stop hook in .claude/settings.json that runs bun qa/gate.ts",
+  },
+  {
+    says: "a test-reviewer agent can read but not edit, and checks for a removed expect",
+    test: reviewerCannotEdit,
+    tryNext:
+      "save .claude/agents/test-reviewer.md with tools: Read, Grep, Glob and no Edit or Write",
   },
 ] satisfies Rule[];

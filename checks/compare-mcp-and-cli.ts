@@ -1,8 +1,10 @@
 // compare-mcp-and-cli: the same exploring task, run once with Playwright MCP and once with the
 // Playwright CLI, both through claude -p. The check reads the two saved stream-json transcripts
 // and makes sure every number in qa/mcp-vs-cli.md comes from them, never from a guess.
+import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { Rule } from "../scripts/verify";
+import { frontmatter, readFile, words } from "./lib/claude-files";
 import { readText } from "./lib/markdown";
 
 type ToolUse = { name: string; command: string };
@@ -145,6 +147,18 @@ function cliRunUsedOnlyTheCli(folder: string): boolean {
   return usedCliBrowser(run) && !usedMcpBrowser(run);
 }
 
+// A skill is a folder with a SKILL.md: a name, a description that says when to use it, and steps.
+function hasOneGoodSkill(folder: string): boolean {
+  const dir = join(folder, ".claude", "skills");
+  if (!existsSync(dir)) return false;
+  return readdirSync(dir).some((name) => {
+    const text = readFile(join(dir, name, "SKILL.md"));
+    const header = frontmatter(text);
+    const steps = text.split("\n").filter((line) => /^\d+\.\s/.test(line));
+    return header.name === name && words(header.description ?? "") >= 8 && steps.length >= 3;
+  });
+}
+
 export default [
   {
     says: "qa/runs/mcp.jsonl is a finished claude -p run that used the Playwright MCP browser",
@@ -170,5 +184,10 @@ export default [
     says: "## Choice names MCP or CLI for the team, with a reason",
     test: choiceHasReason,
     tryNext: "write which one the team will use for exploring, and the number that decided it",
+  },
+  {
+    says: "a skill in .claude/skills has a name, a description of when to use it and three steps",
+    test: hasOneGoodSkill,
+    tryNext: "ask Claude Code to save your winning way as .claude/skills/<name>/SKILL.md",
   },
 ] satisfies Rule[];

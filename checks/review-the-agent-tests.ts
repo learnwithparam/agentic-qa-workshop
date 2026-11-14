@@ -3,6 +3,7 @@
 import { basename, join } from "node:path";
 import { ROOT } from "../scripts/structure";
 import type { Rule } from "../scripts/verify";
+import { labelled, sectionOf, words } from "./lib/claude-files";
 import { norm, readText } from "./lib/markdown";
 import { bugKillMatrix } from "./lib/matrix";
 import { once } from "./lib/memo";
@@ -90,6 +91,16 @@ async function suiteCatchesTheLetThroughBugs(folder: string): Promise<boolean> {
   return matrix.caught === LET_THROUGH.length;
 }
 
+const MODES = /\b(plan|default|acceptEdits|accept edits)\b/i;
+const HOW = (folder: string) =>
+  sectionOf(readText(join(folder, "qa", "review.md")), "How I reviewed");
+
+// Each line says in a few words what the learner did, so a blank or a copied label fails.
+function saidIt(folder: string, label: string, needs: RegExp = /./): boolean {
+  const line = labelled(HOW(folder), label);
+  return words(line) >= 4 && needs.test(line);
+}
+
 export default [
   {
     says: "qa/review.md gives every agent test a verdict: keep, fix or drop",
@@ -126,5 +137,23 @@ export default [
     tryNext:
       "start the shop with BUGS=weighted-price bun run shop " +
       "and find the test that should go red; make it check the number the shopper pays",
+  },
+  {
+    says: "How I reviewed names the permission mode you used",
+    test: (folder) => saidIt(folder, "Permission mode", MODES),
+    tryNext: "write which mode you ran in, such as plan, and why it fit a review",
+  },
+  {
+    says: "How I reviewed says you read the diff before you kept a change",
+    test: (folder) => saidIt(folder, "Diff", /diff/i),
+    tryNext: "write one line about reading the diff of each fix before you accepted it",
+  },
+  {
+    says: "How I reviewed says when you pressed Esc, and when you used /rewind and /clear",
+    test: (folder) =>
+      saidIt(folder, "Esc") &&
+      saidIt(folder, "Rewind", /\/rewind/) &&
+      saidIt(folder, "Clear", /\/clear/),
+    tryNext: "add an Esc, a Rewind and a Clear line, each with a few words and the slash command",
   },
 ] satisfies Rule[];

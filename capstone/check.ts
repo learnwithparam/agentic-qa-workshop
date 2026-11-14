@@ -2,12 +2,12 @@
 // The learner runs Playwright's planner and generator (and the healer if a test broke)
 // on their OWN app. This check never opens the course shop. It reads the learner's files only.
 // It proves the shape of the work and that evidence exists: a saved report with every test green.
-// Set MY_APP_DIR to point the check at a folder outside this repo.
+// Run: bun capstone/check.ts <your folder>
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { readText, scenarios } from "../checks/lib/markdown";
+import { allTests, specFiles } from "../checks/lib/static";
 import type { Rule } from "../scripts/verify";
-import { readText, scenarios } from "./lib/markdown";
-import { allTests, specFiles } from "./lib/static";
 
 const SECTIONS = [
   "My app",
@@ -21,8 +21,7 @@ const NOT_A_PERSON = /^(claude|claude code|ai|agent|bot|planner|generator|healer
 // Anything from the course world means the learner copied the example, not their own app.
 const COURSE_WORLD = /pantry|localhost:4173|__test\/reset|ana@pantryrun/i;
 
-// MY_APP_DIR lets a learner check a folder that lives in their own repo.
-const mine = (folder: string) => process.env.MY_APP_DIR ?? folder;
+const mine = (folder: string) => folder;
 
 const notesPath = (folder: string) => join(mine(folder), "MY-APP.md");
 const evidencePath = (folder: string) => join(mine(folder), "evidence.json");
@@ -168,7 +167,7 @@ function evidenceIsComplete(folder: string): boolean {
   );
 }
 
-export default [
+const rules = [
   {
     says: "MY-APP.md has all five sections, each with a real answer and no TODO",
     test: notesAreFilledIn,
@@ -219,3 +218,57 @@ export default [
     tryNext: "run the tests again and save a new report, so it matches the files you have now",
   },
 ] satisfies Rule[];
+
+export default rules;
+
+const here = import.meta.dir;
+
+async function grade(folder: string): Promise<boolean> {
+  let allPass = true;
+  for (const rule of rules) {
+    let ok = false;
+    try {
+      ok = await rule.test(folder);
+    } catch {
+      ok = false;
+    }
+    if (ok) console.log(`  PASS  ${rule.says}`);
+    else {
+      allPass = false;
+      console.log(`  FAIL  ${rule.says}\n        Try next: ${rule.tryNext}`);
+    }
+  }
+  return allPass;
+}
+
+// bun capstone/check.ts --wrong: every folder in capstone/wrong must fail.
+async function provedWrong(): Promise<number> {
+  const root = join(here, "wrong");
+  let bad = 0;
+  for (const name of readdirSync(root)) {
+    const quiet = console.log;
+    console.log = () => {};
+    const passed = await grade(join(root, name));
+    console.log = quiet;
+    if (passed) {
+      console.log(`wrong/${name} PASSES, so the check misses that mistake`);
+      bad += 1;
+    }
+  }
+  if (bad === 0) console.log("Every wrong answer fails, as it should.");
+  return bad === 0 ? 0 : 1;
+}
+
+async function main(): Promise<number> {
+  const arg = process.argv[2];
+  if (arg === "--wrong") return provedWrong();
+  if (!arg) {
+    console.log("Give the folder to check: bun capstone/check.ts <your folder>");
+    return 2;
+  }
+  const passed = await grade(arg);
+  console.log(passed ? "Done. All rules pass." : "Not done yet. See the FAIL lines above.");
+  return passed ? 0 : 1;
+}
+
+if (import.meta.main) process.exit(await main());

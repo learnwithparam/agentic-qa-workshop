@@ -62,12 +62,19 @@ Expect: `Pantry Run ready on http://localhost:4173 (bugs: api-field-rename)`
 
 The order tests should now go red. Stop the shop and do the same with `BUGS=api-status`.
 
+## Teach the repo in two files
+
+Claude Code forgets between sessions, so you give it a map. In Claude Code run `/init`. It reads the folder and writes a short `CLAUDE.md`. Keep that file under 200 lines and add one line that says how to run the tests: `bunx playwright test`.
+
+Rules that matter only for the API tests belong in their own file, so they load only when Claude Code touches those tests. Move them to `.claude/rules/api-tests.md`, and start that file with a `paths:` line that names `tests/api/**`.
+
 ## Done when
 
 - Every file in `tests/api/` starts with `// spec: world/openapi.yaml` and uses only the `request` fixture.
 - The tests pass on the fixed build and reach all 12 path and status pairs in the contract.
 - The tests go red on `api-field-rename` and on `api-status`.
 - `tests/mocked/` has a browser test that mocks a failed booking with `page.route` and passes. Steps: [the second half](MORE.md).
+- `CLAUDE.md` is under 200 lines and says how to run the tests, and `.claude/rules/api-tests.md` loads only for `tests/api`.
 
 Ask Claude Code:
 
@@ -81,7 +88,7 @@ Or run it yourself:
 bun run verify test-the-order-api-contract
 ```
 
-Expect: `Done. All 8 rules pass.`
+Expect: `Done. All 10 rules pass.`
 
 ![The check passing](../images/expected.png)
 

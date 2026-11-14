@@ -70,10 +70,15 @@ decimal, Cost is total_cost_usd. Kept tests is the tests in tests/ apart from th
 Cost per kept test is the three costs added up, divided by Kept tests, to the cent.
 ```
 
+## Fence the shell
+
+A run that no one watches should not be able to touch the whole machine. Turn the sandbox on in `.claude/settings.json` with `"sandbox": { "enabled": true }`. Bash commands then run inside a fence.
+
 ## Done when
 
 - `qa/runs/` holds the three results, and the three rows in `qa/cost.md` match them.
 - Kept tests counts the tests still in `tests/`, and the cost per kept test is right to the cent.
+- `.claude/settings.json` turns the sandbox on.
 
 Ask Claude Code:
 
@@ -87,7 +92,7 @@ Or run it yourself:
 bun run verify measure-the-agent-cost
 ```
 
-Expect: `Done. All 4 rules pass.`
+Expect: `Done. All 5 rules pass.`
 
 ![The check passing](../images/expected.png)
 
