@@ -2,17 +2,17 @@
 
 ## The problem
 
-An agent wrote every test in `tests/`. All are green. Some check what their title says. Some check only a message.
+An agent wrote every test in `tests/`. All are green, but some check only a message.
 
-A green test that stays green with the bug on is worse than no test. For example, a test called "750 g of bananas costs $1.04" that checks only a message passes even when the price is wrong.
+A green test that stays green with the bug on is worse than no test. For example, a test called "750 g of bananas costs $1.04" checks only a message, so it passes even when the price is wrong.
 
 ```mermaid
 flowchart LR
-  T[agent tests<br/>all green] --> R[you read each one<br/>next to its scenario]
+  T[agent tests<br/>all green] --> R[you read each one]
   R -->|keep| K[unchanged]
   R -->|fix| F[stronger expect]
   R -->|drop| D[deleted]
-  F --> M{run with the bug on:<br/>does it go red?}
+  F --> M{bug on: red?}
 ```
 
 ## Watch it done
@@ -25,7 +25,7 @@ Each test gets one line in `qa/review.md`, in this form:
 
 ## Your turn
 
-Three weak tests are planted here. Use Claude Code to find them, record a verdict for each test, and fix the weak ones. You edit no file. You judge every verdict and fix.
+Three weak tests are planted here. Use Claude Code to find and fix them. You judge every verdict.
 
 Start Claude Code in this folder:
 
@@ -35,23 +35,23 @@ claude
 
 Expect: Claude Code opens in this folder.
 
-Ask for the review first, and for no changes yet:
+Ask for the review first, with no changes yet:
 
 ```text
 Read every test in tests/slots.spec.ts and tests/basket.spec.ts next to its scenario in specs/.
-For each test, ask: if the rule in this title broke, would this test go red?
+For each test, ask: would it go red if its rule broke?
 Write one line per test in qa/review.md in this form:
 - <test title>: keep | fix | drop: <why, in a few words>
-Do not change any test yet. Show me the list.
+Do not change any test yet.
 ```
 
-Check the list yourself. Signs of a weak test: an `expect` on a message or a visible element instead of a number, or `expect(locator).toBeTruthy()`, which passes for any locator. Reject a verdict you do not agree with.
+Check the list yourself. A weak test checks only a message, or uses `expect(locator).toBeTruthy()`, which passes for any locator.
 
 Then ask for the fixes:
 
 ```text
-Fix every test marked fix in qa/review.md. Make each one check the number or line
-the shopper sees. Do not change any test marked keep.
+Fix every test marked fix in qa/review.md. Check the number or line the shopper sees.
+Do not change any test marked keep.
 ```
 
 Prove each fix. Start the shop with the matching bug on, run that one test, and watch it go red:
@@ -62,30 +62,30 @@ BUGS=weighted-price bun run shop
 
 Expect: `Pantry Run ready on http://localhost:4173 (bugs: weighted-price)`
 
-Then switch the bug off and watch the test pass.
+Then switch the bug off.
 
 ## Keep your hand on the wheel
 
-You are the reviewer, so set the pace. Start Claude Code in plan mode, where it can read and explain but not edit. Read the diff of every fix before you accept it. If Claude Code starts a change you did not ask for, press Esc. If it already made one, run `/rewind` to go back. Run `/clear` before a new review so old talk does not bend it.
+Use plan mode, so Claude Code reads but does not edit. Read each fix's diff. Press Esc to stop an unwanted change, and `/rewind` to undo one. Run `/clear` before a new review.
 
-Then add a "How I reviewed" part at the end of `qa/review.md`. Fill each line with a few words of your own: the permission mode, the diff, Esc, Rewind and Clear.
+Then add a "How I reviewed" part at the end of `qa/review.md`, in your own words.
 
 ## Do it on your work
 
-Pick one test in an app your team owns. Ask Claude Code whether it would go red if its rule broke. Read the verdict before you keep it.
+Pick one test in your own app. Ask whether it would go red if its rule broke.
 
 ## Done when
 
-- `qa/review.md` gives every agent test a verdict (keep, fix or drop), and every fix or drop says why.
+- `qa/review.md` gives every test a verdict, with a reason for each fix or drop.
 - At least one test is marked fix or drop.
-- Every test marked fix was changed; every test marked drop is gone.
-- The suite passes on the fixed build and now catches `weighted-price`, `ghost-line` and `promo-stacking`.
+- Every fix was changed; every drop is gone.
+- The suite passes on the fixed build and catches `weighted-price`, `ghost-line` and `promo-stacking`.
 - "How I reviewed" names your permission mode, your diff check, Esc, `/rewind` and `/clear`.
 
 Ask Claude Code:
 
 ```text
-Run `bun run verify review-the-agent-tests` from the repo root and tell me what it printed. Do not change anything to make it pass.
+Run `bun run verify review-the-agent-tests` and tell me what it printed. Do not change anything to make it pass.
 ```
 
 Or run it yourself:
@@ -98,18 +98,12 @@ Expect: `Done. All 9 rules pass.`
 
 ## Solution
 
-The finished answer is in `solution/`. Read it after you pass, not before.
+Read the finished answer in `solution/` after you pass.
 
-## If you get stuck
+## Go further
 
-| What you see                              | Fix                                                                                                         |
-| ----------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `FAIL the reviewed suite now catches ...` | A test marked fix still passes with the bug on. Ask Claude Code to check the price the shopper pays.        |
-| `FAIL every test marked fix was changed`  | The check compares with the agent's first version. Ask Claude Code to change the test, not only the review. |
-| You dropped a weak test                   | Then nothing checks that rule. A weak test is usually worth fixing.                                         |
+If you get stuck:
 
-## Words you will use
-
-- **Verdict**: keep, fix or drop, with a reason.
-- **Weak assertion**: an `expect` that passes whether or not the rule holds.
-- **Catch**: a test goes red when a planted bug is on, and green when it is off.
+- **A fix still passes:** ask Claude Code to check the price the shopper pays.
+- **Fix not counted:** change the test, not only the review.
+- **Dropped a weak test:** nothing checks that rule now.

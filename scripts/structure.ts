@@ -23,7 +23,10 @@ type StepSettings = {
 function subfolders(folder: string): string[] {
   if (!existsSync(folder)) return [];
   const entries = readdirSync(folder);
-  const folders = entries.filter((entry) => statSync(join(folder, entry)).isDirectory());
+  const notSteps = new Set(["helpers", "images", "recordings"]);
+  const folders = entries.filter(
+    (entry) => !notSteps.has(entry) && statSync(join(folder, entry)).isDirectory(),
+  );
   return folders.sort();
 }
 
