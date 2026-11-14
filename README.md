@@ -28,7 +28,7 @@ cd agentic-qa-workshop
 Expect: no error. Git prints `Cloning into 'agentic-qa-workshop'...` and the second line prints nothing.
 
 **3. Install Claude Code and sign in.** Follow the first steps of the
-[orientation walkthrough](00-orientation/README.md#walkthrough). It also shows how to install Bun and git.
+[orientation walkthrough](00-orientation/README.md#walkthrough).
 
 **4. Learn the ways of working.** [Claude Code ways of working](00-orientation/claude-code-ways-of-working.md)
 lists each habit the course teaches and links to the step where you try it.
