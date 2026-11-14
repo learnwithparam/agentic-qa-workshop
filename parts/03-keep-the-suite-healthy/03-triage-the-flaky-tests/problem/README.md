@@ -18,7 +18,7 @@ flowchart LR
 ## Your challenge
 
 Get Claude Code to find the three flaky tests, name each cause, and fix them after you approve. Start the
-shop on release v1 and leave it running:
+shop (release v1) and leave it running:
 
 ```bash
 bun run shop
@@ -32,7 +32,7 @@ Start Claude Code in this folder:
 claude
 ```
 
-Expect: Claude Code opens in this folder. Ask for a diagnosis first, and no changes:
+Expect: Claude Code opens. Ask for a diagnosis first, and no changes:
 
 ```text
 The legacy suite in tests/ fails now and then, and nobody trusts a red run any more.
@@ -45,7 +45,7 @@ This is what 20 shuffled runs of the three tests look like before the fix (a sum
 
 ![Before the fix: 24 of 60 runs fail](../images/expected.png)
 
-Check each proposal. In the real run, Claude Code proposed `21:59:00-06:00` for the clock test. On March 10
+In the real run, Claude Code proposed `21:59:00-06:00` for the clock test. On March 10
 that is 22:59 in Larkford, after the cutoff. Then approve, with your own name:
 
 ```text
@@ -58,13 +58,13 @@ Prove it: run bunx playwright test --repeat-each=20 --shuffle --grep on the thre
 ## Done when
 
 - The 3 tests keep their expects and pass 20 shuffled runs, with no retries, sleeps or real time.
-- `qa/triage.json` gives each one the right cause, and a person in `approvedBy`.
+- `qa/triage.json` gives each the right cause and a person in `approvedBy`.
 
 ```bash
 bun run verify triage-the-flaky-tests
 ```
 
-Expect: `Done. All 8 rules pass.` Then it counts your progress on every step, which can take a few minutes.
+Expect: `Done. All 8 rules pass.`
 
 ## If you get stuck
 

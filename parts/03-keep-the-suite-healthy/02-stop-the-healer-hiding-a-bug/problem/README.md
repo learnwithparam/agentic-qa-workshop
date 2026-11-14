@@ -75,7 +75,7 @@ Do not change any test.
 bun run verify stop-the-healer-hiding-a-bug
 ```
 
-Expect: `Done. All 6 rules pass.` Then it counts your progress on every step, which can take a few minutes.
+Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 

@@ -73,7 +73,7 @@ The 7 tests still red are in `substitutions.spec.ts`. They are red for a real re
 bun run verify heal-a-renamed-button
 ```
 
-Expect: `Done. All 5 rules pass.` Then it counts your progress on every step, which can take a few minutes.
+Expect: `Done. All 5 rules pass.`
 
 ## If you get stuck
 
