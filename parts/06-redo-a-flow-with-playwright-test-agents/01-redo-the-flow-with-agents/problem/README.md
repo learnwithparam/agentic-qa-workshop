@@ -2,9 +2,7 @@
 
 ## The problem
 
-A hand-written spec for "book a delivery slot" takes time to write and time to repair. Playwright's agents can do
-both. But an agent that "fixes" a red test by deleting its assertion hides a bug. For example, if the healer drops the check that the basket shows the slot fee, the spec turns green and tests
-nothing. You let the agents work, and you prove they did the job.
+A hand-written spec takes time to write and time to repair. Playwright's agents can do both. But an agent that "fixes" a red test by deleting its assertion hides a bug. You let the agents work, and you prove they did the job.
 
 ```mermaid
 flowchart LR
@@ -15,7 +13,11 @@ flowchart LR
   E --> F[bun run assignment]
 ```
 
-## Your challenge
+## Watch it done
+
+For example, if the healer drops the check that the basket shows the slot fee, the spec turns green and tests nothing. You watch the healer fix one broken selector.
+
+## Your turn
 
 This step is optional in the live session and expected as homework. You type prompts and review. Claude Code and
 Playwright's agents write every file. Work in this `problem/` folder.
@@ -57,6 +59,10 @@ Do not remove or weaken any expect.
 Last, write `CHOICE.md` in this folder: when is a hand-written spec the better choice? Compare the generated spec
 with the hand-written tests in `parts/01-write-tests-with-agents/03-generate-tests-from-the-plan/solution/tests`.
 
+## Do it on your work
+
+Pick one flow in your own app. Ask a planner agent for its plan, and read the plan first.
+
 ## Done when
 
 - `@playwright/test` resolves to the version this course pins.
@@ -84,4 +90,6 @@ Expect: `Done. All Done-when lines pass.` and a new `assignment/result.json`.
 - **Planner agent**: the Playwright agent that explores the shop and writes a Markdown test plan.
 - **Healer agent**: the Playwright agent that runs a red test, finds what changed on the page and fixes the locator.
 - **Selector**: how a test finds an element, such as a button's name.
-- **Reference solution**: a finished answer in `solution/`. Read it after you pass, not before.
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.

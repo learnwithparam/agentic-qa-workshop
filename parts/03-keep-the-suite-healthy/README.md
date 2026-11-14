@@ -2,6 +2,20 @@
 
 This part moves the outcome: a suite that stays honest when Claude Code heals it, and that the team trusts again.
 
+## After this part you can
+
+- Tell a healed test from a weakened one.
+- Turn a real regression into a bug report, not a skip.
+- Find the cause of a flaky test, and fix it.
+- Check looks and access with screenshot and axe tests.
+
+## You leave with
+
+- A healed suite that passes on the new release, with no expect changed.
+- A bug report for the SUB-1 bug.
+- Triage notes for the flaky tests, approved by a person.
+- Visual and accessibility tests that catch two bugs.
+
 ## The problem
 
 The new release of Pantry Run renames "Book slot" to "Reserve" and moves the slot picker into a dialog. 15 of your 23
@@ -182,3 +196,7 @@ what no screen shows: the order API, bugs nobody wrote down, and the AI suggeste
 | read  | Flaky tests at Google and how we mitigate them       | Google Testing Blog               | Google says how common flakes are and how it handles them.              | <https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html> |
 | read  | Trace viewer                                         | The Playwright team               | The tool docs for the recording that you open after a failed run.       | <https://playwright.dev/docs/trace-viewer>                                     |
 | read  | Visual comparisons                                   | The Playwright team               | The tool docs for screenshot checks like the ones in this part.         | <https://playwright.dev/docs/test-snapshots>                                   |
+
+## Project
+
+Your project is the Assignment above. Hand in the four `problem/` folders and answer the rubric.

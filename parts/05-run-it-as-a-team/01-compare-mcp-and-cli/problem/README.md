@@ -2,12 +2,7 @@
 
 ## The problem
 
-Claude Code can drive a browser in two ways. **Playwright MCP** gives it browser tools that send a snapshot of
-the page after each step. The **Playwright CLI** gives it short shell commands, such as `bunx playwright cli
-click e21`. It saves snapshots to files that Claude Code reads only when it needs to.
-
-Playwright's own README says the CLI is "more token-efficient". But your team pays for your shop, not theirs.
-For example, an MCP run may use fewer turns and still read more tokens. Measure the same task both ways.
+Claude Code can drive a browser two ways. **Playwright MCP** sends a page snapshot after each step. The **Playwright CLI** uses short shell commands. Its README calls it "more token-efficient". But your team pays for every run, so measure the same task both ways.
 
 ```mermaid
 flowchart LR
@@ -19,10 +14,13 @@ flowchart LR
   TB --> CH[the team's choice]
 ```
 
-## Your challenge
+## Watch it done
 
-Run the task in `qa/task.md` twice with `claude -p`, once per browser. Then get Claude Code to fill in the table
-from the two runs. You judge which findings are real and write the choice. Start the release candidate first:
+For example, `bunx playwright cli click e21` is one CLI command. An MCP run may use fewer turns and still read more tokens.
+
+## Your turn
+
+Run the task in `qa/task.md` twice with `claude -p`, once per browser. Then get Claude Code to fill in the table. You judge which findings are real and write the choice. Start the release candidate first:
 
 ```bash
 BUGS=release bun run shop
@@ -61,7 +59,11 @@ Try each finding in the shop yourself. Fill in Real findings, then write the cho
 
 ## Save the winner as a skill
 
-A skill is a small folder Claude Code loads when its description fits the job. Ask Claude Code to save the way you chose as `.claude/skills/<name>/SKILL.md`. The file starts with a `name` that matches the folder and a `description` that says when to use it. Then it lists the steps.
+Save your choice as `.claude/skills/<name>/SKILL.md`. The file starts with a `name` that matches the folder and a `description` that says when to use it. Then it lists the steps.
+
+## Do it on your work
+
+Run one browser task from your own app both ways. Compare the tokens.
 
 ## Done when
 
@@ -70,13 +72,7 @@ A skill is a small folder Claude Code loads when its description fits the job. A
 - You counted the real findings and wrote a choice with a reason.
 - A skill in `.claude/skills` has a name, a description of when to use it, and three steps.
 
-Ask Claude Code:
-
-```text
-Run `bun run verify compare-mcp-and-cli` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify compare-mcp-and-cli
@@ -86,6 +82,10 @@ Expect: `Done. All 6 rules pass.`
 
 ![The check passing](../images/expected.png)
 
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
+
 ## If you get stuck
 
 | What you see                                       | Fix                                                                     |
@@ -93,9 +93,3 @@ Expect: `Done. All 6 rules pass.`
 | The check says the MCP tokens do not match the run | A number was typed or rounded. Ask Claude Code to read it from the run. |
 | The run stops at max turns                         | Raise `--max-turns`, or make the task in `qa/task.md` smaller.          |
 | `Cost (USD)` looks high                            | On a Claude plan it is Claude Code's estimate, not a bill.              |
-
-## Words you will use
-
-- **Token**: a small piece of text a model reads or writes.
-- **Turn**: one step where Claude Code thinks and calls a tool.
-- **Headless run**: `claude -p`, Claude Code with no chat window.

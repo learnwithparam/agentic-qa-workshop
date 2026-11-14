@@ -2,15 +2,7 @@
 
 ## The problem
 
-After the heal, 7 tests in `substitutions.spec.ts` are still red on the new release. They are red for a real reason.
-On the new release every new basket line starts with "Allow substitutes" switched off. That breaks SUB-1: "Every new basket
-line starts with "Allow substitutes" switched on."
-
-For example, a shopper adds Whole milk 2 L, which is out of stock. On the old release the order says "Substituted with
-Semi-skimmed milk 2 L". On the new release it says "Not available", and the shopper gets no milk.
-
-A healer can make these tests green: expect the box unticked, tick it in the test, or mark the test
-`test.fixme()`. Each of those hides the bug from every later run.
+After the heal, 7 tests in `substitutions.spec.ts` stay red. They are red for a real reason. On the new release, every new basket line starts with "Allow substitutes" switched off. That breaks SUB-1. A healer can make these tests green, but each hides the bug from every later run.
 
 ```mermaid
 flowchart LR
@@ -18,10 +10,20 @@ flowchart LR
   H -->|flip the expect<br/>or test.fixme| G[guard hook: exit 2]
   H -->|the shop is wrong| K[test stays red]
   G --> K
-  K --> B[qa/bugs/SUB-1.md<br/>for the developers]
+  K --> B[SUB-1.md report]
 ```
 
-## Your challenge
+## Watch it done
+
+SUB-1 says every new basket line starts with "Allow substitutes" switched on. For example, a shopper adds Whole milk 2 L, which is out of stock. On the old release the order says "Substituted with Semi-skimmed milk 2 L". On the new release it says "Not available", and the shopper gets no milk.
+
+A healer can expect the box unticked, tick it in the test, or mark the test `test.fixme()`.
+
+In the real run, the healer saw the shop was wrong and made no edit:
+
+![The healer declines to hide the bug](../images/expected.png)
+
+## Your turn
 
 Keep the SUB-1 test red, and get Claude Code to write a bug report the developers can act on. You edit no test.
 
@@ -48,11 +50,6 @@ First, ask the healer, with no extra rules:
 Seven tests in tests/substitutions.spec.ts still fail on release v2, which is running on http://localhost:4173. Use the playwright-test-healer agent to fix them.
 ```
 
-Watch what it tries. If it proposes a weaker test, the guard blocks it. In the real run, the healer saw the shop
-was wrong and made no edit:
-
-![The healer declines to hide the bug](../images/expected.png)
-
 Then ask for the report:
 
 ```text
@@ -65,25 +62,27 @@ Before you write Actual, tick "Allow substitutes" by hand in one test run, so yo
 Do not change any test.
 ```
 
+## Do it on your work
+
+Ask Claude Code whether the shop or a red test is wrong. Write a report only if the shop is.
+
 ## Done when
 
 - The SUB-1 test still fails on the new release, at its `toBeChecked()` check, with every expect intact.
 - No test is marked `test.skip` or `test.fixme`.
 - `qa/bugs/SUB-1.md` has Steps, Expected, Actual and Requirement, names SUB-1, and quotes the rule.
 
-Ask Claude Code:
-
-```text
-Run `bun run verify stop-the-healer-hiding-a-bug` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify stop-the-healer-hiding-a-bug
 ```
 
 Expect: `Done. All 6 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 
@@ -95,5 +94,4 @@ Expect: `Done. All 6 rules pass.`
 
 ## Words you will use
 
-- **Regression**: a rule that worked in the last release and breaks in this one.
 - **Bug report**: steps, what should happen, what happens, and the rule it breaks.

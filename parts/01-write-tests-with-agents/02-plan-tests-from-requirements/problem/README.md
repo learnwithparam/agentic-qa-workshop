@@ -2,12 +2,9 @@
 
 ## The problem
 
-An agent can write forty tests before you finish reading the rules. Writing tests is cheap. Knowing what to test
-is not.
+An agent can write forty tests before you read the rules. Writing tests is cheap. Knowing what to test is not.
 
-Playwright's planner agent is asked for happy paths, edge cases and error handling. But nothing checks that every
-written rule got a scenario. For example, a plan that skips SLOT-3 (slots close at 22:00) gives a suite that can
-never catch a cutoff bug, however many tests it has.
+Playwright's planner agent is asked for happy paths, edge cases and error handling. Nothing checks that every rule got a scenario. A plan that skips SLOT-3 (slots close at 22:00) gives a suite that never catches a cutoff bug.
 
 ```mermaid
 flowchart LR
@@ -17,14 +14,16 @@ flowchart LR
   F --> C{every ID covered?<br/>a boundary per file?}
 ```
 
-## Your challenge
+## Watch it done
 
-Get Claude Code to write two test plans in `specs/`: `slots.md` and `basket.md`. You write no plan text. You write the prompt and send Claude Code back for what is missing.
-
-Every scenario needs a heading, numbered steps, an Expected part, and two lines the course checks:
+A finished plan has a heading, numbered steps, an Expected part, and two lines the course checks:
 
 - **Covers:** the requirement IDs, such as `SLOT-2`.
 - **Kind:** `happy`, `boundary` (where a rule flips: 20 orders, 22:00, $25.00) or `negative` (what must not work).
+
+## Your turn
+
+Get Claude Code to write `specs/slots.md` and `specs/basket.md`. You write the prompt and send Claude Code back for what is missing.
 
 First add Playwright's agents to this folder, then start Claude Code here:
 
@@ -35,7 +34,7 @@ claude
 
 Expect: `init-agents` writes `.claude/agents/` and `.mcp.json`, then Claude Code opens.
 
-Type this prompt. The `@` before a path makes Claude Code read that real file, so it does not guess what the file says:
+Type this prompt. The `@` before a path makes Claude Code read that real file:
 
 ```text
 Use the playwright-test-planner agent to plan tests for Pantry Run from
@@ -54,6 +53,10 @@ Read the plans next to the requirements. Agents often skip rules that need a clo
 specs/slots.md has no scenario for SLOT-3, the 22:00 cutoff. Add a boundary scenario
 at 21:59 and at 22:00, with Covers and Kind lines.
 ```
+
+## Do it on your work
+
+Pick one rule in an app your team owns. Ask Claude Code for one plan with a Covers line for that rule. Read the plan before you keep it.
 
 ## Done when
 
@@ -76,6 +79,10 @@ bun run verify plan-tests-from-requirements
 ```
 
 Expect: `Done. All 8 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 

@@ -2,11 +2,9 @@
 
 ## The problem
 
-An agent wrote every test in `tests/`, and every test is green. Some check what their title says. Some check that
-a message popped up, and stop there.
+An agent wrote every test in `tests/`. All are green. Some check what their title says. Some check only a message.
 
-A green test that stays green with the bug switched on is worse than no test. For example, a test called "750 g of bananas costs $1.04" that only checks a
-message, and never the $1.04, passes even when the price is wrong.
+A green test that stays green with the bug on is worse than no test. For example, a test called "750 g of bananas costs $1.04" that checks only a message passes even when the price is wrong.
 
 ```mermaid
 flowchart LR
@@ -17,10 +15,17 @@ flowchart LR
   F --> M{run with the bug on:<br/>does it go red?}
 ```
 
-## Your challenge
+## Watch it done
 
-Three weak tests are planted here. Use Claude Code to find them, record a verdict for each test, and fix the weak
-ones. You edit no file. You judge every verdict and fix.
+Each test gets one line in `qa/review.md`, in this form:
+
+```text
+- <test title>: keep | fix | drop: <why, in a few words>
+```
+
+## Your turn
+
+Three weak tests are planted here. Use Claude Code to find them, record a verdict for each test, and fix the weak ones. You edit no file. You judge every verdict and fix.
 
 Start Claude Code in this folder:
 
@@ -40,8 +45,7 @@ Write one line per test in qa/review.md in this form:
 Do not change any test yet. Show me the list.
 ```
 
-Check the list yourself. Signs of a weak test: an `expect` on a message or a visible element instead of a number,
-or `expect(locator).toBeTruthy()`, which passes for any locator. Reject a verdict you do not agree with.
+Check the list yourself. Signs of a weak test: an `expect` on a message or a visible element instead of a number, or `expect(locator).toBeTruthy()`, which passes for any locator. Reject a verdict you do not agree with.
 
 Then ask for the fixes:
 
@@ -66,6 +70,10 @@ You are the reviewer, so set the pace. Start Claude Code in plan mode, where it 
 
 Then add a "How I reviewed" part at the end of `qa/review.md`. Fill each line with a few words of your own: the permission mode, the diff, Esc, Rewind and Clear.
 
+## Do it on your work
+
+Pick one test in an app your team owns. Ask Claude Code whether it would go red if its rule broke. Read the verdict before you keep it.
+
 ## Done when
 
 - `qa/review.md` gives every agent test a verdict (keep, fix or drop), and every fix or drop says why.
@@ -87,6 +95,10 @@ bun run verify review-the-agent-tests
 ```
 
 Expect: `Done. All 9 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 

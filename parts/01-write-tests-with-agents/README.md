@@ -1,5 +1,16 @@
 # Write tests with agents
 
+## After this part you can
+
+- Give Claude Code a seed and a set of requirements.
+- Read a plan against the rules.
+- Judge a test by one question: would this go red if the rule broke?
+
+## You leave with
+
+- `tests/seed.spec.ts`, `specs/slots.md`, `specs/basket.md`, `tests/slots.spec.ts`, `tests/basket.spec.ts` and `qa/review.md`.
+- Each one written by Claude Code and read by you.
+
 This part moves the objective: you get Claude Code to plan and write tests, and you judge them.
 
 ## The problem
@@ -121,3 +132,7 @@ you can judge its tests by one question: would this go red if the rule broke? Pa
 | read  | Test agents                     | The Playwright team | The tool docs for the three agents this part uses.                                              | <https://playwright.dev/docs/test-agents>                          |
 | read  | Claude Code best practices      | Anthropic           | Short advice on plans, checks and clear prompts.                                                | <https://www.anthropic.com/engineering/claude-code-best-practices> |
 | read  | Building effective agents       | Anthropic           | The idea behind an agent loop that ends with a check.                                           | <https://www.anthropic.com/engineering/building-effective-agents>  |
+
+## Project
+
+Pick one rule in an app your team owns. Ask Claude Code for one test that goes red when that rule breaks. Read the test before you keep it.

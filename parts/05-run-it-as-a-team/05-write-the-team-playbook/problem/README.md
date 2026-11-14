@@ -2,12 +2,7 @@
 
 ## The problem
 
-You have a gate, a cost per kept test, and habits from every part of this course. But they live in your head.
-A new teammate, or a new agent, does not know them. And unless the team agrees on numbers, leadership will pick
-one for you, usually "tests written by AI".
-
-That number grows when the suite gets worse. For example, the `catches-nothing` pull request adds a test, so
-"tests written" goes up. The gate blocks it, because "new tests that catch a planted bug" says 0 of 1.
+You have a gate, a cost per kept test, and habits from this course. But they live in your head, and a new teammate or agent does not know them. Unless the team agrees on numbers, leadership will pick one, usually "tests written by AI".
 
 ```mermaid
 flowchart LR
@@ -19,7 +14,11 @@ flowchart LR
   N --> P
 ```
 
-## Your challenge
+## Watch it done
+
+That number grows when the suite gets worse. For example, the `catches-nothing` pull request adds a test, so "tests written" goes up. The gate blocks it, because "new tests that catch a planted bug" says 0 of 1.
+
+## Your turn
 
 Get Claude Code to draft `qa/playbook.md`, then make it yours. You decide every rule. Claude Code drafts and
 checks the numbers against what the gate really computes.
@@ -50,6 +49,10 @@ Claude Code.
 Add two more sections to the playbook. Under Parallel work, say each agent gets its own worktree with `claude -w <name>`, and when to use `/batch`. Under Unattended runs, say what `/loop` and `/schedule` are for.
 
 Then write `qa/run-contract.md` for one scheduled run, with five parts: Goal, Stop condition, Tools allowed, Budget and Report to. A run with no one watching must know when to stop.
+
+## Do it on your work
+
+Write down one number your team reports.
 
 ## Done when
 
@@ -86,3 +89,7 @@ Expect: `Done. All 8 rules pass.`
 - **Playbook**: the team's written rules for a kind of work, kept in the repo next to the tests.
 - **Human gate**: a step where a named person must approve before work moves on.
 - **Vanity number**: a number that looks good but does not tell you if quality went up.
+
+## Solution
+
+See `solution/`.

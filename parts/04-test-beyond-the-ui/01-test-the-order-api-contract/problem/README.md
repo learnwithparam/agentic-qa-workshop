@@ -2,35 +2,32 @@
 
 ## The problem
 
-Partner apps place Pantry Run orders without a browser. They call the partner API, and they trust
-`world/openapi.yaml`. That file is the contract: it lists every path, every status code and the shape of every
-answer.
-
-A partner app breaks when the shop drifts from the contract. For example, the contract says an order has
-`slotId`. If the shop sends `slot_id`, a partner app reads no slot. And a full slot must answer `409`.
+Partner apps order without a browser. They trust `world/openapi.yaml`, the contract for every path and status code. A partner app breaks when the shop drifts from it. For example, a shop that sends `slot_id` instead of `slotId` leaves the partner app with no slot.
 
 ```mermaid
 flowchart LR
   C[openapi.yaml] --> T[tests/api/orders.spec.ts]
-  T -->|request.get and request.post| A[partner API]
-  A --> S{answer matches<br/>status and schema?}
+  T --> A[partner API]
+  A --> S{matches status<br/>and schema?}
   S -->|yes| G[green]
-  S -->|no| R[red: the shop broke the contract]
+  S -->|no| R[red: contract broken]
 ```
 
-## Your challenge
+## Watch it done
 
-Get Claude Code to write API tests for every path and every status code in the contract. You write no test
-code. You read the plan, and you reject a test that copies what the shop does instead of what the contract says.
+Claude Code plans one test for each path and status code. A full slot must answer `409`.
 
-The `CLAUDE.md` in this folder already tells Claude Code where the contract is and how to call the API. Start
-Claude Code in this folder:
+## Your turn
+
+Get Claude Code to write API tests for every path and status code in the contract. You write no test code. Reject any test that copies what the shop does.
+
+Start Claude Code in this folder:
 
 ```bash
 claude
 ```
 
-Expect: Claude Code opens in this folder and reads `CLAUDE.md`.
+Expect: Claude Code opens and reads `CLAUDE.md`.
 
 Then type this prompt:
 
@@ -39,12 +36,10 @@ Read the contract in ../../../../world/openapi.yaml. Plan one API test for every
 every status code it lists. Then write them in tests/api/orders.spec.ts with the request
 fixture. Check every order body with a strict zod schema made from the Order in the contract,
 so an extra or renamed field fails. Use slot 2026-03-11T18, which is full, for the 409.
-Show me the plan first: one line per path and status code.
+Show me the plan first.
 ```
 
-Read the plan. It should have 12 lines. Say no if a line expects `500`, or if the plan only checks status codes.
-
-Then run the tests:
+Read the plan. It should have 12 lines. Say no if a line expects `500`, or only checks status codes.
 
 ```bash
 bunx playwright test tests/api
@@ -52,7 +47,7 @@ bunx playwright test tests/api
 
 Expect: `12 passed`
 
-Prove the tests catch the API bugs. Start the shop with one bug on, and run the tests again:
+Start the shop with one bug on, and run the tests again:
 
 ```bash
 BUGS=api-field-rename bun run shop
@@ -60,13 +55,15 @@ BUGS=api-field-rename bun run shop
 
 Expect: `Pantry Run ready on http://localhost:4173 (bugs: api-field-rename)`
 
-The order tests should now go red. Stop the shop and do the same with `BUGS=api-status`.
+The order tests should now go red. Do the same with `BUGS=api-status`.
 
 ## Teach the repo in two files
 
-Claude Code forgets between sessions, so you give it a map. In Claude Code run `/init`. It reads the folder and writes a short `CLAUDE.md`. Keep that file under 200 lines and add one line that says how to run the tests: `bunx playwright test`.
+Claude Code forgets between sessions. Run `/init` to write a short `CLAUDE.md`. Keep it under 200 lines, with a line on how to run the tests: `bunx playwright test`. Put API-only rules in `.claude/rules/api-tests.md`, starting with a `paths:` line for `tests/api/**`.
 
-Rules that matter only for the API tests belong in their own file, so they load only when Claude Code touches those tests. Move them to `.claude/rules/api-tests.md`, and start that file with a `paths:` line that names `tests/api/**`.
+## Do it on your work
+
+Ask Claude Code for a contract test for one API your team calls. Read the plan first.
 
 ## Done when
 
@@ -76,13 +73,7 @@ Rules that matter only for the API tests belong in their own file, so they load 
 - `tests/mocked/` has a browser test that mocks a failed booking with `page.route` and passes. Steps: [the second half](MORE.md).
 - `CLAUDE.md` is under 200 lines and says how to run the tests, and `.claude/rules/api-tests.md` loads only for `tests/api`.
 
-Ask Claude Code:
-
-```text
-Run `bun run verify test-the-order-api-contract` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify test-the-order-api-contract
@@ -91,6 +82,10 @@ bun run verify test-the-order-api-contract
 Expect: `Done. All 10 rules pass.`
 
 ![The check passing](../images/expected.png)
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 
@@ -102,6 +97,5 @@ Expect: `Done. All 10 rules pass.`
 ## Words you will use
 
 - **Mock**: a call your test answers itself, so a service can fail on purpose.
-
 - **Contract**: a file that says what an API promises. Here it is `openapi.yaml`.
 - **Strict schema**: a schema that also fails on a field it does not name, such as `slot_id`.

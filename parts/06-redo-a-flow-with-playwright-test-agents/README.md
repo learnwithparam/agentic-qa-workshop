@@ -3,6 +3,16 @@
 This part redoes one thing you built by hand, with the open-source tool teams run in production. It is optional in
 the live session and expected as homework. Nothing in parts 1 to 5 changes.
 
+## After this part you can
+
+- Run Playwright's planner, generator and healer on one flow.
+- Check that a healed spec keeps every assertion.
+
+## You leave with
+
+- A plan file for one flow.
+- A generated spec that passes, and a healed spec after a scripted break.
+
 ## The problem
 
 You wrote a test plan and specs with Claude Code earlier in this course. Many teams skip that and hand-write each
@@ -91,3 +101,7 @@ Expect: `Part redo-a-flow-with-playwright-test-agents is done: 1/1 steps pass.`
 | read  | Test agents                     | The Playwright team | The reference for init-agents and what each agent writes.         | <https://playwright.dev/docs/test-agents>          |
 | read  | Best practices                  | The Playwright team | Advice on tests that stay stable when the page changes.           | <https://playwright.dev/docs/best-practices>       |
 | read  | Common workflows                | Anthropic           | Docs for plan mode and other habits that keep a person in charge. | <https://code.claude.com/docs/en/common-workflows> |
+
+## Project
+
+Your project is the capstone in the table above. Run the three agents on your own app.

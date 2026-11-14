@@ -2,13 +2,13 @@
 
 ## The problem
 
-Agents write tests that pass today and break next sprint. For example:
+Agents write tests that pass today and break next sprint:
 
-- A CSS selector such as `#slot-3` breaks when someone changes the page layout.
+- A CSS selector such as `#slot-3` breaks when the layout changes.
 - `waitForTimeout(1000)` waits one second to hide a race, and fails on a slow machine.
 - A test with no `expect` passes whatever the page shows.
 
-Each one costs you a morning later. Playwright's generator agent works from the plan, so every test points back to its scenario.
+Playwright's generator agent works from the plan, so every test points to its scenario.
 
 ```mermaid
 flowchart LR
@@ -19,10 +19,15 @@ flowchart LR
   T --> RUN[run on BUGS=none]
 ```
 
-## Your challenge
+## Watch it done
 
-The plans from the last step are in `specs/`. Get Claude Code to turn every scenario into a test in `tests/`.
-You type prompts and review.
+The finished tests pass on the fixed build. The HTML report shows every generated test green:
+
+![The HTML report with every generated test green](../images/expected.png)
+
+## Your turn
+
+The plans from the last step are in `specs/`. Get Claude Code to turn every scenario into a test in `tests/`. You type prompts and review.
 
 Add Playwright's agents to this folder and start Claude Code:
 
@@ -58,7 +63,9 @@ bunx playwright test --reporter=html
 
 Expect: `16 passed` (15 scenarios and the seed), then the HTML report opens.
 
-![The HTML report with every generated test green](../images/expected.png)
+## Do it on your work
+
+Pick one rule in an app your team owns. Ask Claude Code for one generated test that goes red when that rule breaks. Read the test before you keep it.
 
 ## Done when
 
@@ -80,6 +87,10 @@ bun run verify generate-tests-from-the-plan
 ```
 
 Expect: `Done. All 7 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 

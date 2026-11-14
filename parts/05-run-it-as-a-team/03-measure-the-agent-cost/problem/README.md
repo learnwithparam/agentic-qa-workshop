@@ -2,11 +2,7 @@
 
 ## The problem
 
-Every agent run costs tokens, and tokens cost money or plan limits. When a manager asks "was it worth it?", "the agent wrote 21 tests" is no answer.
-
-A better number is **cost per kept test**: what the runs cost, divided by the tests still in the suite after
-review. For example, if plan, generate and heal cost $1.70 together and 21 tests are kept, each kept test cost
-about $0.08. If review drops 11 of them, each kept test costs $0.17.
+Every agent run costs tokens, and tokens cost money or plan limits. "The agent wrote 21 tests" says nothing about worth. A better number is **cost per kept test**: what the runs cost, divided by the tests still in the suite after review.
 
 ```mermaid
 flowchart LR
@@ -18,10 +14,13 @@ flowchart LR
   C --> K[cost per kept test]
 ```
 
-## Your challenge
+## Watch it done
 
-Run the planner, the generator and the healer on the basket with `claude -p`, and save each result. Then get
-Claude Code to fill in `qa/cost.md` from the results and from the tests still in `tests/`.
+When a manager asks "was it worth it?", the answer must be a number. For example, if plan, generate and heal cost $1.70 together and 21 tests are kept, each kept test cost about $0.08. If review drops 11 of them, each kept test costs $0.17.
+
+## Your turn
+
+Run the planner, generator and healer with `claude -p` and save each result. Then get Claude Code to fill in `qa/cost.md`.
 
 In this folder, add Playwright's agents and start the shop:
 
@@ -37,7 +36,7 @@ bun run shop
 
 Expect: `Pantry Run ready on http://localhost:4173 (bugs: none)`
 
-Leave the shop running. In a second terminal, run the planner:
+In a second terminal, run the planner:
 
 ```bash
 mkdir -p qa/runs
@@ -64,15 +63,19 @@ pass again. Fix locators only. Never change an expected value or remove an expec
 Delete any test you would not keep. Then open `claude` and type:
 
 ```text
-Fill in qa/cost.md from qa/runs/plan.json, generate.json and heal.json: Tokens is input +
-output + cache creation + cache read tokens, Minutes is duration_ms in minutes to one
-decimal, Cost is total_cost_usd. Kept tests is the tests in tests/ apart from the seed.
-Cost per kept test is the three costs added up, divided by Kept tests, to the cent.
+Fill in qa/cost.md from the three result files. Tokens is input + output + cache creation +
+cache read tokens. Minutes is duration_ms in minutes to one decimal. Cost is total_cost_usd.
+Kept tests is the tests in tests/ apart from the seed. Cost per kept test is the three costs
+added up, divided by Kept tests, to the cent.
 ```
 
 ## Fence the shell
 
-A run that no one watches should not be able to touch the whole machine. Turn the sandbox on in `.claude/settings.json`: add a `sandbox` key and set its `enabled` value to `true`. Bash commands then run inside a fence.
+Turn the sandbox on in `.claude/settings.json`: add a `sandbox` key with `enabled` set to `true`.
+
+## Do it on your work
+
+Add up what one agent task cost. Divide it by the tests you keep.
 
 ## Done when
 
@@ -80,13 +83,7 @@ A run that no one watches should not be able to touch the whole machine. Turn th
 - Kept tests counts the tests still in `tests/`, and the cost per kept test is right to the cent.
 - `.claude/settings.json` turns the sandbox on.
 
-Ask Claude Code:
-
-```text
-Run `bun run verify measure-the-agent-cost` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify measure-the-agent-cost
@@ -96,6 +93,10 @@ Expect: `Done. All 5 rules pass.`
 
 ![The check passing](../images/expected.png)
 
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
+
 ## If you get stuck
 
 | What you see               | Fix                                                                        |
@@ -103,8 +104,3 @@ Expect: `Done. All 5 rules pass.`
 | `plan: the run says ...`   | A number was typed or rounded. Ask Claude Code to read it from the result. |
 | `FAIL Kept tests ...`      | Do not count the seed or deleted tests.                                    |
 | The run stops at max turns | Raise `--max-turns`.                                                       |
-
-## Words you will use
-
-- **Cost per kept test**: the run cost divided by kept tests.
-- **Kept test**: a test that is still in `tests/` after your review.

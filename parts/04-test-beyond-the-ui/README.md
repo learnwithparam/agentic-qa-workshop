@@ -2,6 +2,18 @@
 
 This part moves the outcome: tests for the partner API, for bugs nobody wrote down, and for the AI feature.
 
+## After this part you can
+
+- Write API tests from an OpenAPI contract, with strict schemas.
+- Explore a shop with an agent, and turn each finding into a repro test.
+- Test an AI feature with rules that never bend, such as allergens.
+
+## You leave with
+
+- Tests for the order API, each one checked against the contract.
+- Repro tests for three bugs that no requirement named.
+- A suggester test, with notes, thresholds and rules.
+
 ## The problem
 
 The shop's pages are one way in, but not the only one. Partner apps place orders through the API in
@@ -153,3 +165,7 @@ the schema. Then you count what agent runs cost, and build one pull request gate
 | read  | API testing                                | The Playwright team             | The tool docs for calling an API from a test.               | <https://playwright.dev/docs/api-testing>     |
 | read  | Mock APIs                                  | The Playwright team             | The tool docs for faking a failed call with a route.        | <https://playwright.dev/docs/mock>            |
 | read  | Authentication                             | The Playwright team             | The tool docs for saving a sign in once and reusing it.     | <https://playwright.dev/docs/auth>            |
+
+## Project
+
+Your project is the Assignment above. Hand in the three `problem/` folders and answer the rubric.

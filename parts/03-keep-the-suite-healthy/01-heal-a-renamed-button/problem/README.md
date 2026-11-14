@@ -2,23 +2,22 @@
 
 ## The problem
 
-The new release of Pantry Run renames "Book slot" to "Reserve". It also moves the slot picker into a dialog, behind a
-"Choose a delivery time" button. Shoppers notice nothing, but 15 of your 23 tests go red.
-
-For example, "Peak slots cost $4.99 and others $2.99" fails on the new release. The slot list now sits in a closed dialog.
-
-A **healer** agent fixes tests like this. But some red tests are red for a real reason. Heal the first kind and leave the second red.
+The new release of Pantry Run renames "Book slot" to "Reserve". It also moves the slot picker into a dialog. Shoppers notice nothing, but 15 of your 23 tests go red. A **healer** agent fixes tests like this. Some red tests are red for a real reason. Heal the first kind and leave the second red.
 
 ```mermaid
 flowchart LR
   R[run on RELEASE=v2] --> F{a red test}
-  F -->|can't find a button<br/>or a moved element| H[healer fixes the locator]
+  F -->|a moved element| H[healer fixes it]
   F -->|the shop is wrong| K[leave it red]
   H --> G[guard hook checks the edit]
   G --> T[green on v2]
 ```
 
-## Your challenge
+## Watch it done
+
+The slot picker now sits behind a "Choose a delivery time" button. For example, "Peak slots cost $4.99 and others $2.99" fails on the new release, because the slot list sits in a closed dialog.
+
+## Your turn
 
 Get Claude Code's healer to fix every test that broke only because something moved or was renamed. The guard hook is on.
 
@@ -56,7 +55,9 @@ A good fix clicks "Choose a delivery time" or changes "Book slot" to "Reserve". 
 
 ![After the heal: 16 pass, 7 still red](../images/expected.png)
 
-The 7 tests still red are in `substitutions.spec.ts`, for a real reason: the next step.
+## Do it on your work
+
+Ask Claude Code for a locator fix only, for one test a page change broke.
 
 ## Done when
 
@@ -65,19 +66,17 @@ The 7 tests still red are in `substitutions.spec.ts`, for a real reason: the nex
 - No test is marked `test.skip` or `test.fixme`, and no locator uses CSS or XPath.
 - The guard hook is still in `.claude/settings.json`.
 
-Ask Claude Code:
-
-```text
-Run `bun run verify heal-a-renamed-button` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify heal-a-renamed-button
 ```
 
 Expect: `Done. All 5 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 
@@ -91,4 +90,3 @@ Expect: `Done. All 5 rules pass.`
 
 - **Heal**: fix a test that broke because the page changed, not because the rule broke.
 - **Locator**: how a test finds an element.
-- **The new release**: the next shop version, `RELEASE=v2`.

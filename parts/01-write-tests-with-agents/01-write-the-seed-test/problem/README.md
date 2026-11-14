@@ -2,13 +2,12 @@
 
 ## The problem
 
-Playwright has a planner agent and a generator agent. Both start every session from one file: the seed test.
-A seed test is the first test an agent runs. It opens the app in a known state, and the agent copies its style.
+Playwright's planner and generator agents start from one file: the seed test, the first test an agent runs. It opens the app in a known state, and the agent copies its style.
 
-A bad seed spreads into every test. For example:
+For example:
 
-- A seed that does not reset the shop data gives tests that pass once and fail on the second run.
-- A seed that does not sign in sends the agent to explore the Sign in page instead of the basket.
+- No reset: tests pass once, then fail on run two.
+- No sign-in: the agent explores the Sign in page, not the basket.
 
 ```mermaid
 flowchart LR
@@ -17,7 +16,13 @@ flowchart LR
   E -.copied by.-> G[generator]
 ```
 
-## Your challenge
+## Watch it done
+
+Your seed should end here:
+
+![The empty basket the seed ends on](../images/expected.png)
+
+## Your turn
 
 Get Claude Code to finish `tests/seed.spec.ts` in this folder. You type no test code. When it is done, the seed must:
 
@@ -51,9 +56,9 @@ bunx playwright test --repeat-each=3
 
 Expect: `3 passed`
 
-Your seed should end here:
+## Do it on your work
 
-![The empty basket the seed ends on](../images/expected.png)
+Pick one app your team owns. Ask Claude Code for a seed that resets it and signs in. Read the plan before you say yes.
 
 ## Done when
 
@@ -75,6 +80,10 @@ bun run verify write-the-seed-test
 ```
 
 Expect: `Done. All 8 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 

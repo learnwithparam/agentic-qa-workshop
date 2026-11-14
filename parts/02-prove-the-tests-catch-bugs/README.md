@@ -3,6 +3,18 @@
 This part moves the transformation: from "all green" to "catches 7 of 8 planted bugs", with numbers a script
 prints.
 
+## After this part you can
+
+- Show which planted bugs a suite catches, in a grid.
+- Measure how much of your domain code a test would defend.
+- Stop an agent from weakening a test's expects or expected values.
+
+## You leave with
+
+- A substitution spec and tests that catch the planted bugs.
+- Unit tests and a `stryker.config.json` for the domain code.
+- A guard script and a PreToolUse hook in `.claude/settings.json`.
+
 ## The problem
 
 Every test is green. That proves the tests run, not that they would catch anything. With agent-written tests the
@@ -136,7 +148,23 @@ bun run verify part prove-the-tests-catch-bugs
 
 Expect: `Part prove-the-tests-catch-bugs is done: 3/3 steps pass.`
 
-## Assignment
+## Recap
+
+You can now prove a suite works, three ways. The bug-kill grid shows which planted bugs it catches. The mutation
+score shows how much of the domain code a test would defend. The guard makes sure no agent can quietly lower
+either number. Part 3 lets the healer loose on a new release, with this guard switched on.
+
+## Watch and read
+
+| Kind  | Title                                         | Author                            | Why                                                                                 | Link                                                                               |
+| ----- | --------------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| video | Mutation testing in JavaScript with StrykerJS | Nico Jansen, Stryker team         | A maintainer of the tool used in this part explains why coverage alone can mislead. | <https://www.youtube.com/watch?v=3FN1r43yJHU>                                      |
+| video | The value of small tests                      | Google Test Automation Conference | Engineers at Google on which tests catch bugs for the least cost.                   | <https://www.youtube.com/watch?v=MpG2i_6nkUg>                                      |
+| read  | Practical mutation testing at scale           | Google research team              | The people who run mutation testing at Google say what worked.                      | <https://research.google/pubs/pub50658/>                                           |
+| read  | Just say no to more end-to-end tests          | Google Testing Blog               | A Google engineer on how many UI tests a suite should hold.                         | <https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html> |
+| read  | The practical test pyramid                    | Ham Vocke on martinfowler.com     | A trusted engineering site on where each kind of test fits.                         | <https://martinfowler.com/articles/practical-test-pyramid.html>                    |
+
+## Project
 
 **Problem:** green proves the tests run, not that they catch anything.
 
@@ -153,19 +181,3 @@ step to your notes: the number before and after.
 
 **Extension:** ask Claude Code to write its own mutants for `domain/basket.ts`, like Meta's ACH project does.
 Keep only the ones no test kills. Each one it keeps is a test you are missing.
-
-## Recap
-
-You can now prove a suite works, three ways. The bug-kill grid shows which planted bugs it catches. The mutation
-score shows how much of the domain code a test would defend. The guard makes sure no agent can quietly lower
-either number. Part 3 lets the healer loose on a new release, with this guard switched on.
-
-## Watch and read
-
-| Kind  | Title                                         | Author                            | Why                                                                                 | Link                                                                               |
-| ----- | --------------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| video | Mutation testing in JavaScript with StrykerJS | Nico Jansen, Stryker team         | A maintainer of the tool used in this part explains why coverage alone can mislead. | <https://www.youtube.com/watch?v=3FN1r43yJHU>                                      |
-| video | The value of small tests                      | Google Test Automation Conference | Engineers at Google on which tests catch bugs for the least cost.                   | <https://www.youtube.com/watch?v=MpG2i_6nkUg>                                      |
-| read  | Practical mutation testing at scale           | Google research team              | The people who run mutation testing at Google say what worked.                      | <https://research.google/pubs/pub50658/>                                           |
-| read  | Just say no to more end-to-end tests          | Google Testing Blog               | A Google engineer on how many UI tests a suite should hold.                         | <https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html> |
-| read  | The practical test pyramid                    | Ham Vocke on martinfowler.com     | A trusted engineering site on where each kind of test fits.                         | <https://martinfowler.com/articles/practical-test-pyramid.html>                    |

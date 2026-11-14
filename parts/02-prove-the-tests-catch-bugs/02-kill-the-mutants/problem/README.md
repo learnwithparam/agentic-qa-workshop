@@ -2,11 +2,7 @@
 
 ## The problem
 
-The bug-kill grid uses 8 planted bugs. Real bugs are not on a list. Mutation testing is a second measure. A tool called Stryker makes hundreds of small changes to the code, one at a time. Each changed copy is a **mutant**. For example, it turns the `>=` in `booked >= capacity` into `>`,
-which is the `slot-capacity` bug. Then it runs your unit tests. If a test goes red, the mutant is **killed**. If
-every test stays green, the mutant **survived**: your tests would miss that bug.
-
-The **mutation score** is the share of mutants your tests kill. Coverage says a line ran. The score says a test would notice.
+The bug-kill grid uses 8 planted bugs. Mutation testing is a second measure. Stryker makes small changes to the code, one at a time. Each changed copy is a **mutant**. For example, it turns the `>=` in `booked >= capacity` into `>`. Your unit tests then run. A red test **kills** the mutant. If every test stays green, the mutant **survived**.
 
 ```mermaid
 flowchart LR
@@ -17,10 +13,19 @@ flowchart LR
   K & U --> SC[mutation score]
 ```
 
-## Your challenge
+## Watch it done
 
-`domain/` holds the shop's rules as plain code, with no tests. Get Claude Code to write Vitest unit tests and a
-Stryker config, and to push the score to 70 or more. You read what survives and steer.
+The `>=` change is the `slot-capacity` bug.
+
+The **mutation score** is the share of mutants your tests kill. Coverage says a line ran. The score says a test would notice.
+
+A survived mutant looks like this:
+
+![A survived mutant and the score table](../images/expected.png)
+
+## Your turn
+
+`domain/` holds the shop's rules as plain code, with no tests. Get Claude Code to write Vitest unit tests and a Stryker config, and to push the score to 70 or more. You read what survives and steer.
 
 Start Claude Code in this folder:
 
@@ -38,11 +43,11 @@ Run bunx vitest run, then bunx stryker run. For each survived mutant, add or fix
 Do not change the domain code itself, only the .test.ts files and stryker.config.json.
 ```
 
-A survived mutant looks like this:
-
-![A survived mutant and the score table](../images/expected.png)
-
 Reject two shortcuts: lowering `"break"`, and changing the domain code.
+
+## Do it on your work
+
+Ask Claude Code which changes to a module no test would catch.
 
 ## Done when
 
@@ -51,19 +56,17 @@ Reject two shortcuts: lowering `"break"`, and changing the domain code.
 - The mutation score on the three files is at least 70.
 - Each test file kills a mutant.
 
-Ask Claude Code:
-
-```text
-Run `bun run verify kill-the-mutants` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify kill-the-mutants
 ```
 
 Expect: `mutation score:` with a number of 70 or more, then `Done. All 4 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 
