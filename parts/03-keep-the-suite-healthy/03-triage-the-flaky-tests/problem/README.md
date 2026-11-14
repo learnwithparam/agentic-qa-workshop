@@ -50,8 +50,7 @@ that is 22:59 in Larkford, after the cutoff. Then approve, with your own name:
 ```text
 Approved, with one change. For the clock test, 2026-03-10T21:59:00-06:00 is 22:59 in Larkford: on March 10 the store is on daylight time, -05:00. Use the shop's own seeded time instead, 2026-03-10T15:00:00-05:00.
 Apply the three fixes. Rules: no retries, no waitForTimeout, no removed expect, and keep each test's title.
-First set trace: "retain-on-failure" in the use block of playwright.config.ts, so each red run keeps a trace. Open one with bunx playwright show-trace and look at the steps and the page at the moment of the failure. "trace" is the path to the trace.zip you opened.
-Then write qa/triage.json: an array with one entry per flaky test, { "test", "cause", "evidence", "fix", "approvedBy", "trace" }. "test" is the exact test title, "cause" is race, shared-data or clock, and "approvedBy" is "<your name>".
+Then write qa/triage.json: an array with one entry per flaky test, { "test", "cause", "evidence", "fix", "approvedBy" }. "test" is the exact test title, "cause" is race, shared-data or clock, and "approvedBy" is "<your name>".
 Prove it: run bunx playwright test --repeat-each=20 --shuffle --grep on the three titles, and show me the result.
 ```
 
@@ -59,7 +58,7 @@ Prove it: run bunx playwright test --repeat-each=20 --shuffle --grep on the thre
 
 - The 3 tests keep their expects and pass 20 shuffled runs, with no retries, sleeps or real time.
 - `qa/triage.json` gives each the right cause and a person in `approvedBy`.
-- `playwright.config.ts` keeps traces of failed runs, and each entry names the trace it read.
+- The config keeps traces of failed runs, and each entry names the trace it read. Steps: [the second half](MORE.md).
 
 Ask Claude Code:
 
@@ -77,15 +76,12 @@ Expect: `Done. All 10 rules pass.`
 
 ## If you get stuck
 
-| What you see                                   | Fix                                         |
-| ---------------------------------------------- | ------------------------------------------- |
-| `FAIL each flaky test passes 20 shuffled runs` | One test still depends on time or order.    |
-| `FAIL no retries were added`                   | Take retries out of `playwright.config.ts`. |
-| `FAIL every fix was approved by a person`      | Use your own name.                          |
+| What you see                                   | Fix                                      |
+| ---------------------------------------------- | ---------------------------------------- |
+| `FAIL each flaky test passes 20 shuffled runs` | One test still depends on time or order. |
 
 ## Words you will use
 
+- **Trace**: a recording of one test run. Open it with `bunx playwright show-trace`.
+
 - **Flaky test**: a test that passes and fails on the same code.
-- **Trace**: a recording of one test run. It shows each step and the page at that moment. Open it with `bunx playwright show-trace`.
-- **Race**: the test checks before the page is ready.
-- **Shared data**: the test needs another test to run first.

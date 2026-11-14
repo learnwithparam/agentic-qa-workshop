@@ -1,4 +1,5 @@
-// saved sign-in: sign in once, keep the cookies in a file, and let other tests start already signed in.
+// saved sign-in: sign in once, keep the cookies in a file,
+// and let other tests start already signed in.
 import { expect, test } from "@playwright/test";
 
 const SIGNED_IN_FILE = ".auth/ana.json";

@@ -36,9 +36,10 @@ You run Playwright's own agents on one flow, "book a delivery slot". You compare
 tests from part 1. The tool is `@playwright/test` 1.65.0, under the Apache-2.0 licence. The course already pins that
 version.
 
-| Step                                                                        | Minutes | Claude Code makes                                         | The check reads                                               |
-| --------------------------------------------------------------------------- | ------- | --------------------------------------------------------- | ------------------------------------------------------------- |
-| [redo-the-flow-with-agents](01-redo-the-flow-with-agents/problem/README.md) | 15      | a plan, a spec, then a healed spec after a scripted break | the version, the plan, the generated spec and the healed spec |
+| Step                                                                          | Minutes | Claude Code makes                                                         | The check reads                                                       |
+| ----------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| [redo-the-flow-with-agents](01-redo-the-flow-with-agents/problem/README.md)   | 15      | a plan, a spec, then a healed spec after a scripted break                 | the version, the plan, the generated spec and the healed spec         |
+| [run-agents-on-your-own-app](02-run-agents-on-your-own-app/problem/README.md) | 30      | the same three agents on your own app, with your notes and a saved report | your files only: the plan, the specs, your notes and the saved report |
 
 ## Options
 

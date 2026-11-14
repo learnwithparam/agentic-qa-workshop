@@ -4,7 +4,7 @@
   "type": "module",
   "packageManager": "bun@1.4.4",
   "scripts": {
-    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all && bun checks/assignment.ts --prove && bun scripts/text-audit.ts",
+    "check": "bun scripts/readable.ts && bun scripts/plain-english.ts && bun scripts/check.ts && bun scripts/verify.ts --all && bun checks/assignment.ts --prove && bun checks/ladder.ts && bun scripts/text-audit.ts",
     "text-audit": "bun scripts/text-audit.ts",
     "readable": "bun scripts/readable.ts",
     "plain-english": "bun scripts/plain-english.ts",
@@ -17,7 +17,8 @@
     "shots": "bun images/shots.ts",
     "doctor": "bun scripts/doctor.ts",
     "finished": "bun world/finished/run.ts",
-    "assignment": "bun checks/assignment.ts"
+    "assignment": "bun checks/assignment.ts",
+    "ladder": "bun checks/ladder.ts"
   },
   "dependencies": {
     "hono": "4.13.18",

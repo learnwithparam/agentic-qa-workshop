@@ -1,0 +1,9 @@
+{
+  "appUrl": "https://notes.example.test",
+  "approvedBy": "Claude Code",
+  "agents": ["planner", "generator", "healer"],
+  "report": "evidence/report.json",
+  "healed": [
+    { "test": "a new note appears in the list", "change": "the Save button is now called Add note" }
+  ]
+}

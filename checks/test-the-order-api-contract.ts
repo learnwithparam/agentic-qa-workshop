@@ -113,8 +113,8 @@ function mockSource(folder: string): string {
     .join("\n");
 }
 
-// A mock answers a call for the test. It must send a real failure, and the test must expect its effect.
-function mocksAFailedCall(folder: string): boolean {
+// A mock answers a call for the test. It must send a real failure and expect its effect.
+function mocksFailedCall(folder: string): boolean {
   const source = mockSource(folder);
   const routes = /page\.route\(/.test(source) && /route\.fulfill\(/.test(source);
   const fails = /status:\s*[45]\d\d/.test(source);
@@ -162,13 +162,14 @@ export default [
     tryNext: "add a test that orders into the full 18:00 slot and expects exactly 409 slot_full",
   },
   {
-    says: "tests/mocked/ has a browser test that mocks a failed call with page.route and expects its effect",
-    test: mocksAFailedCall,
-    tryNext: "use page.route to fulfill the booking call with status 503, then expect the alert text",
+    says: "tests/mocked/ mocks a failed call with page.route and expects its effect",
+    test: mocksFailedCall,
+    tryNext:
+      "use page.route to fulfill the booking call with status 503, then expect the alert text",
   },
   {
     says: "the mocked test passes on the fixed build",
-    test: async (folder) => mocksAFailedCall(folder) && (await mockedTestPasses(folder)),
+    test: async (folder) => mocksFailedCall(folder) && (await mockedTestPasses(folder)),
     tryNext: "run bunx playwright test tests/mocked and fix the first red line",
   },
 ] satisfies Rule[];

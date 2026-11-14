@@ -55,28 +55,12 @@ Your seed should end here:
 
 ![The empty basket the seed ends on](../images/expected.png)
 
-Then ask for one more file, so later tests need no sign-in page:
-
-```text
-Add tests/saved-sign-in.spec.ts. One test signs in as Ana and saves it with
-page.context().storageState({ path: ".auth/ana.json" }). A second test uses
-test.use({ storageState: ".auth/ana.json" }), opens /basket, and expects "Signed in as".
-```
-
-Run the tests again:
-
-```bash
-bunx playwright test
-```
-
-Expect: `3 passed`
-
 ## Done when
 
 - `tests/seed.spec.ts` resets the shop through `POST /__test/reset` and has at least one `expect`.
 - It passes 3 runs in a row on the fixed build.
-- `tests/saved-sign-in.spec.ts` saves the sign-in to a file, and a second test starts signed in from that file.
 - The shop's event log shows a reset and a sign-in as Ana on every run, and every run ends on an empty basket.
+- `tests/saved-sign-in.spec.ts` saves the sign-in to a file, and a second test starts signed in from it. Steps: [the second half](MORE.md).
 
 Ask Claude Code:
 
@@ -99,13 +83,10 @@ Expect: `Done. All 8 rules pass.`
 | `FAIL it passes 3 runs in a row`              | Read the first error. A missing reset often fails on the second run.                     |
 | `FAIL every run ends on an empty basket page` | The seed must not add anything. Tell Claude Code to open `/basket` last and add nothing. |
 | `Timed out waiting ... config.webServer`      | Start the shop with `bun run shop` in another terminal, then run again.                  |
-| `getByLabel("Email")` finds nothing           | The test is not on `/signin`. Tell Claude Code to go to `/signin` first.                 |
 
 ## Words you will use
 
 - **Seed test**: the first test an agent runs. The agent copies its style.
-- **Saved sign-in**: a file of cookies, made with `storageState`. A test that loads it starts already signed in.
 - **`request`**: Playwright's tool for web calls with no browser.
 - **`expect`**: a check in a test. A test with no `expect` passes whatever the page shows.
-- **Event log**: `events.jsonl`, the shop's record of what happened. The checks read it.
 - **Plan**: the list of changes Claude Code shows before it edits files. You approve or reject it.

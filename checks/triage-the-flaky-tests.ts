@@ -122,7 +122,7 @@ function keepsTracesOfFailures(folder: string): boolean {
 }
 
 // Each entry names the trace the person opened in the trace viewer.
-function entriesNameATrace(folder: string): boolean {
+function entriesNameTrace(folder: string): boolean {
   return FLAKY_TITLES.every((title) => /trace\.zip$/.test(entryFor(folder, title)?.trace ?? ""));
 }
 
@@ -207,8 +207,7 @@ export default [
   },
   {
     says: "each triage entry names the trace.zip that showed the cause",
-    test: entriesNameATrace,
-    tryNext:
-      "run bunx playwright show-trace on a failed run's trace.zip and put its path in trace",
+    test: entriesNameTrace,
+    tryNext: "run bunx playwright show-trace on a failed run's trace.zip and put its path in trace",
   },
 ] satisfies Rule[];

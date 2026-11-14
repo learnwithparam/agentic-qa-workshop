@@ -1,0 +1,9 @@
+{
+  "appUrl": "http://localhost:4173",
+  "approvedBy": "Dana Whitfield",
+  "agents": ["planner", "generator", "healer"],
+  "report": "evidence/report.json",
+  "healed": [
+    { "test": "a new note appears in the list", "change": "the Save button is now called Add note" }
+  ]
+}

@@ -62,26 +62,12 @@ Expect: `Pantry Run ready on http://localhost:4173 (bugs: api-field-rename)`
 
 The order tests should now go red. Stop the shop and do the same with `BUGS=api-status`.
 
-Last, mock a failure. A **mock** is a call your test answers itself, so you can make a partner fail on purpose:
-
-```text
-Add tests/mocked/slot-booking.spec.ts. Sign in as Ana, open /slots, and use page.route to
-answer POST **/api/slots/*/book with status 503 and a message. Pick a slot, press Book,
-and expect the alert to show that message and the page to stay on /slots.
-```
-
-```bash
-bunx playwright test tests/mocked
-```
-
-Expect: `1 passed`
-
 ## Done when
 
 - Every file in `tests/api/` starts with `// spec: world/openapi.yaml` and uses only the `request` fixture.
 - The tests pass on the fixed build and reach all 12 path and status pairs in the contract.
 - The tests go red on `api-field-rename` and on `api-status`.
-- `tests/mocked/` has a browser test that mocks a failed booking with `page.route`, expects the message, and passes.
+- `tests/mocked/` has a browser test that mocks a failed booking with `page.route` and passes. Steps: [the second half](MORE.md).
 
 Ask Claude Code:
 
@@ -101,15 +87,14 @@ Expect: `Done. All 8 rules pass.`
 
 ## If you get stuck
 
-| What you see                                 | Fix                                                                                  |
-| -------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `Not reached yet: POST /api/orders 404`      | Ask Claude Code for an order to a slot that does not exist, such as `2026-04-30T09`. |
-| `FAIL ... api-field-rename`                  | The tests read the status but not the body. Ask for a strict schema on every order.  |
-| `FAIL the API tests pass on the fixed build` | A test expects what a buggy shop did. The contract wins. Ask Claude Code to fix it.  |
+| What you see                            | Fix                                                                                  |
+| --------------------------------------- | ------------------------------------------------------------------------------------ |
+| `Not reached yet: POST /api/orders 404` | Ask Claude Code for an order to a slot that does not exist, such as `2026-04-30T09`. |
+| `FAIL ... api-field-rename`             | The tests read the status but not the body. Ask for a strict schema on every order.  |
 
 ## Words you will use
 
+- **Mock**: a call your test answers itself, so a service can fail on purpose.
+
 - **Contract**: a file that says what an API promises. Here it is `openapi.yaml`.
-- **Schema**: the shape of an answer: which fields, and of which type.
-- **Mock**: a test answers a call itself, so it can make a service fail on purpose.
 - **Strict schema**: a schema that also fails on a field it does not name, such as `slot_id`.

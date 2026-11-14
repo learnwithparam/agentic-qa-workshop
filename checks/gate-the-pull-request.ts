@@ -75,12 +75,16 @@ function quarantineIsOwned(folder: string): boolean {
 }
 
 // The list may not grow without limit, and a retry may not stand in for a fix.
-function quarantineHasALimit(folder: string): boolean {
+function quarantineHasLimit(folder: string): boolean {
   const policy = readPolicy(folder);
   if (!policy || !Array.isArray(policy.quarantine)) return false;
   const limit = policy.maxQuarantined;
-  return typeof limit === "number" && limit > 0 && policy.quarantine.length <= limit
-    && (policy.retries ?? 0) === 0;
+  return (
+    typeof limit === "number" &&
+    limit > 0 &&
+    policy.quarantine.length <= limit &&
+    (policy.retries ?? 0) === 0
+  );
 }
 
 function ciShardsTheSuite(folder: string): boolean {
@@ -147,7 +151,8 @@ export default [
   {
     says: "a red run uploads its trace and report as a CI artefact",
     test: ciKeepsTraces,
-    tryNext: "add an upload-artifact step with if: failure() for playwright-report and test-results",
+    tryNext:
+      "add an upload-artifact step with if: failure() for playwright-report and test-results",
   },
   {
     says: "qa/flake-policy.json gives every quarantined test an owner, a reason and an end date",
@@ -156,7 +161,7 @@ export default [
   },
   {
     says: "the quarantine has a size limit and the policy allows no retries",
-    test: quarantineHasALimit,
+    test: quarantineHasLimit,
     tryNext: "set maxQuarantined above zero, keep the list within it, and keep retries at 0",
   },
   {

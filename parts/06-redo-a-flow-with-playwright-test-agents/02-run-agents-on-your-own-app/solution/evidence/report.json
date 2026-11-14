@@ -1,0 +1,101 @@
+{
+  "config": {
+    "projects": [
+      {
+        "name": "chromium"
+      }
+    ]
+  },
+  "suites": [
+    {
+      "title": "seed.spec.ts",
+      "file": "seed.spec.ts",
+      "specs": [
+        {
+          "title": "seed",
+          "ok": true,
+          "file": "seed.spec.ts",
+          "tests": [
+            {
+              "status": "expected",
+              "results": [
+                {
+                  "status": "passed"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "create-a-note.spec.ts",
+      "file": "create-a-note.spec.ts",
+      "specs": [
+        {
+          "title": "a new note appears in the list",
+          "ok": true,
+          "file": "create-a-note.spec.ts",
+          "tests": [
+            {
+              "status": "expected",
+              "results": [
+                {
+                  "status": "passed"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "create-a-note.spec.ts",
+      "file": "create-a-note.spec.ts",
+      "specs": [
+        {
+          "title": "an empty title is refused",
+          "ok": true,
+          "file": "create-a-note.spec.ts",
+          "tests": [
+            {
+              "status": "expected",
+              "results": [
+                {
+                  "status": "passed"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "create-a-note.spec.ts",
+      "file": "create-a-note.spec.ts",
+      "specs": [
+        {
+          "title": "a very long title is cut in the list",
+          "ok": true,
+          "file": "create-a-note.spec.ts",
+          "tests": [
+            {
+              "status": "expected",
+              "results": [
+                {
+                  "status": "passed"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "stats": {
+    "expected": 4,
+    "unexpected": 0,
+    "flaky": 0,
+    "skipped": 0
+  }
+}

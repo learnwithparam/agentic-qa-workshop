@@ -118,6 +118,7 @@ export default [
   {
     says: "a second test reuses the saved sign-in with test.use({ storageState }) and passes",
     test: async (folder) => reusesTheSignIn(folder) && (await passesEveryRun(folder)),
-    tryNext: "wrap a test in test.use({ storageState: '.auth/ana.json' }) and skip the sign-in page",
+    tryNext:
+      "wrap a test in test.use({ storageState: '.auth/ana.json' }) and skip the sign-in page",
   },
 ] satisfies Rule[];
