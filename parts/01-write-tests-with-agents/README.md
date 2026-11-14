@@ -1,4 +1,4 @@
-# Part 1: Write tests with agents
+# Write tests with agents
 
 This part moves the objective: you get Claude Code to plan and write tests, and you judge them.
 

@@ -8,7 +8,7 @@ import rules, { playwrightVersion } from "./redo-the-flow-with-agents";
 const STEP = join(
   ROOT,
   "parts",
-  "06-do-it-with-the-tools-teams-run",
+  "06-redo-a-flow-with-playwright-test-agents",
   "01-redo-the-flow-with-agents",
 );
 

@@ -1,16 +1,17 @@
 # Parts: what is built and what each part session builds
 
-The spine is built: the world, the checker library, the finished suite, the orientation and Part 1. Parts 2 to 5
+The spine is built: the world, the checker library, the finished suite, the orientation, Part 1 and Part 6. Parts 2 to 5
 have a README with the problem, a diagram and the step table, and no step folders yet. A part session builds one
 part from this file, its part README, and the code it points to.
 
 ## Built
 
-| Folder                              | Steps                                                                                                   | Minutes                | Status                                                                                        |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------- |
-| `00-orientation/`                   | meet-the-shop                                                                                           | 15                     | complete: check, solution, 2 wrong answers, picture                                           |
-| `parts/01-write-tests-with-agents/` | write-the-seed-test, plan-tests-from-requirements, generate-tests-from-the-plan, review-the-agent-tests | 10 + 20 + 15 + 10 = 55 | complete: 4 checks, solutions, 2 or 3 wrong answers each, pictures; agent work in Claude Code |
-| `world/finished/`                   | the finished system                                                                                     | none                   | `bun run finished`: a real Claude Code run, or a replay of `world/recordings/`                |
+| Folder                                              | Steps                                                                                                   | Minutes                | Status                                                                                                    |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------- | --------------------------------------------------------------------------------------------------------- |
+| `00-orientation/`                                   | meet-the-shop                                                                                           | 15                     | complete: check, solution, 2 wrong answers, picture                                                       |
+| `parts/01-write-tests-with-agents/`                 | write-the-seed-test, plan-tests-from-requirements, generate-tests-from-the-plan, review-the-agent-tests | 10 + 20 + 15 + 10 = 55 | complete: 4 checks, solutions, 2 or 3 wrong answers each, pictures; agent work in Claude Code             |
+| `parts/06-redo-a-flow-with-playwright-test-agents/` | redo-the-flow-with-agents                                                                               | 15                     | complete: check, solution, wrong answers; Playwright Test Agents on one flow, run as `bun run assignment` |
+| `world/finished/`                                   | the finished system                                                                                     | none                   | `bun run finished`: a real Claude Code run, or a replay of `world/recordings/`                            |
 
 ## To build
 

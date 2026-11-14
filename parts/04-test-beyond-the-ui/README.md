@@ -1,4 +1,4 @@
-# Part 4: Test beyond the UI
+# Test beyond the UI
 
 This part moves the outcome: tests for the partner API, for bugs nobody wrote down, and for the AI feature.
 
