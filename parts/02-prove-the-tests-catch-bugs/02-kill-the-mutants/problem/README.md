@@ -2,13 +2,11 @@
 
 ## The problem
 
-The bug-kill grid uses 8 bugs we planted. Real bugs are not on a list. Mutation testing gives you a second
-measure. A tool called Stryker makes hundreds of small changes to the code, one at a time. Each changed copy is a **mutant**. For example, it turns `booked >= capacity` into `booked > capacity`,
+The bug-kill grid uses 8 planted bugs. Real bugs are not on a list. Mutation testing is a second measure. A tool called Stryker makes hundreds of small changes to the code, one at a time. Each changed copy is a **mutant**. For example, it turns `booked >= capacity` into `booked > capacity`,
 which is the `slot-capacity` bug. Then it runs your unit tests. If a test goes red, the mutant is **killed**. If
 every test stays green, the mutant **survived**: your tests would miss that bug.
 
-The **mutation score** is the share of mutants your tests kill. Coverage says a line ran. The score says a test
-would notice if it were wrong.
+The **mutation score** is the share of mutants your tests kill. Coverage says a line ran. The score says a test would notice.
 
 ```mermaid
 flowchart LR
@@ -40,12 +38,11 @@ Run bunx vitest run, then bunx stryker run. For each survived mutant, add or fix
 Do not change the domain code itself, only the .test.ts files and stryker.config.json.
 ```
 
-A survived mutant looks like this. No test noticed when Stryker flipped the check for loose produce:
+A survived mutant looks like this:
 
 ![A survived mutant and the score table](../images/expected.png)
 
-Reject two shortcuts: lowering `"break"`, and changing the domain code. The check runs your tests against its
-own copy of the domain code.
+Reject two shortcuts: lowering `"break"`, and changing the domain code.
 
 ## Done when
 
@@ -53,6 +50,14 @@ own copy of the domain code.
 - Your tests pass on the fixed domain code.
 - The mutation score on the three files is at least 70.
 - Each test file kills a mutant.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify kill-the-mutants` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify kill-the-mutants
@@ -70,7 +75,7 @@ Expect: `mutation score:` with a number of 70 or more, then `Done. All 4 rules p
 
 ## Words you will use
 
-- **Mutant**: a copy of the code with one small change, like `>=` turned into `>`.
+- **Mutant**: a copy of the code with one small change.
 - **Killed**: at least one test went red on the mutant.
 - **Survived**: every test stayed green. Your tests would miss that bug.
 - **Mutation score**: the percent of mutants killed.

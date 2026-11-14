@@ -2,8 +2,7 @@
 
 ## The problem
 
-The suite in `tests/` has 16 tests, and all of them are green. Green proves the tests run. It does not prove
-they would catch a bug.
+The suite in `tests/` has 16 green tests. Green proves they run, not that they catch a bug.
 
 Pantry Run plants 8 bugs that break a written rule, each behind a switch. A good suite goes red when a bug is
 on. This one misses 2. For example, with `BUGS=sub-allergen` the picker swaps Oat granola for Almond crunch
@@ -31,8 +30,7 @@ bun run verify catch-the-seeded-bugs
 
 Expect: a grid with `6 of 8 bugs caught`, and a `missed` line for `sub-allergen` and `sub-optout-chilled`.
 
-Both misses are substitution rules (SUB-2 and SUB-4). Part 1 planned slots and basket only, so no test reads
-the packing note on an order.
+Both misses are substitution rules (SUB-2 and SUB-4). No test reads the packing note on an order.
 
 Start Claude Code in this folder:
 
@@ -54,8 +52,7 @@ Ana (ana@pantryrun.test) declared tree nuts.
 Run bunx playwright test and make sure every test passes on the fixed build. Do not change the existing tests.
 ```
 
-Read each new test before you accept it. Which `expect` goes red if the rule breaks? A test that only checks
-"Order placed" stays green with every bug on. Then run the grid again.
+Read each new test before you accept it. Which `expect` goes red if the rule breaks? Then run the grid again.
 
 ![The grid with every bug caught](../images/expected.png)
 
@@ -63,6 +60,14 @@ Read each new test before you accept it. Which `expect` goes red if the rule bre
 
 - The suite passes on the fixed build (`BUGS=none`).
 - The suite goes red on at least 7 of the 8 requirement bugs.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify catch-the-seeded-bugs` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify catch-the-seeded-bugs
@@ -80,6 +85,6 @@ Expect: `8 of 8 bugs caught` (7 is enough), then `Done. All 2 rules pass.`
 
 ## Words you will use
 
-- **Planted bug**: a known fault you can switch on, so you can test your tests.
+- **Planted bug**: a known fault you can switch on.
 - **Bug-kill matrix**: the grid of caught and missed, one row per planted bug.
 - **Caught**: the suite is green with the bug off and red with it on.

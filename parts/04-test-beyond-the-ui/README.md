@@ -66,6 +66,17 @@ Then, for each step, work in its `problem/` folder with Claude Code and check it
 explore step and the first half of the suggester step use the release candidate,
 `BUGS=release bun run shop`, as their READMEs say.
 
+Ask Claude Code:
+
+```text
+Run these from the repo root and tell me what each one printed. Do not change anything to make it pass.
+bun run verify test-the-order-api-contract
+bun run verify explore-with-an-agent
+bun run verify test-the-substitution-suggester
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify test-the-order-api-contract
 bun run verify explore-with-an-agent
@@ -83,6 +94,14 @@ bun run verify test-the-order-api-contract solution
 Expect: `Done. All 6 rules pass.`
 
 When all three pass, the whole part passes.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify part test-beyond-the-ui` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify part test-beyond-the-ui

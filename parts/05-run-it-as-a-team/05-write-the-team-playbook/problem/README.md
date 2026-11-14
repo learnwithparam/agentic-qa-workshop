@@ -52,6 +52,14 @@ Claude Code.
 - Every human gate names who approves.
 - At least 4 numbers, each one the gate or the cost step computes, and none counts tests written.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify write-the-team-playbook` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify write-the-team-playbook
 ```

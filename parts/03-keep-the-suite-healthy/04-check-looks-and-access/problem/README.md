@@ -2,10 +2,10 @@
 
 ## The problem
 
-Some bugs break no number. On a 375 px phone, a price can sit on top of its Add button. And a screen reader
-can find slot radios with no name, so a blind shopper cannot pick a delivery time.
+Some bugs break no number. On a 375 px phone, a price can sit on top of its Add button. A screen reader
+can find slot radios with no name.
 
-For example, with `BUGS=price-overlap` every functional test stays green. The total is right. The card just looks
+For example, with `BUGS=price-overlap` every functional test stays green. The card just looks
 broken on a phone.
 
 Two kinds of test catch this. A **visual test** saves a screenshot and compares each run with it. An
@@ -40,7 +40,7 @@ Do not turn any axe rule off. If you ever must, add a comment that names the tic
 Run bunx playwright test tests/visual.spec.ts --update-snapshots to make the baselines, then run both files twice more to show they are stable.
 ```
 
-Then prove each test catches its bug. Stop the shop, and start it with the first bug on:
+Then prove each test catches its bug. Restart the shop with the first bug on:
 
 ```bash
 BUGS=price-overlap bun run shop
@@ -54,9 +54,8 @@ Run `bunx playwright test tests/visual.spec.ts` and open the report. The diff sh
 
 Do the same with `BUGS=missing-label` and `tests/a11y.spec.ts`. Axe lists a violation.
 
-Saved screenshots differ a little from one machine to the next. To share baselines with a team, make them in
-Playwright's container, `mcr.microsoft.com/playwright:v1.65.0-noble`. The check makes its own fresh baselines,
-so it works on any machine.
+Saved screenshots differ a little between machines. To share baselines with a team, make them in
+Playwright's container, `mcr.microsoft.com/playwright:v1.65.0-noble`.
 
 ## Done when
 
@@ -64,6 +63,14 @@ so it works on any machine.
 - The accessibility test runs axe with the WCAG 2.1 AA tags, passes on the fixed build, and fails on
   `missing-label`.
 - Any axe rule turned off has a comment that names a ticket.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify check-looks-and-access` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify check-looks-and-access
@@ -82,5 +89,5 @@ Expect: `Done. All 7 rules pass.`
 ## Words you will use
 
 - **Baseline**: the saved screenshot a visual test compares with.
-- **Axe**: a tool that lists accessibility problems on a page.
+- **Axe**: a tool that lists accessibility problems.
 - **WCAG 2.1 AA**: the usual accessibility rules.

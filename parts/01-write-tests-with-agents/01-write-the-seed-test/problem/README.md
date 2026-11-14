@@ -5,7 +5,7 @@
 Playwright has a planner agent and a generator agent. Both start every session from one file: the seed test.
 A seed test is the first test an agent runs. It opens the app in a known state, and the agent copies its style.
 
-A bad seed spreads into every test the agents write. For example:
+A bad seed spreads into every test. For example:
 
 - A seed that does not reset the shop data gives tests that pass once and fail on the second run.
 - A seed that does not sign in sends the agent to explore the Sign in page instead of the basket.
@@ -19,8 +19,7 @@ flowchart LR
 
 ## Your challenge
 
-Get Claude Code to finish `tests/seed.spec.ts` in this folder. You type no test code: you write the prompt and
-review the plan. Today the file has an empty test. When Claude Code is done, the seed must:
+Get Claude Code to finish `tests/seed.spec.ts` in this folder. You type no test code. When it is done, the seed must:
 
 1. Reset the shop with `request.post("/__test/reset")`.
 2. Sign in on the Sign in page as `ana@pantryrun.test`, password `pantry`.
@@ -32,7 +31,7 @@ Start Claude Code in this folder:
 claude
 ```
 
-Expect: Claude Code opens. The first time, it asks if you trust this folder. Say yes.
+Expect: Claude Code opens and asks to trust this folder. Say yes.
 
 Then type this prompt:
 
@@ -44,8 +43,7 @@ expect the empty basket. Use getByLabel and getByRole, not CSS. Show me your pla
 
 Read the plan before you say yes. Say no if the plan adds an item to the basket, or has no `expect`.
 
-Then run the seed three times in a second terminal, in this folder. Playwright starts the shop if it is not
-running yet.
+Then run the seed three times in a second terminal in this folder. Playwright starts the shop for you.
 
 ```bash
 bunx playwright test --repeat-each=3
@@ -53,7 +51,7 @@ bunx playwright test --repeat-each=3
 
 Expect: `3 passed`
 
-This is where your seed should leave the browser:
+Your seed should end here:
 
 ![The empty basket the seed ends on](../images/expected.png)
 
@@ -62,6 +60,14 @@ This is where your seed should leave the browser:
 - `tests/seed.spec.ts` resets the shop through `POST /__test/reset` and has at least one `expect`.
 - It passes 3 runs in a row on the fixed build.
 - The shop's event log shows a reset and a sign-in as Ana on every run, and every run ends on an empty basket.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify write-the-seed-test` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify write-the-seed-test
@@ -81,7 +87,7 @@ Expect: `Done. All 6 rules pass.`
 ## Words you will use
 
 - **Seed test**: the first test an agent runs. The agent copies its style.
-- **`request`**: Playwright's built-in tool for web calls inside a test, when no browser is needed.
+- **`request`**: Playwright's tool for web calls with no browser.
 - **`expect`**: a check in a test. A test with no `expect` passes whatever the page shows.
 - **Event log**: `events.jsonl`, the shop's record of what happened. The checks read it.
 - **Plan**: the list of changes Claude Code shows before it edits files. You approve or reject it.

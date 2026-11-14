@@ -57,6 +57,19 @@ you measure your shop.
 Check each step from the repo root once its work is in place. The README of each step has the commands to run
 first. For example, the first step runs `claude -p` twice against `BUGS=release bun run shop`.
 
+Ask Claude Code:
+
+```text
+Run these from the repo root and tell me what each one printed. Do not change anything to make it pass.
+bun run verify compare-mcp-and-cli
+bun run verify fuzz-the-api-from-the-schema
+bun run verify measure-the-agent-cost
+bun run verify gate-the-pull-request
+bun run verify write-the-team-playbook
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify compare-mcp-and-cli
 bun run verify fuzz-the-api-from-the-schema
@@ -76,6 +89,14 @@ bun run gate ../pulls/catches-nothing
 Expect: `BLOCKED at catches: "the shop lists bananas" catches no planted bug`
 
 When all five steps pass, the whole part passes.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify part run-it-as-a-team` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify part run-it-as-a-team

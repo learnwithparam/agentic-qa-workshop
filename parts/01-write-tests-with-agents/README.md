@@ -70,6 +70,18 @@ Expect: `Pantry Run ready on http://localhost:4173 (bugs: none)`
 
 Then, for each step, work in its `problem/` folder and check it from the repo root.
 
+Ask Claude Code:
+
+```text
+Run these from the repo root and tell me what each one printed. Do not change anything to make it pass.
+bun run verify write-the-seed-test
+bun run verify plan-tests-from-requirements
+bun run verify generate-tests-from-the-plan
+bun run verify review-the-agent-tests
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify write-the-seed-test
 bun run verify plan-tests-from-requirements
@@ -80,6 +92,14 @@ bun run verify review-the-agent-tests
 Expect: `Done.` on each step once its work is in place, and a `Progress:` line after each.
 
 When all four pass, the whole part passes.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify part write-tests-with-agents` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify part write-tests-with-agents

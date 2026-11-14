@@ -4,6 +4,35 @@ An agent can write forty Playwright tests that all pass. This course is about th
 tests catch a real bug? You let agents plan, write and fix tests for a grocery delivery shop. Then you prove the
 result with numbers a script prints: planted bugs caught, mutants killed, assertions kept.
 
+## Start here
+
+You do not need to know how to code. You need a terminal, Claude Code and this folder.
+
+**What Claude Code is.** It is an assistant that works inside a project folder. It reads the files and writes
+new ones. It asks before it runs a command or changes a file, and you say yes or no.
+
+**What you do.** You paste prompts, read the plan it shows, and say yes or no. You write no code.
+
+**1. Open a terminal.** On a Mac, press Command and Space, type Terminal and press Enter. On Windows, open
+the Start menu, type PowerShell and press Enter. On Linux, open your Terminal app. A terminal is a window where
+you type a command and press Enter. Later you will open a second one in the same way.
+
+**2. Get the course.** Type these two lines in the terminal. The first copies the course to your computer. The
+second moves into its folder.
+
+```bash
+git clone https://github.com/learnwithparam/agentic-qa-workshop
+cd agentic-qa-workshop
+```
+
+Expect: no error. Git prints `Cloning into 'agentic-qa-workshop'...` and the second line prints nothing.
+
+**3. Install Claude Code and sign in.** Follow the first steps of the
+[orientation walkthrough](00-orientation/README.md#walkthrough).
+
+**4. Learn the ways of working.** [Claude Code ways of working](00-orientation/claude-code-ways-of-working.md)
+lists each habit the course teaches and links to the step where you try it.
+
 ## The promise
 
 - **Objective.** You can get Claude Code to plan, write and review a Playwright suite, and prove it catches bugs.
@@ -150,6 +179,14 @@ Each step lives in its own folder with three parts:
 
 When Claude Code is done, check the step:
 
+Ask Claude Code:
+
+```text
+Run `bun run verify write-the-seed-test` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify write-the-seed-test
 ```
@@ -175,13 +212,9 @@ numbers; nobody types them in. A hiring manager reads the top of your README and
 
 ## Claude Code in this course
 
-Every agent step runs in the real Claude Code. You can use it in three places:
-
-- the `claude` command in a terminal;
-- the Claude Code extension in your editor;
-- the Code tab in Claude Desktop.
-
-Sign in with your own Claude account (Pro, Max or a Console account). The course never asks for an API key.
+Every agent step runs in the real Claude Code, in the `claude` command, the editor extension or the Code tab
+in Claude Desktop. Sign in with your own Claude account. The course never asks for an API key. The habits it
+teaches are on [one page](00-orientation/claude-code-ways-of-working.md).
 
 You build Claude Code's setup and the work it does with it. For example: `CLAUDE.md`, the permissions in
 `.claude/settings.json`, hooks, Playwright's planner, generator and healer agents, and runs with `claude -p`.

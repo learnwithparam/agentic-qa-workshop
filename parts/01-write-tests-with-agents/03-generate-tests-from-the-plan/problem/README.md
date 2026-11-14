@@ -8,8 +8,7 @@ Agents write tests that pass today and break next sprint. For example:
 - `waitForTimeout(1000)` waits one second to hide a race, and fails on a slow machine.
 - A test with no `expect` passes whatever the page shows.
 
-Each one costs you a morning later. Playwright's generator agent logs its steps from the plan, so every test can point
-back to the scenario it came from. You keep that link, and the habits that make tests last.
+Each one costs you a morning later. Playwright's generator agent works from the plan, so every test points back to its scenario.
 
 ```mermaid
 flowchart LR
@@ -23,7 +22,7 @@ flowchart LR
 ## Your challenge
 
 The plans from the last step are in `specs/`. Get Claude Code to turn every scenario into a test in `tests/`.
-You type prompts and review. Claude Code writes every line of test code.
+You type prompts and review.
 
 Add Playwright's agents to this folder and start Claude Code:
 
@@ -47,7 +46,7 @@ Then read what came back. Check these five things in every file:
 
 - The file starts with `// spec: specs/<plan>.md`.
 - Each test title matches its scenario's title.
-- Elements are found with `getByRole`, `getByLabel`, `getByText` or `getByTestId`. No CSS, no XPath.
+- Elements use `getByRole`, `getByLabel`, `getByText` or `getByTestId`. No CSS, no XPath.
 - No `waitForTimeout`. Let `expect` wait.
 - Every test has an `expect`.
 
@@ -68,6 +67,14 @@ Expect: `16 passed` (15 scenarios and the seed), then the HTML report opens.
 - Every test has an `expect`, no test uses `waitForTimeout`, no test finds elements by CSS or XPath.
 - Every test passes on the fixed build.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify generate-tests-from-the-plan` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify generate-tests-from-the-plan
 ```
@@ -85,7 +92,7 @@ Expect: `Done. All 7 rules pass.`
 
 ## Words you will use
 
-- **Generator agent**: the Playwright agent that turns a plan scenario into test code by using the browser.
+- **Generator agent**: the Playwright agent that turns a scenario into test code.
 - **Locator**: how a test finds an element. Role and label locators match what a shopper sees.
-- **Auto-waiting**: `expect` tries again until the page matches or time runs out, so sleeps are not needed.
+- **Auto-waiting**: `expect` tries again until the page matches, so sleeps are not needed.
 - **HTML report**: Playwright's page of results, one row per test.
