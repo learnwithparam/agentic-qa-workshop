@@ -68,7 +68,7 @@ Run it on the four others. Each must print `BLOCKED`, with the stage that caught
 
 Add a Stop hook in `.claude/settings.json`. It runs `bun qa/gate.ts` when Claude Code thinks it is done, and if the gate blocks, Claude Code keeps working.
 
-Then add a reviewer. Save `.claude/agents/test-reviewer.md` with `tools: Read, Grep, Glob, Bash` and no tool that edits. Ask Claude Code to run `/code-review` through this subagent on your diff, so a fresh pair of eyes checks it.
+Then add a reviewer. Save `.claude/agents/test-reviewer.md` with the tools Read, Grep, Glob and Bash, and no tool that edits. Ask Claude Code to run `/code-review` through this subagent on your diff, so a fresh pair of eyes checks it.
 
 ## Done when
 

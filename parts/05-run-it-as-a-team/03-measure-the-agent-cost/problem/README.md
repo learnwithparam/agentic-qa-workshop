@@ -72,7 +72,7 @@ Cost per kept test is the three costs added up, divided by Kept tests, to the ce
 
 ## Fence the shell
 
-A run that no one watches should not be able to touch the whole machine. Turn the sandbox on in `.claude/settings.json` with `"sandbox": { "enabled": true }`. Bash commands then run inside a fence.
+A run that no one watches should not be able to touch the whole machine. Turn the sandbox on in `.claude/settings.json`: add a `sandbox` key and set its `enabled` value to `true`. Bash commands then run inside a fence.
 
 ## Done when
 

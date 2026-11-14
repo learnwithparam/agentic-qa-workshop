@@ -17,7 +17,7 @@ flowchart LR
 ## Your challenge
 
 Get Claude Code to find the three flaky tests, name each cause, and fix them after you approve. Start the
-shop (release v1) and leave it running:
+shop (the old release) and leave it running:
 
 ```bash
 bun run shop
@@ -44,7 +44,7 @@ This is what 20 shuffled runs look like before the fix:
 
 ![Before the fix: 24 of 60 runs fail](../images/expected.png)
 
-Claude Code may propose `21:59:00-06:00` for the clock test. On March 10
+Claude Code may propose a clock time with the wrong offset for the clock test. In daylight time,
 that is 22:59 in Larkford, after the cutoff. Then approve, with your own name:
 
 ```text

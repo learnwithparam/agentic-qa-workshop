@@ -1,6 +1,6 @@
 # How Claude Code got here
 
-You edited no test. You started the shop on release v2, gave Claude Code the healer job with clear rules, and
+You edited no test. You started the shop on the new release, gave Claude Code the healer job with clear rules, and
 read every fix.
 
 This solution is a real run: 8 turns in the main session, with the `playwright-test-healer` subagent doing the

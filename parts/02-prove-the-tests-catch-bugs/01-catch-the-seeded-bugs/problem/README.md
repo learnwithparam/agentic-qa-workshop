@@ -28,7 +28,7 @@ First, see the grid. From the repo root:
 bun run verify catch-the-seeded-bugs
 ```
 
-Expect: a grid with `6 of 8 bugs caught`, and a `missed` line for `sub-allergen` and `sub-optout-chilled`.
+Expect: a grid with 6 of 8 bugs caught, and a `missed` line for `sub-allergen` and `sub-optout-chilled`.
 
 Both misses are substitution rules (SUB-2 and SUB-4). No test reads the packing note on an order.
 
@@ -73,7 +73,7 @@ Or run it yourself:
 bun run verify catch-the-seeded-bugs
 ```
 
-Expect: `8 of 8 bugs caught` (7 is enough), then `Done. All 2 rules pass.`
+Expect: 8 of 8 bugs caught (7 is enough), then `Done. All 2 rules pass.`
 
 ## If you get stuck
 

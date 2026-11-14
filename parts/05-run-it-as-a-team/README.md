@@ -86,7 +86,7 @@ Try the sample gate on one planted pull request, from the gate step's `solution/
 bun run gate ../pulls/catches-nothing
 ```
 
-Expect: `BLOCKED at catches: "the shop lists bananas" catches no planted bug`
+Expect: BLOCKED at catches. The shop lists bananas catches no planted bug.
 
 When all five steps pass, the whole part passes.
 

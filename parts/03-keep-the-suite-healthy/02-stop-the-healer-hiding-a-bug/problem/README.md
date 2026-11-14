@@ -2,12 +2,12 @@
 
 ## The problem
 
-After the heal, 7 tests in `substitutions.spec.ts` are still red on release v2. They are red for a real reason.
-On v2 every new basket line starts with "Allow substitutes" switched off. That breaks SUB-1: "Every new basket
+After the heal, 7 tests in `substitutions.spec.ts` are still red on the new release. They are red for a real reason.
+On the new release every new basket line starts with "Allow substitutes" switched off. That breaks SUB-1: "Every new basket
 line starts with "Allow substitutes" switched on."
 
-For example, a shopper adds Whole milk 2 L, which is out of stock. On v1 the order says "Substituted with
-Semi-skimmed milk 2 L". On v2 it says "Not available", and the shopper gets no milk.
+For example, a shopper adds Whole milk 2 L, which is out of stock. On the old release the order says "Substituted with
+Semi-skimmed milk 2 L". On the new release it says "Not available", and the shopper gets no milk.
 
 A healer can make these tests green: expect the box unticked, tick it in the test, or mark the test
 `test.fixme()`. Each of those hides the bug from every later run.
@@ -25,7 +25,7 @@ flowchart LR
 
 Keep the SUB-1 test red, and get Claude Code to write a bug report the developers can act on. You edit no test.
 
-Start the shop on release v2 and leave it running:
+Start the shop on the new release and leave it running:
 
 ```bash
 RELEASE=v2 bun run shop
@@ -67,7 +67,7 @@ Do not change any test.
 
 ## Done when
 
-- The SUB-1 test still fails on v2, at its `toBeChecked()` check, with every expect intact.
+- The SUB-1 test still fails on the new release, at its `toBeChecked()` check, with every expect intact.
 - No test is marked `test.skip` or `test.fixme`.
 - `qa/bugs/SUB-1.md` has Steps, Expected, Actual and Requirement, names SUB-1, and quotes the rule.
 

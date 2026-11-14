@@ -9,7 +9,7 @@ You wrote a test plan and specs with Claude Code earlier in this course. Many te
 spec instead. That works for a short, stable flow. It stops working when the pages change often, because every
 renamed button means a manual hunt through the specs.
 
-For example, in release v2 the button "Book slot" is called "Reserve". One renamed button turns every spec that
+For example, in the new release the button "Book slot" is called "Reserve". One renamed button turns every spec that
 clicks it red.
 
 ## Why it matters
@@ -33,7 +33,7 @@ flowchart LR
 ## What we teach
 
 You run Playwright's own agents on one flow, "book a delivery slot". You compare the result with the hand-written
-tests from part 1. The tool is `@playwright/test` 1.65.0, under the Apache-2.0 licence. The course already pins that
+tests from part 1. The tool is `@playwright/test`, under the Apache-2.0 licence. The course already pins that
 version.
 
 | Step                                                                        | Minutes | Claude Code makes                                                         | The check reads                                               |

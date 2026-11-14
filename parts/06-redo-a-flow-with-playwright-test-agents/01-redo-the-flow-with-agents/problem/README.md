@@ -45,7 +45,7 @@ bunx playwright test
 bun ../../../assignment/break-selector.ts .
 ```
 
-Expect: `passed` for every test, then `Broke one selector: { name: "Book slot" } is now { name: "Reserve slot" }`.
+Expect: `passed` for every test, then a line that says the selector broke, from "Book slot" to "Reserve slot".
 
 Run the tests again and watch one go red. Then ask the healer to fix it, and keep every assertion:
 
@@ -59,7 +59,7 @@ with the hand-written tests in `parts/01-write-tests-with-agents/03-generate-tes
 
 ## Done when
 
-- `@playwright/test` resolves to 1.65.0.
+- `@playwright/test` resolves to the version this course pins.
 - A plan file exists for the chosen flow, with at least 3 scenarios.
 - The generated spec names its plan and passes.
 - After the scripted selector break, the healed spec passes and no assertion is lost.
@@ -76,7 +76,7 @@ Expect: `Done. All Done-when lines pass.` and a new `assignment/result.json`.
 | -------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | `FAIL a plan file with at least 3 scenarios` | Ask the planner to use `####` headings for each scenario, like the plans in part 1.         |
 | `FAIL the generated spec names its plan`     | The first line must be `// spec: specs/book-a-slot.md`.                                     |
-| `Is it already broken?` from the script      | The selector is already renamed. Heal the spec, or restore it from git, then rerun.         |
+| The script asks if it is already broken      | The selector is already renamed. Heal the spec, or restore it from git, then rerun.         |
 | `FAIL after the scripted selector break`     | Check `tests/book-a-slot.spec.ts` for a removed `expect`. The healer may only fix locators. |
 
 ## Words you will use

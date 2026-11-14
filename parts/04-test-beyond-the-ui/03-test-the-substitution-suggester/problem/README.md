@@ -98,7 +98,7 @@ Expect: `Done. All 11 rules pass.`
 
 | What you see                               | Fix                                                                               |
 | ------------------------------------------ | --------------------------------------------------------------------------------- |
-| `Wrong row: MLK-WH2 ana seed 1`            | The note does not match the real answer. Ask Claude Code to call that seed again. |
+| A wrong row for `MLK-WH2`, ana, seed 1     | The note does not match the real answer. Ask Claude Code to call that seed again. |
 | `FAIL one allergen in all the answers ...` | The allergen sits inside the pass rate. Ask for a separate list of hits.          |
 | `FAIL a different but valid answer ...`    | The test compares with saved answers. Ask it to check the rules instead.          |
 

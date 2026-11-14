@@ -66,7 +66,7 @@ bun run setup
 ```
 
 Expect: `Ready: Bun 1.4.4, Playwright 1.65.0, Chromium installed. Shop data seeded.`
-If the course finds a Chromium already on your computer, the line says `Chromium at <path>` instead.
+If the course finds a Chromium already on your computer, the line gives that Chromium's path instead.
 
 ```bash
 bun run board
@@ -90,7 +90,7 @@ bun run finished
 ```
 
 Expect: `Signed in: yes. Claude Code is ready for this course.`, then one line per tool Claude Code used, then
-`Finished run: plans cover 17 of 17 requirements` and how many of the 6 slot and basket bugs its tests caught.
+a finished run line saying the plans cover 17 of 17 requirements, and how many of the 6 slot and basket bugs its tests caught.
 
 Is Claude Code not signed in, or is this CI? Then the first line says `Replay:`. The script replays a recorded
 real run from `world/recordings/`.
@@ -221,7 +221,7 @@ You build Claude Code's setup and the work it does with it. For example: `CLAUDE
 
 | Command                         | What it does                                                                                                                             |
 | ------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `bun run doctor`                | Asks `claude` for its version and whether it is signed in. Tested on a recent Claude Code.                                      |
+| `bun run doctor`                | Asks `claude` for its version and whether it is signed in. Tested on a recent Claude Code.                                               |
 | `bun run finished`              | A live `claude -p` run on a fresh copy of `world/finished/template` when Claude Code is signed in; otherwise a replay of a recorded run. |
 | `bun run finished --replay all` | Replays every recorded run and scores each, so you see how much one run differs from the next.                                           |
 | `bun test`                      | Tests the course's hook with the exact JSON Claude Code sends it, and checks the recordings. No model needed.                            |

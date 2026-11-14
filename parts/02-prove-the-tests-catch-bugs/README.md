@@ -76,12 +76,12 @@ Or run it yourself:
 bun run verify catch-the-seeded-bugs
 ```
 
-Expect: `6 of 8 bugs caught`, with `missed` lines for `sub-allergen` and `sub-optout-chilled`.
+Expect: 6 of 8 bugs caught, with `missed` lines for `sub-allergen` and `sub-optout-chilled`.
 
 Then open `claude` in `01-catch-the-seeded-bugs/problem/`, give it the prompt in that step's README, and run
 the same command again.
 
-Expect: `8 of 8 bugs caught` and `Done. All 2 rules pass.`
+Expect: 8 of 8 bugs caught and `Done. All 2 rules pass.`
 
 For the unit tests, work in `02-kill-the-mutants/problem/`. After Claude Code has written the tests, run
 Stryker yourself there:
@@ -90,7 +90,7 @@ Stryker yourself there:
 bunx stryker run
 ```
 
-Expect: a table with `All files` and a mutation score of 70 or more, and no `under breaking threshold` error.
+Expect: a table with `All files` and a mutation score of 70 or more, and no error about being under the breaking threshold.
 
 For the guard, work in `03-guard-the-assertions/problem/`. After Claude Code has written it, try it on a
 planted example:

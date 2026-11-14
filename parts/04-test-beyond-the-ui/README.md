@@ -127,7 +127,7 @@ suggester notes, thresholds and test.
 **Rubric.** Each line is yes or no.
 
 1. Does `bun run verify test-the-order-api-contract` print `Done.`?
-2. Does `bun run verify explore-with-an-agent` print `Found 2 of 3` or `Found 3 of 3`?
+2. Does `bun run verify explore-with-an-agent` report that it found 2 or 3 of the 3 unwritten bugs?
 3. Does `bun run verify test-the-substitution-suggester` print `Done.`, with allergen in `hardFail`?
 4. Does every repro test expect what should happen, not what the buggy shop did?
 

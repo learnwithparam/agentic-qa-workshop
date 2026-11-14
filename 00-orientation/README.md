@@ -70,7 +70,7 @@ bun run setup
 ```
 
 Expect: `Ready: Bun 1.4.4, Playwright 1.65.0, Chromium installed. Shop data seeded.`
-If the course finds a Chromium already on your computer, the line says `Chromium at <path>` instead.
+If the course finds a Chromium already on your computer, the line gives that Chromium's path instead.
 
 Check that the course can see Claude Code. This asks the `claude` command itself, so it works however you installed it.
 
@@ -152,7 +152,7 @@ run, and says so in its first line.
 bun run finished
 ```
 
-Expect: lines for each tool Claude Code used, then `Finished run: plans cover 17 of 17 requirements` and how
+Expect: lines for each tool Claude Code used, then a finished run line saying the plans cover 17 of 17 requirements, and how
 many of the 6 slot and basket bugs its tests caught. The substitution bugs are left for Part 2.
 
 When a command prints something you do not expect, look it up in [troubleshooting.md](troubleshooting.md).

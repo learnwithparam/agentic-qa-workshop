@@ -2,7 +2,7 @@
 
 ## The problem
 
-The bug-kill grid uses 8 planted bugs. Real bugs are not on a list. Mutation testing is a second measure. A tool called Stryker makes hundreds of small changes to the code, one at a time. Each changed copy is a **mutant**. For example, it turns `booked >= capacity` into `booked > capacity`,
+The bug-kill grid uses 8 planted bugs. Real bugs are not on a list. Mutation testing is a second measure. A tool called Stryker makes hundreds of small changes to the code, one at a time. Each changed copy is a **mutant**. For example, it turns the `>=` in `booked >= capacity` into `>`,
 which is the `slot-capacity` bug. Then it runs your unit tests. If a test goes red, the mutant is **killed**. If
 every test stays green, the mutant **survived**: your tests would miss that bug.
 

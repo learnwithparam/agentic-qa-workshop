@@ -92,7 +92,7 @@ After a double click on Book slot, you should see two held slots:
 | ------------------------------------------------- | -------------------------------------------------------------------------------- |
 | `/mcp` shows `playwright` as failed               | Run `bun run setup` at the repo root, then restart Claude Code.                  |
 | `FAIL every repro test passes on the fixed build` | The test expects what the bug did. Ask Claude Code to expect what should happen. |
-| `Found 1 of 3`                                    | Explore again. Try a double click on Book slot, or Back after checkout.          |
+| Only 1 of 3 bugs found                            | Explore again. Try a double click on Book slot, or Back after checkout.          |
 
 ## Words you will use
 

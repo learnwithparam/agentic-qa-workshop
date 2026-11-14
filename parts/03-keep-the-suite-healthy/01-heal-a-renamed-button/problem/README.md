@@ -2,10 +2,10 @@
 
 ## The problem
 
-Release v2 of Pantry Run renames "Book slot" to "Reserve". It also moves the slot picker into a dialog, behind a
+The new release of Pantry Run renames "Book slot" to "Reserve". It also moves the slot picker into a dialog, behind a
 "Choose a delivery time" button. Shoppers notice nothing, but 15 of your 23 tests go red.
 
-For example, "Peak slots cost $4.99 and others $2.99" fails on v2. The slot list now sits in a closed dialog.
+For example, "Peak slots cost $4.99 and others $2.99" fails on the new release. The slot list now sits in a closed dialog.
 
 A **healer** agent fixes tests like this. But some red tests are red for a real reason. Heal the first kind and leave the second red.
 
@@ -22,7 +22,7 @@ flowchart LR
 
 Get Claude Code's healer to fix every test that broke only because something moved or was renamed. The guard hook is on.
 
-Start the shop on release v2, and leave it running:
+Start the shop on the new release, and leave it running:
 
 ```bash
 RELEASE=v2 bun run shop
@@ -60,7 +60,7 @@ The 7 tests still red are in `substitutions.spec.ts`, for a real reason: the nex
 
 ## Done when
 
-- Every test outside `substitutions.spec.ts` passes on release v2.
+- Every test outside `substitutions.spec.ts` passes on the new release.
 - Every test is still there, with every expect and every expected value.
 - No test is marked `test.skip` or `test.fixme`, and no locator uses CSS or XPath.
 - The guard hook is still in `.claude/settings.json`.
@@ -84,11 +84,11 @@ Expect: `Done. All 5 rules pass.`
 | What you see                   | Fix                                                                           |
 | ------------------------------ | ----------------------------------------------------------------------------- |
 | `still red on v2: ...`         | Run that test alone. A timeout on `locator.check` means the dialog is closed. |
-| `an expected value changed`    | The healer changed what a test expects. Undo that edit.                       |
+| An expected value changed      | The healer changed what a test expects. Undo that edit.                       |
 | The healer's own run times out | Ask it to run one test file at a time.                                        |
 
 ## Words you will use
 
 - **Heal**: fix a test that broke because the page changed, not because the rule broke.
 - **Locator**: how a test finds an element.
-- **Release v2**: the next shop version, `RELEASE=v2`.
+- **The new release**: the next shop version, `RELEASE=v2`.

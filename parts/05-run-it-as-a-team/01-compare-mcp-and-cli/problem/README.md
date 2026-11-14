@@ -88,11 +88,11 @@ Expect: `Done. All 6 rules pass.`
 
 ## If you get stuck
 
-| What you see                   | Fix                                                                     |
-| ------------------------------ | ----------------------------------------------------------------------- |
-| `Tokens for MCP: the run says` | A number was typed or rounded. Ask Claude Code to read it from the run. |
-| The run stops at max turns     | Raise `--max-turns`, or make the task in `qa/task.md` smaller.          |
-| `Cost (USD)` looks high        | On a Claude plan it is Claude Code's estimate, not a bill.              |
+| What you see                                       | Fix                                                                     |
+| -------------------------------------------------- | ----------------------------------------------------------------------- |
+| The check says the MCP tokens do not match the run | A number was typed or rounded. Ask Claude Code to read it from the run. |
+| The run stops at max turns                         | Raise `--max-turns`, or make the task in `qa/task.md` smaller.          |
+| `Cost (USD)` looks high                            | On a Claude plan it is Claude Code's estimate, not a bill.              |
 
 ## Words you will use
 
