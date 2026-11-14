@@ -1,6 +1,6 @@
 ---
-
-## paths: tests/api/**
+paths: tests/api/**
+---
 
 # Rules for the API tests
 
