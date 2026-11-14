@@ -6,7 +6,8 @@
       "!**/node_modules",
       "!**/world/recordings",
       "!**/.runs",
-      "!**/e2e/page-checks.js"
+      "!**/e2e/page-checks.js",
+      "!**/.claude/rules"
     ]
   },
   "formatter": {
