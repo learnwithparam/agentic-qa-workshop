@@ -451,12 +451,16 @@ app.get("/orders", (context) => {
     <Layout title="Orders" shopper={shopper} basketLines={lineCount(shopper.id)}>
       <h1>Your orders</h1>
       {orders.length === 0 ? (
-        <p>No orders yet.</p>
+        <div data-empty-state>
+          <p>No orders yet.</p>
+          <a href="/">Start shopping</a>
+        </div>
       ) : (
         <ul data-testid="order-list">
           {orders.map((order) => (
             <li>
-              <a href={`/orders/${order.orderId}`}>{order.orderId}</a>, {money(order.totalCents)}
+              <a href={`/orders/${order.orderId}`}>Order {order.orderId}</a>,{" "}
+              {money(order.totalCents)}
             </li>
           ))}
         </ul>
@@ -718,5 +722,11 @@ app.get("/api/suggest", async (context) => {
 
 app.onError((error, context) => {
   store.logEvent("server_error", { path: context.req.path, message: error.message });
-  return context.json({ error: "internal", message: "Something went wrong." }, 500);
+  return context.json(
+    {
+      error: "internal",
+      message: "The shop could not finish that request. Try again in a minute.",
+    },
+    500,
+  );
 });
