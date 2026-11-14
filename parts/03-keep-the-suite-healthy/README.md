@@ -1,4 +1,4 @@
-# Part 3: Keep the suite healthy
+# Keep the suite healthy
 
 This part moves the outcome: a suite that stays honest when Claude Code heals it, and that the team trusts again.
 

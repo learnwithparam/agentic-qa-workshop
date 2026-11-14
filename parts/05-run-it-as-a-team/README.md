@@ -1,4 +1,4 @@
-# Part 5: Run it as a team
+# Run it as a team
 
 This part moves the goal: one pull request gate, run on every change, that reports the numbers that matter.
 

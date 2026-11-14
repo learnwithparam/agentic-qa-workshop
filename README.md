@@ -134,9 +134,9 @@ flowchart LR
 | [3. Keep the suite healthy](parts/03-keep-the-suite-healthy/README.md)                 | heal-a-renamed-button, stop-the-healer-hiding-a-bug, triage-the-flaky-tests, check-looks-and-access                       | 60      | healing that changes locators only, a regression kept red, zero flaky tests                             |
 | [4. Test beyond the UI](parts/04-test-beyond-the-ui/README.md)                         | test-the-order-api-contract, explore-with-an-agent, test-the-substitution-suggester                                       | 60      | the API contract, bugs no requirement names, and an AI feature judged by properties                     |
 | [5. Run it as a team](parts/05-run-it-as-a-team/README.md)                             | compare-mcp-and-cli, fuzz-the-api-from-the-schema, measure-the-agent-cost, gate-the-pull-request, write-the-team-playbook | 100     | one gate, measured cost, and the team's rules for agents                                                |
-| [6. Do it with the tools teams run](parts/06-do-it-with-the-tools-teams-run/README.md) | redo-the-flow-with-agents                                                                                                 |
+| [6. Redo a flow with Playwright Test Agents](parts/06-redo-a-flow-with-playwright-test-agents/README.md) | redo-the-flow-with-agents                                                                                                 | 15 | you can generate a plan and a spec with Playwright Test Agents and heal a renamed button |
 
-Orientation and parts 1 to 4 are the core (250 minutes). Part 5 is the extension for a full day or a cohort.
+Orientation and parts 1 to 4 are the core (250 minutes). Part 5 is the extension for a full day or a cohort. Part 6 is optional homework.
 `schedules.toml` maps the parts onto a one-day format, four evenings and a weekly cohort.
 
 ## How a step works

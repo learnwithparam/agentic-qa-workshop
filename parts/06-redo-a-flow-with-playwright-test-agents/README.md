@@ -1,4 +1,4 @@
-# Part 6: Do it with the tools teams run
+# Redo a flow with Playwright Test Agents
 
 This part redoes one thing you built by hand, with the open-source tool teams run in production. It is optional in
 the live session and expected as homework. Nothing in parts 1 to 5 changes.
@@ -68,7 +68,7 @@ Expect: four `FAIL` lines with a `Try next:` sentence each, and `Not done yet.`,
 When the step passes, the whole part passes.
 
 ```bash
-bun run verify part do-it-with-the-tools-teams-run
+bun run verify part redo-a-flow-with-playwright-test-agents
 ```
 
-Expect: `Part do-it-with-the-tools-teams-run is done: 1/1 steps pass.`
+Expect: `Part redo-a-flow-with-playwright-test-agents is done: 1/1 steps pass.`

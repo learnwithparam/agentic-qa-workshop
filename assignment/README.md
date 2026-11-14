@@ -1,11 +1,11 @@
 # Assignment: generate and heal one flow's tests with Playwright Test Agents
 
 This assignment is optional in the live session and expected as homework. It is the closing part of the course:
-[Part 6, Do it with the tools teams run](../parts/06-do-it-with-the-tools-teams-run/README.md).
+[Redo a flow with Playwright Test Agents](../parts/06-redo-a-flow-with-playwright-test-agents/README.md).
 
 ## The task
 
-Work in `parts/06-do-it-with-the-tools-teams-run/01-redo-the-flow-with-agents/problem/`. The starter is the course
+Work in `parts/06-redo-a-flow-with-playwright-test-agents/01-redo-the-flow-with-agents/problem/`. The starter is the course
 repo as it is, plus `assignment/break-selector.ts`, a script that renames one button in a spec. Use Playwright's
 planner, generator and healer agents on the flow "book a delivery slot". Then write `CHOICE.md`.
 

@@ -1,4 +1,4 @@
-# Part 2: Prove the tests catch bugs
+# Prove the tests catch bugs
 
 This part moves the transformation: from "all green" to "catches 7 of 8 planted bugs", with numbers a script
 prints.
