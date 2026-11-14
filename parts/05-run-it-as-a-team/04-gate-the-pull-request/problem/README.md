@@ -24,7 +24,7 @@ flowchart LR
 ## Your challenge
 
 Get Claude Code to turn `qa/gate.ts` into a gate that merges the clean pull request and blocks the other four.
-It also writes a CI file that runs the gate. You write no code. You read the plan and try the gate on each pull request.
+It also writes a CI file that runs the gate, a flake policy, and a sharded test job. You write no code. You read the plan and try the gate on each pull request.
 
 First see the problem. The gate today merges the pull request that removed an `expect`:
 
@@ -68,6 +68,17 @@ Run it on the four others. Each must print `BLOCKED`, with the stage that caught
 
 - The gate merges `clean-pull` and blocks the four bad pull requests.
 - `ci/pull-request.yml` runs `bun run gate` on every pull request.
+- The same file runs the suite in shards, and a red run uploads its trace and report.
+- `qa/flake-policy.json` lists each quarantined test with an owner, a reason and an end date. It has a size limit and allows no retries.
+- The sharded job skips tests tagged `@quarantine`.
+
+Ask Claude Code for the CI and the policy in a second prompt:
+
+```text
+In ci/pull-request.yml add a job that runs playwright test in four shards and skips @quarantine.
+On failure, upload playwright-report and test-results. Then write qa/flake-policy.json with
+retries 0, a maxQuarantined limit, and for each quarantined test: test, owner, reason, expires.
+```
 
 Ask Claude Code:
 
@@ -81,7 +92,7 @@ Or run it yourself:
 bun run verify gate-the-pull-request
 ```
 
-Expect: `Done. All 6 rules pass.`
+Expect: `Done. All 11 rules pass.`
 
 ![The gate blocking a flaky test](../images/expected.png)
 
@@ -97,4 +108,7 @@ Expect: `Done. All 6 rules pass.`
 
 - **Gate**: a script that decides if a pull request may merge.
 - **Stage**: one check inside the gate. The first stage that fails blocks the merge.
+- **Shard**: one slice of the suite. Shards run at the same time on different machines.
+- **Quarantine**: a short list of flaky tests moved out of the gate. Each one has an owner and an end date.
+- **Trace**: a recording of a test run that you open in the trace viewer.
 - **Break threshold**: the lowest mutation score Stryker accepts, `thresholds.break`.

@@ -60,6 +60,19 @@ async function endsOnEmptyBasketEveryRun(folder: string): Promise<boolean> {
   return basketViews.length >= RUNS && everyViewIsEmpty && !addedSomething;
 }
 
+const savedSignInFile = (folder: string) => join(folder, "tests", "saved-sign-in.spec.ts");
+
+function savedSignInSource(folder: string): string {
+  const path = savedSignInFile(folder);
+  return existsSync(path) ? readFileSync(path, "utf8") : "";
+}
+
+const savesTheSignIn = (folder: string) =>
+  /storageState\(\s*\{\s*path:/.test(savedSignInSource(folder));
+
+const reusesTheSignIn = (folder: string) =>
+  /test\.use\(\s*\{\s*storageState:/.test(savedSignInSource(folder));
+
 export default [
   {
     says: "tests/seed.spec.ts exists",
@@ -96,5 +109,15 @@ export default [
     test: endsOnEmptyBasketEveryRun,
     tryNext:
       "open /basket last and add nothing; the seed is a clean starting point, not a test of adding",
+  },
+  {
+    says: "tests/saved-sign-in.spec.ts saves Ana's sign-in to a file with storageState",
+    test: savesTheSignIn,
+    tryNext: "sign in once, then call page.context().storageState({ path: '.auth/ana.json' })",
+  },
+  {
+    says: "a second test reuses the saved sign-in with test.use({ storageState }) and passes",
+    test: async (folder) => reusesTheSignIn(folder) && (await passesEveryRun(folder)),
+    tryNext: "wrap a test in test.use({ storageState: '.auth/ana.json' }) and skip the sign-in page",
   },
 ] satisfies Rule[];

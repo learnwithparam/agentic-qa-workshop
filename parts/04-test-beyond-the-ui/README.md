@@ -91,7 +91,7 @@ You can check any sample solution the same way. For example:
 bun run verify test-the-order-api-contract solution
 ```
 
-Expect: `Done. All 6 rules pass.`
+Expect: `Done. All 8 rules pass.`
 
 When all three pass, the whole part passes.
 

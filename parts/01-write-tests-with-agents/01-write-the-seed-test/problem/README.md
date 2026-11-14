@@ -55,10 +55,27 @@ Your seed should end here:
 
 ![The empty basket the seed ends on](../images/expected.png)
 
+Then ask for one more file, so later tests need no sign-in page:
+
+```text
+Add tests/saved-sign-in.spec.ts. One test signs in as Ana and saves it with
+page.context().storageState({ path: ".auth/ana.json" }). A second test uses
+test.use({ storageState: ".auth/ana.json" }), opens /basket, and expects "Signed in as".
+```
+
+Run the tests again:
+
+```bash
+bunx playwright test
+```
+
+Expect: `3 passed`
+
 ## Done when
 
 - `tests/seed.spec.ts` resets the shop through `POST /__test/reset` and has at least one `expect`.
 - It passes 3 runs in a row on the fixed build.
+- `tests/saved-sign-in.spec.ts` saves the sign-in to a file, and a second test starts signed in from that file.
 - The shop's event log shows a reset and a sign-in as Ana on every run, and every run ends on an empty basket.
 
 Ask Claude Code:
@@ -73,7 +90,7 @@ Or run it yourself:
 bun run verify write-the-seed-test
 ```
 
-Expect: `Done. All 6 rules pass.`
+Expect: `Done. All 8 rules pass.`
 
 ## If you get stuck
 
@@ -87,6 +104,7 @@ Expect: `Done. All 6 rules pass.`
 ## Words you will use
 
 - **Seed test**: the first test an agent runs. The agent copies its style.
+- **Saved sign-in**: a file of cookies, made with `storageState`. A test that loads it starts already signed in.
 - **`request`**: Playwright's tool for web calls with no browser.
 - **`expect`**: a check in a test. A test with no `expect` passes whatever the page shows.
 - **Event log**: `events.jsonl`, the shop's record of what happened. The checks read it.

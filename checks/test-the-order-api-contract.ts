@@ -105,6 +105,31 @@ function usesOnlyTheRequestFixture(folder: string): boolean {
   return files.length > 0 && !files.some(opensBrowserPage);
 }
 
+const mockedTests = (folder: string) => join(folder, "tests", "mocked");
+
+function mockSource(folder: string): string {
+  return specFiles(mockedTests(folder))
+    .map((file) => readFileSync(file, "utf8"))
+    .join("\n");
+}
+
+// A mock answers a call for the test. It must send a real failure, and the test must expect its effect.
+function mocksAFailedCall(folder: string): boolean {
+  const source = mockSource(folder);
+  const routes = /page\.route\(/.test(source) && /route\.fulfill\(/.test(source);
+  const fails = /status:\s*[45]\d\d/.test(source);
+  return routes && fails && /\bexpect\(/.test(source);
+}
+
+function mockedTestPasses(folder: string): Promise<boolean> {
+  return once("contract-mocked", folder, () =>
+    withShop({ bugs: "none" }, async (shop) => {
+      const suite = await runSuite(mockedTests(folder), shop.url);
+      return suite.ran && suite.tests.length > 0 && suite.failed === 0;
+    }),
+  );
+}
+
 export default [
   {
     says: "tests/api/ has spec files, and each names the contract in a // spec: line",
@@ -135,5 +160,15 @@ export default [
     says: "the API tests go red when a full slot answers 500 instead of 409 (api-status)",
     test: goesRedWith("api-status"),
     tryNext: "add a test that orders into the full 18:00 slot and expects exactly 409 slot_full",
+  },
+  {
+    says: "tests/mocked/ has a browser test that mocks a failed call with page.route and expects its effect",
+    test: mocksAFailedCall,
+    tryNext: "use page.route to fulfill the booking call with status 503, then expect the alert text",
+  },
+  {
+    says: "the mocked test passes on the fixed build",
+    test: async (folder) => mocksAFailedCall(folder) && (await mockedTestPasses(folder)),
+    tryNext: "run bunx playwright test tests/mocked and fix the first red line",
   },
 ] satisfies Rule[];

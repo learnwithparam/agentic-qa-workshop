@@ -1,0 +1,6 @@
+{
+  "mutate": ["world/domain/slots.ts", "world/domain/basket.ts", "world/domain/substitutions.ts"],
+  "testRunner": "vitest",
+  "reporters": ["json", "html"],
+  "thresholds": { "high": 80, "low": 60, "break": 70 }
+}

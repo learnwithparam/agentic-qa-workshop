@@ -6,3 +6,4 @@ world/.data
 **/playwright-report
 .runs
 assignment/result.json
+.auth

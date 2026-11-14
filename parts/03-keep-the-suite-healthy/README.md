@@ -132,7 +132,7 @@ bun run verify triage-the-flaky-tests
 bun run verify check-looks-and-access
 ```
 
-Expect: `Done. All 8 rules pass.` and `Done. All 7 rules pass.` Each command then counts your progress on every step, which can take a few minutes.
+Expect: `Done. All 10 rules pass.` and `Done. All 7 rules pass.` Each command then counts your progress on every step, which can take a few minutes.
 
 When all four pass, the whole part passes:
 
