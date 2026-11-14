@@ -3,7 +3,7 @@
 ## The problem
 
 Planned tests only find what someone wrote down. The release candidate has three bugs that break no written
-requirement, so no planned test can catch them. People find such bugs by exploring. For example, a shopper on a
+requirement. People find such bugs by exploring. For example, a shopper on a
 slow phone taps "Book slot" twice. Does the shop book two slots and charge the $2.99 fee twice?
 
 ```mermaid
@@ -29,7 +29,7 @@ BUGS=release bun run shop
 
 Expect: `Pantry Run ready on http://localhost:4173 (bugs: 16 on)`
 
-Start Claude Code in this folder in a second terminal. The first time, say yes to the `playwright` MCP server.
+Start Claude Code here in a second terminal. Say yes to the `playwright` MCP server.
 
 ```bash
 claude
@@ -68,13 +68,21 @@ Expect: each repro test fails, with the bug it describes in its error.
 - Each repro test starts with `// finding:`, passes on the fixed build and goes red with its bug on.
 - The repro tests find at least 2 of the 3 unwritten bugs.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify explore-with-an-agent` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify explore-with-an-agent
 ```
 
 Expect: `Done. All 5 rules pass.`
 
-After a double click on Book slot, Claude Code should see two held slots and the fee charged twice:
+After a double click on Book slot, you should see two held slots:
 
 ![Two slots held after one double click](../images/expected.png)
 
@@ -88,6 +96,6 @@ After a double click on Book slot, Claude Code should see two held slots and the
 
 ## Words you will use
 
-- **Charter**: one short page that aims the exploration: its mission, its areas and how long it may take.
+- **Charter**: one short page with a mission, areas and a time box.
 - **Finding**: something odd you saw, written as steps, expected and actual.
 - **Repro test**: a test that reproduces one finding. Red with the bug, green without it.

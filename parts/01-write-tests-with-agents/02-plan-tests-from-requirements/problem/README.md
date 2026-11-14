@@ -19,8 +19,7 @@ flowchart LR
 
 ## Your challenge
 
-Get Claude Code to write two test plans in `specs/`: `slots.md` and `basket.md`. You write no plan text. You
-write the prompt, read the plan, and send Claude Code back for what is missing.
+Get Claude Code to write two test plans in `specs/`: `slots.md` and `basket.md`. You write no plan text. You write the prompt and send Claude Code back for what is missing.
 
 Every scenario needs a heading, numbered steps, an Expected part, and two lines the course checks:
 
@@ -48,8 +47,7 @@ Kind is happy, boundary or negative. Every SLOT and BASK ID must be covered at l
 and each file needs at least one boundary or negative scenario.
 ```
 
-Then read the plans next to the requirements. Agents often skip the rule that needs a clock or a weight. When a
-rule is missing, do not edit the plan. Send Claude Code back with a prompt like this:
+Read the plans next to the requirements. Agents often skip rules that need a clock or a weight. If one is missing, send Claude Code back:
 
 ```text
 specs/slots.md has no scenario for SLOT-3, the 22:00 cutoff. Add a boundary scenario
@@ -63,6 +61,14 @@ at 21:59 and at 22:00, with Covers and Kind lines.
 - Every SLOT and every BASK requirement is covered at least once.
 - Each plan has at least one boundary or negative scenario.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify plan-tests-from-requirements` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify plan-tests-from-requirements
 ```
@@ -71,16 +77,16 @@ Expect: `Done. All 7 rules pass.`
 
 ## If you get stuck
 
-| What you see                               | Fix                                                                                                              |
-| ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
-| `FAIL every SLOT requirement is covered`   | Compare the IDs in the Covers lines with `world/requirements/slots.md`. Ask Claude Code to add the missing ones. |
-| `FAIL every scenario has a Covers line`    | The planner does not add Covers on its own. Put the Covers rule in your prompt and ask again.                    |
-| `FAIL each plan has at least one boundary` | Ask for a scenario just below and just at each number in a rule.                                                 |
-| `init-agents` replaced `.mcp.json`         | It writes one in this folder. Keep your own copy elsewhere.                                                      |
+| What you see                               | Fix                                                                                           |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------- |
+| `FAIL every SLOT requirement is covered`   | Ask Claude Code to add the missing IDs from `world/requirements/slots.md`.                    |
+| `FAIL every scenario has a Covers line`    | The planner does not add Covers on its own. Put the Covers rule in your prompt and ask again. |
+| `FAIL each plan has at least one boundary` | Ask for a scenario just below and just at each number in a rule.                              |
+| `init-agents` replaced `.mcp.json`         | It writes one in this folder. Keep your own copy elsewhere.                                   |
 
 ## Words you will use
 
-- **Test plan**: scenarios in plain words, before any code. Agents and people both read it.
+- **Test plan**: scenarios in plain words, before any code.
 - **Requirement ID**: the label on one written rule, such as SLOT-3. It ties a test to a rule.
 - **Boundary case**: a test at the point where a rule changes its answer. For example, 21:59 and 22:00.
-- **Coverage (of requirements)**: every written rule has at least one scenario. It is not code coverage.
+- **Coverage (of requirements)**: every written rule has a scenario. It is not code coverage.

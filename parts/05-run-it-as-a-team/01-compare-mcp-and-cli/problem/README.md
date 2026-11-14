@@ -7,8 +7,7 @@ the page after each step. The **Playwright CLI** gives it short shell commands, 
 click e21`. It saves snapshots to files that Claude Code reads only when it needs to.
 
 Playwright's own README says the CLI is "more token-efficient". But your team pays for your shop, not theirs.
-For example, on Pantry Run an MCP run may use fewer turns and still read more tokens. You cannot know until you
-measure the same task both ways.
+For example, an MCP run may use fewer turns and still read more tokens. Measure the same task both ways.
 
 ```mermaid
 flowchart LR
@@ -58,13 +57,21 @@ number of FINDING: lines. Leave Real findings and Choice to me. List each findin
 ## What we saw.
 ```
 
-Try each finding in the shop yourself. Fill in Real findings, then write the choice and the number behind it.
+Try each finding in the shop yourself. Fill in Real findings, then write the choice.
 
 ## Done when
 
 - Each run is a finished `claude -p` transcript that used its own browser.
 - The table's tokens, turns, seconds and findings match the runs.
 - You counted the real findings and wrote a choice with a reason.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify compare-mcp-and-cli` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify compare-mcp-and-cli
@@ -84,6 +91,6 @@ Expect: `Done. All 5 rules pass.`
 
 ## Words you will use
 
-- **Token**: a small piece of text a model reads or writes. Costs and limits count tokens.
+- **Token**: a small piece of text a model reads or writes.
 - **Turn**: one step where Claude Code thinks and calls a tool.
-- **Headless run**: `claude -p`, Claude Code with no chat window. It prints a transcript you can save.
+- **Headless run**: `claude -p`, Claude Code with no chat window.

@@ -2,9 +2,7 @@
 
 ## The problem
 
-When an item is out of stock, Pantry Run's suggester picks up to three replacements. It is an AI feature: ask
-twice with a different seed and you can get a different answer. A **seed** is a number that picks one of the
-possible answers, so the same seed always gives the same answer.
+When an item is out of stock, Pantry Run's suggester picks up to three replacements. It is an AI feature: a different seed can give a different answer. A **seed** is a number that picks one answer, so the same seed gives the same answer.
 
 So `toEqual` cannot test it: two different answers can both be right. For example, for out-of-stock whole milk,
 semi-skimmed milk is fine for Ana. Almond drink never is, because she declared tree nuts (SUB-4).
@@ -24,7 +22,7 @@ flowchart LR
 ## Your challenge
 
 First get Claude Code to read 20 real answers and write down how they fail. Then get it to write a test that
-checks the rules, not the exact answers. You type prompts and judge. You write no test code.
+checks the rules, not the exact answers. You write no test code.
 
 Start the release candidate in one terminal:
 
@@ -60,7 +58,7 @@ seed. Allergens are a hard fail: collect every hit and expect none. The other ru
 toward the pass rate. Read both limits from qa/ai-thresholds.json.
 ```
 
-Stop the shop, start it with `bun run shop`, and run the test:
+Restart the shop with `bun run shop`, then run the test:
 
 ```bash
 bunx playwright test tests/ai
@@ -75,6 +73,14 @@ Expect: `1 passed`
 - The test passes on the fixed build, goes red on `ai-allergen`, and goes red on a single allergen.
 - It stays green when a good answer comes back in another order.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify test-the-substitution-suggester` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify test-the-substitution-suggester
 ```
@@ -85,14 +91,14 @@ Expect: `Done. All 10 rules pass.`
 
 ## If you get stuck
 
-| What you see                               | Fix                                                                                      |
-| ------------------------------------------ | ---------------------------------------------------------------------------------------- |
-| `Wrong row: MLK-WH2 ana seed 1`            | The note does not match the real answer. Ask Claude Code to call that seed again.        |
-| `FAIL one allergen in all the answers ...` | The allergen sits inside the pass rate. Ask for a separate list of hits, expected empty. |
-| `FAIL a different but valid answer ...`    | The test compares with saved answers. Ask it to check the rules instead.                 |
+| What you see                               | Fix                                                                               |
+| ------------------------------------------ | --------------------------------------------------------------------------------- |
+| `Wrong row: MLK-WH2 ana seed 1`            | The note does not match the real answer. Ask Claude Code to call that seed again. |
+| `FAIL one allergen in all the answers ...` | The allergen sits inside the pass rate. Ask for a separate list of hits.          |
+| `FAIL a different but valid answer ...`    | The test compares with saved answers. Ask it to check the rules instead.          |
 
 ## Words you will use
 
-- **Seed**: a number that picks one answer, so a test can ask again and get the same one.
+- **Seed**: a number that picks one answer.
 - **Property**: a rule every good answer keeps, such as "same category".
-- **Hard fail**: a rule where one break fails the test, whatever the pass rate.
+- **Hard fail**: a rule where one break fails the test.

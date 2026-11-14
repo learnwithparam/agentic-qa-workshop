@@ -2,9 +2,7 @@
 
 ## The problem
 
-Every agent run costs tokens, and tokens cost money or plan limits. Nobody knows what a plan, a batch of tests or a
-heal really costs. So when a manager asks "was it worth it?", the only answer is "the agent
-wrote 21 tests".
+Every agent run costs tokens, and tokens cost money or plan limits. When a manager asks "was it worth it?", "the agent wrote 21 tests" is no answer.
 
 A better number is **cost per kept test**: what the runs cost, divided by the tests still in the suite after
 review. For example, if plan, generate and heal cost $1.70 together and 21 tests are kept, each kept test cost
@@ -23,7 +21,7 @@ flowchart LR
 ## Your challenge
 
 Run the planner, the generator and the healer on the basket with `claude -p`, and save each result. Then get
-Claude Code to fill in `qa/cost.md` from the results and from the tests still in `tests/`. You write no code.
+Claude Code to fill in `qa/cost.md` from the results and from the tests still in `tests/`.
 
 In this folder, add Playwright's agents and start the shop:
 
@@ -39,7 +37,7 @@ bun run shop
 
 Expect: `Pantry Run ready on http://localhost:4173 (bugs: none)`
 
-Leave the shop running. In a second terminal here, run the planner:
+Leave the shop running. In a second terminal, run the planner:
 
 ```bash
 mkdir -p qa/runs
@@ -77,6 +75,14 @@ Cost per kept test is the three costs added up, divided by Kept tests, to the ce
 - `qa/runs/` holds the three results, and the three rows in `qa/cost.md` match them.
 - Kept tests counts the tests still in `tests/`, and the cost per kept test is right to the cent.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify measure-the-agent-cost` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify measure-the-agent-cost
 ```
@@ -90,10 +96,10 @@ Expect: `Done. All 4 rules pass.`
 | What you see               | Fix                                                                        |
 | -------------------------- | -------------------------------------------------------------------------- |
 | `plan: the run says ...`   | A number was typed or rounded. Ask Claude Code to read it from the result. |
-| `FAIL Kept tests ...`      | Do not count the seed, and do not count tests you deleted after review.    |
+| `FAIL Kept tests ...`      | Do not count the seed or deleted tests.                                    |
 | The run stops at max turns | Raise `--max-turns`.                                                       |
 
 ## Words you will use
 
-- **Cost per kept test**: what the agent runs cost, divided by the tests still in the suite.
+- **Cost per kept test**: the run cost divided by kept tests.
 - **Kept test**: a test that is still in `tests/` after your review.

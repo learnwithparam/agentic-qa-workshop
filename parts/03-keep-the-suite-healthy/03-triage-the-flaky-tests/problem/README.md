@@ -2,8 +2,7 @@
 
 ## The problem
 
-The 25 legacy tests in `tests/` are sometimes red, and a rerun is green. Nobody trusts a red run now, so a real
-bug can hide. A **flaky test** passes and fails on the same code. For example, "orders page lists my order"
+The 25 legacy tests in `tests/` are sometimes red, and a rerun is green. A real bug can hide. A **flaky test** passes and fails on the same code. For example, "orders page lists my order"
 passes only when "place an order" runs just before it.
 
 Three tests here are flaky, each for a different reason. Retries would hide them, not fix them.
@@ -41,11 +40,11 @@ For each flaky test, find the cause. Use one of these words: race (the test does
 For each one, show me the cause, the evidence and the fix you propose. Do not change any file yet.
 ```
 
-This is what 20 shuffled runs of the three tests look like before the fix (a summary of a real run):
+This is what 20 shuffled runs look like before the fix:
 
 ![Before the fix: 24 of 60 runs fail](../images/expected.png)
 
-In the real run, Claude Code proposed `21:59:00-06:00` for the clock test. On March 10
+Claude Code may propose `21:59:00-06:00` for the clock test. On March 10
 that is 22:59 in Larkford, after the cutoff. Then approve, with your own name:
 
 ```text
@@ -60,6 +59,14 @@ Prove it: run bunx playwright test --repeat-each=20 --shuffle --grep on the thre
 - The 3 tests keep their expects and pass 20 shuffled runs, with no retries, sleeps or real time.
 - `qa/triage.json` gives each the right cause and a person in `approvedBy`.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify triage-the-flaky-tests` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify triage-the-flaky-tests
 ```
@@ -68,11 +75,11 @@ Expect: `Done. All 8 rules pass.`
 
 ## If you get stuck
 
-| What you see                                   | Fix                                                                            |
-| ---------------------------------------------- | ------------------------------------------------------------------------------ |
-| `FAIL each flaky test passes 20 shuffled runs` | One test still depends on time or order. Run it alone with `--repeat-each=20`. |
-| `FAIL no retries were added`                   | Take retries out of `playwright.config.ts`.                                    |
-| `FAIL every fix was approved by a person`      | Use your own name. An agent cannot approve its own fix.                        |
+| What you see                                   | Fix                                         |
+| ---------------------------------------------- | ------------------------------------------- |
+| `FAIL each flaky test passes 20 shuffled runs` | One test still depends on time or order.    |
+| `FAIL no retries were added`                   | Take retries out of `playwright.config.ts`. |
+| `FAIL every fix was approved by a person`      | Use your own name.                          |
 
 ## Words you will use
 

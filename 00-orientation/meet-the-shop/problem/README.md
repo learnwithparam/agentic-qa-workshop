@@ -2,14 +2,11 @@
 
 ## The problem
 
-You cannot judge tests until you know the shop they test. Pantry Run has rules that hide real bugs.
-For example:
+You cannot judge tests until you know the shop. Pantry Run has rules that hide real bugs. For example:
 
 - Slots for the next day close at 22:00 store time.
 - Bananas are priced by weight.
 - A shopper can say "no substitutes" for one item.
-
-Skip this, and your tests click buttons but check nothing that matters.
 
 ```mermaid
 sequenceDiagram
@@ -26,9 +23,7 @@ sequenceDiagram
 
 ## Your challenge
 
-You shop in the browser, like a shopper. You write no code.
-
-With `bun run shop` running, open http://localhost:4173 and place one order as Ana (`ana@pantryrun.test`,
+You shop in the browser. You write no code. With `bun run shop` running, open http://localhost:4173 and place one order as Ana (`ana@pantryrun.test`,
 password `pantry`):
 
 1. Add **Bananas, loose** with a weight of 1 kg.
@@ -37,8 +32,7 @@ password `pantry`):
 4. Book any open delivery slot, then check out.
 5. On the order page, click **Download receipt**. Save the file in this folder as `receipt.json`.
 
-Look at the order page. The milk says "Not available": the store respected your choice. That one line is
-requirement SUB-2, and one of the 16 planted bugs breaks it.
+The order page says the milk is "Not available". That is requirement SUB-2, and one planted bug breaks it.
 
 ![The order page after checkout](../images/expected.png)
 
@@ -67,6 +61,14 @@ Claude Code asks before it runs a command or edits `goal.md`. Read each request,
 - The whole milk line had substitutes switched off and says Not available.
 - `goal.md` has the last line of the goal board.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify meet-the-shop` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify meet-the-shop
 ```
@@ -85,7 +87,7 @@ Expect: `Done. All 6 rules pass.` and a `Progress:` line.
 ## Words you will use
 
 - **Planted bug**: a known fault the course can switch on, to see if your tests catch it.
-- **Fixed build**: the shop with every bug off (`BUGS=none`). A good suite is green here.
+- **Fixed build**: the shop with every bug off (`BUGS=none`).
 - **Bug-kill matrix**: your suite, run once per planted bug. Each red run is a bug caught.
 - **Goal board**: the summary `bun run board` prints from the matrix.
-- **Substitution**: a store picker puts a similar item in place of one that is out of stock.
+- **Substitution**: a similar item picked when one is out of stock.

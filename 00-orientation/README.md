@@ -119,6 +119,14 @@ Expect: `No .spec.ts files in 00-orientation/meet-the-shop/problem/tests. Your b
 
 Check the step.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify meet-the-shop` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify meet-the-shop
 ```

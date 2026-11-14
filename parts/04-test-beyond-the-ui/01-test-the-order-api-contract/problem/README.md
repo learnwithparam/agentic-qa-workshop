@@ -7,8 +7,7 @@ Partner apps place Pantry Run orders without a browser. They call the partner AP
 answer.
 
 A partner app breaks when the shop drifts from the contract. For example, the contract says an order has
-`slotId`. If the shop sends `slot_id`, a partner app reads no slot. And a full slot must answer `409`. A `500`
-says the shop crashed, so the partner app keeps retrying.
+`slotId`. If the shop sends `slot_id`, a partner app reads no slot. And a full slot must answer `409`.
 
 ```mermaid
 flowchart LR
@@ -68,6 +67,14 @@ The order tests should now go red. Stop the shop and do the same with `BUGS=api-
 - Every file in `tests/api/` starts with `// spec: world/openapi.yaml` and uses only the `request` fixture.
 - The tests pass on the fixed build and reach all 12 path and status pairs in the contract.
 - The tests go red on `api-field-rename` and on `api-status`.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify test-the-order-api-contract` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify test-the-order-api-contract

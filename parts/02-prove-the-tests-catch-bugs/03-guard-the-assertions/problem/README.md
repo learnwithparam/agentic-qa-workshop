@@ -4,7 +4,7 @@
 
 In Part 3 an agent will "heal" your tests. Playwright's healer may fix "assertions and expected values" or mark
 a test `test.fixme()`. Both hide bugs. For example, if the shop charges `$1.05` for bananas, a healer can change
-the test from `$1.04` to `$1.05`. The test passes and shoppers pay too much.
+the test from `$1.04` to `$1.05`. Shoppers pay too much.
 
 Claude Code runs a **hook** before each tool call. A hook that exits with code 2 blocks the call.
 
@@ -18,7 +18,7 @@ flowchart LR
 
 ## Your challenge
 
-Get Claude Code to write `qa/guard.ts` and wire it as a hook. You say what counts as weakening, then test it.
+Get Claude Code to write `qa/guard.ts` and wire it as a hook. You say what counts as weakening.
 
 Start Claude Code in this folder:
 
@@ -44,23 +44,30 @@ Then wire it in .claude/settings.json as a PreToolUse hook with matcher "Edit|Wr
 Test it with bun qa/guard.ts < qa/examples/removes-an-expect.diff (must exit 2) and qa/examples/changes-a-locator.diff (must exit 0), and with a few small diffs and hook inputs of your own. Keep the code short and readable.
 ```
 
-Claude Code asks before it changes `.claude/settings.json`. Read the hook, approve it, and try an example:
+Claude Code asks before it changes `.claude/settings.json`. Approve the hook, then try an example:
 
 ```bash
 bun qa/guard.ts < qa/examples/removes-an-expect.diff; echo "exit $?"
 ```
 
-Expect: a `guard:` line that names the removed expect, then `exit 2`.
+Expect: a `guard:` line, then `exit 2`.
 
-Then ask Claude Code to change the banana test to `$1.05`. The hook blocks it, as in this real run:
+Then ask Claude Code to change the banana test to `$1.05`. The hook blocks it:
 
 ![Claude Code blocked by the guard hook](../images/expected.png)
 
 ## Done when
 
-- The guard rejects 5 planted diffs (an `expect` removed, `fixme`, `skip`, `$12.40` to `$12.41`,
-  `maxDiffPixels` raised) and accepts 3 (a locator, a new assertion, a new title).
+- The guard rejects 5 planted weakening diffs and accepts 3 harmless ones.
 - As an `Edit|Write` hook it blocks weakening edits and allows a locator edit.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify guard-the-assertions` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify guard-the-assertions

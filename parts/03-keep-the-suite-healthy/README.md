@@ -81,6 +81,16 @@ claude
 Expect: `.claude/agents/` and `.mcp.json` appear, then Claude Code opens. Give it the healer prompt from the step
 README. Do the same in `02-stop-the-healer-hiding-a-bug/problem/`. Then check both from the repo root:
 
+Ask Claude Code:
+
+```text
+Run these from the repo root and tell me what each one printed. Do not change anything to make it pass.
+bun run verify heal-a-renamed-button
+bun run verify stop-the-healer-hiding-a-bug
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify heal-a-renamed-button
 bun run verify stop-the-healer-hiding-a-bug
@@ -107,6 +117,16 @@ command prints `60 passed`.
 
 Give Claude Code the prompts in each step README, then check from the repo root:
 
+Ask Claude Code:
+
+```text
+Run these from the repo root and tell me what each one printed. Do not change anything to make it pass.
+bun run verify triage-the-flaky-tests
+bun run verify check-looks-and-access
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify triage-the-flaky-tests
 bun run verify check-looks-and-access
@@ -115,6 +135,14 @@ bun run verify check-looks-and-access
 Expect: `Done. All 8 rules pass.` and `Done. All 7 rules pass.` Each command then counts your progress on every step, which can take a few minutes.
 
 When all four pass, the whole part passes:
+
+Ask Claude Code:
+
+```text
+Run `bun run verify part keep-the-suite-healthy` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify part keep-the-suite-healthy

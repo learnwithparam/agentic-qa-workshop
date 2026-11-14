@@ -71,6 +71,14 @@ Do not change any test.
 - No test is marked `test.skip` or `test.fixme`.
 - `qa/bugs/SUB-1.md` has Steps, Expected, Actual and Requirement, names SUB-1, and quotes the rule.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify stop-the-healer-hiding-a-bug` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify stop-the-healer-hiding-a-bug
 ```

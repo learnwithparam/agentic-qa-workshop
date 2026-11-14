@@ -67,6 +67,14 @@ Expect: four `FAIL` lines with a `Try next:` sentence each, and `Not done yet.`,
 
 When the step passes, the whole part passes.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify part redo-a-flow-with-playwright-test-agents` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify part redo-a-flow-with-playwright-test-agents
 ```

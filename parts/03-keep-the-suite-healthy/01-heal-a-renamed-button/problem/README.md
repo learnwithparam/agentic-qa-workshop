@@ -5,11 +5,9 @@
 Release v2 of Pantry Run renames "Book slot" to "Reserve". It also moves the slot picker into a dialog, behind a
 "Choose a delivery time" button. Shoppers notice nothing, but 15 of your 23 tests go red.
 
-For example, "Peak slots cost $4.99 and others $2.99" fails on v2. The price is right, but the slot list now sits
-in a closed dialog.
+For example, "Peak slots cost $4.99 and others $2.99" fails on v2. The slot list now sits in a closed dialog.
 
-A **healer** agent fixes tests like this. But some red tests are red for a real reason, and healing those hides a
-bug. Heal the first kind, and leave the second kind red.
+A **healer** agent fixes tests like this. But some red tests are red for a real reason. Heal the first kind and leave the second red.
 
 ```mermaid
 flowchart LR
@@ -22,8 +20,7 @@ flowchart LR
 
 ## Your challenge
 
-Get Claude Code's healer to fix every test that broke only because something moved or was renamed. The Part 2
-guard hook is already on.
+Get Claude Code's healer to fix every test that broke only because something moved or was renamed. The guard hook is on.
 
 Start the shop on release v2, and leave it running:
 
@@ -40,7 +37,7 @@ bunx playwright init-agents --loop=claude
 claude
 ```
 
-Expect: `.claude/agents/` and `.mcp.json` appear, then Claude Code opens. Allow the `playwright-test` MCP server.
+Expect: Claude Code opens. Allow the `playwright-test` MCP server.
 
 Give it the job:
 
@@ -55,12 +52,11 @@ A guard hook checks every edit to a test. If it blocks an edit, do not work arou
 At the end, run bunx playwright test and list which tests still fail and why.
 ```
 
-Read each fix before you approve it. A good fix clicks "Choose a delivery time", or changes "Book slot"
-to "Reserve". Reject any fix that changes what a test expects.
+A good fix clicks "Choose a delivery time" or changes "Book slot" to "Reserve". Reject any fix that changes what a test expects.
 
 ![After the heal: 16 pass, 7 still red](../images/expected.png)
 
-The 7 tests still red are in `substitutions.spec.ts`. They are red for a real reason: the next step.
+The 7 tests still red are in `substitutions.spec.ts`, for a real reason: the next step.
 
 ## Done when
 
@@ -68,6 +64,14 @@ The 7 tests still red are in `substitutions.spec.ts`. They are red for a real re
 - Every test is still there, with every expect and every expected value.
 - No test is marked `test.skip` or `test.fixme`, and no locator uses CSS or XPath.
 - The guard hook is still in `.claude/settings.json`.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify heal-a-renamed-button` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify heal-a-renamed-button
@@ -86,5 +90,5 @@ Expect: `Done. All 5 rules pass.`
 ## Words you will use
 
 - **Heal**: fix a test that broke because the page changed, not because the rule broke.
-- **Locator**: how a test finds an element, like `getByRole("button", { name: "Reserve" })`.
+- **Locator**: how a test finds an element.
 - **Release v2**: the next shop version, `RELEASE=v2`.

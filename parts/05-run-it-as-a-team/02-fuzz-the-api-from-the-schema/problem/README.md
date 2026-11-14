@@ -43,7 +43,7 @@ a status the contract lists for POST /api/orders. On a failure, print the seed a
 Show me the plan first.
 ```
 
-Say no if the plan uses `Math.random`, or only random text for slot ids. Random text never hits a full slot.
+Say no if the plan uses `Math.random`, or only random text for slot ids.
 
 Run it on the fixed build, then on the bug:
 
@@ -66,6 +66,14 @@ Run the fuzz test again in a second terminal. It goes red, and prints a seed and
 - `tests/fuzz/` sends at least 100 orders, at least 50 of them different.
 - It passes on the fixed build, and the same seed sends the same orders.
 - It goes red on `api-status`.
+
+Ask Claude Code:
+
+```text
+Run `bun run verify fuzz-the-api-from-the-schema` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify fuzz-the-api-from-the-schema

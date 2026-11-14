@@ -179,6 +179,14 @@ Each step lives in its own folder with three parts:
 
 When Claude Code is done, check the step:
 
+Ask Claude Code:
+
+```text
+Run `bun run verify write-the-seed-test` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify write-the-seed-test
 ```

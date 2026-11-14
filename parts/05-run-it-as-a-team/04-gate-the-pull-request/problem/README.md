@@ -69,6 +69,14 @@ Run it on the four others. Each must print `BLOCKED`, with the stage that caught
 - The gate merges `clean-pull` and blocks the four bad pull requests.
 - `ci/pull-request.yml` runs `bun run gate` on every pull request.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify gate-the-pull-request` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify gate-the-pull-request
 ```

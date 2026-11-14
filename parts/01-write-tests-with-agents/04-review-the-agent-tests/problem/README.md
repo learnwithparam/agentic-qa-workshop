@@ -5,8 +5,7 @@
 An agent wrote every test in `tests/`, and every test is green. Some check what their title says. Some check that
 a message popped up, and stop there.
 
-A green test that stays green with the bug switched on is worse than no test. It tells the release meeting that a
-rule is covered when it is not. For example, a test called "750 g of bananas costs $1.04" that only checks a
+A green test that stays green with the bug switched on is worse than no test. For example, a test called "750 g of bananas costs $1.04" that only checks a
 message, and never the $1.04, passes even when the price is wrong.
 
 ```mermaid
@@ -21,7 +20,7 @@ flowchart LR
 ## Your challenge
 
 Three weak tests are planted here. Use Claude Code to find them, record a verdict for each test, and fix the weak
-ones. You do not edit any file. You judge every verdict and every fix Claude Code proposes.
+ones. You edit no file. You judge every verdict and fix.
 
 Start Claude Code in this folder:
 
@@ -68,6 +67,14 @@ Then switch the bug off and watch the test pass.
 - Every test marked fix was changed; every test marked drop is gone.
 - The suite passes on the fixed build and now catches `weighted-price`, `ghost-line` and `promo-stacking`.
 
+Ask Claude Code:
+
+```text
+Run `bun run verify review-the-agent-tests` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify review-the-agent-tests
 ```
@@ -84,6 +91,6 @@ Expect: `Done. All 6 rules pass.`
 
 ## Words you will use
 
-- **Verdict**: keep, fix or drop, with a reason. It is your sign-off on agent work.
+- **Verdict**: keep, fix or drop, with a reason.
 - **Weak assertion**: an `expect` that passes whether or not the rule holds.
 - **Catch**: a test goes red when a planted bug is on, and green when it is off.

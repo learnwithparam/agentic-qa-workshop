@@ -64,6 +64,14 @@ Expect: `Pantry Run ready on http://localhost:4173 (bugs: none)`
 
 See the grid for the suite you start with, from the repo root:
 
+Ask Claude Code:
+
+```text
+Run `bun run verify catch-the-seeded-bugs` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify catch-the-seeded-bugs
 ```
@@ -95,6 +103,16 @@ Expect: `guard: tests/basket.spec.ts: removes an expect (2 -> 1)`, then `exit 2`
 
 Check each step from the repo root:
 
+Ask Claude Code:
+
+```text
+Run these from the repo root and tell me what each one printed. Do not change anything to make it pass.
+bun run verify kill-the-mutants
+bun run verify guard-the-assertions
+```
+
+Or run it yourself:
+
 ```bash
 bun run verify kill-the-mutants
 bun run verify guard-the-assertions
@@ -103,6 +121,14 @@ bun run verify guard-the-assertions
 Expect: `Done. All 4 rules pass.` and `Done. All 14 rules pass.`
 
 When all three pass, the whole part passes:
+
+Ask Claude Code:
+
+```text
+Run `bun run verify part prove-the-tests-catch-bugs` from the repo root and tell me what it printed. Do not change anything to make it pass.
+```
+
+Or run it yourself:
 
 ```bash
 bun run verify part prove-the-tests-catch-bugs
