@@ -60,6 +60,15 @@ function planHasBoundaryOrNegative(folder: string, area: string): boolean {
   );
 }
 
+// Each plan names the requirement file it came from, the file you pointed Claude Code at with @.
+function everyPlanNamesItsSource(folder: string): boolean {
+  return PLAN_AREAS.every((area) =>
+    /^\**Source:?\**:?\s*`?\S*requirements\/\w+\.md/im.test(
+      readText(join(folder, "specs", `${area}.md`)),
+    ),
+  );
+}
+
 export default [
   {
     says: "specs/slots.md and specs/basket.md exist with scenarios in them",
@@ -106,5 +115,11 @@ export default [
     tryNext:
       "ask where each rule flips: the 20th order in a slot, " +
       "21:59 against 22:00, $24.99 against $25.00",
+  },
+  {
+    says: "each plan has a Source line that names the requirements file you pointed Claude Code at",
+    test: everyPlanNamesItsSource,
+    tryNext:
+      "ask for a Source line under each plan title, such as Source: world/requirements/slots.md",
   },
 ] satisfies Rule[];

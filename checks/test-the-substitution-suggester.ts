@@ -12,6 +12,7 @@ import {
 import { openDoor, type Rewrite } from "../parts/04-test-beyond-the-ui/helpers/traffic";
 import type { Rule } from "../scripts/verify";
 import shopSeed from "../world/seed.json";
+import { sectionOf, words } from "./lib/claude-files";
 import { readText } from "./lib/markdown";
 import { once } from "./lib/memo";
 import { specFiles } from "./lib/static";
@@ -111,6 +112,20 @@ const withOneAllergen = (folder: string) =>
 const withReversedOrder = (folder: string) =>
   once("suggester-reversed", folder, () => runBent(folder, "none", reversedOrder));
 
+// SPEC.md is what an interview with Claude Code leaves behind: a goal, limits and a stop condition.
+function specIsReady(folder: string): boolean {
+  const spec = readText(join(folder, "SPEC.md"));
+  const answered = spec.split("\n").filter((line) => /^\s*[-*]\s*Q:.+\bA:\s*\S+/.test(line));
+  const stop = sectionOf(spec, "Stop condition");
+  return (
+    words(sectionOf(spec, "Goal")) >= 8 &&
+    words(sectionOf(spec, "Out of scope")) >= 4 &&
+    answered.length >= 3 &&
+    /bunx playwright test/.test(stop) &&
+    /\/goal/.test(stop)
+  );
+}
+
 export default [
   {
     says: "qa/ai-notes.md lists at least 20 suggester answers you read",
@@ -165,5 +180,10 @@ export default [
     says: "a different but valid answer keeps the suite green: it checks rules, not exact answers",
     test: async (folder) => (await withReversedOrder(folder)).green,
     tryNext: "do not compare with saved answers; check category, stock, price and allergens",
+  },
+  {
+    says: "SPEC.md has a goal, what is out of scope, three answered questions and a stop condition",
+    test: specIsReady,
+    tryNext: "ask Claude Code to interview you, then save SPEC.md; end it with a /goal stop line",
   },
 ] satisfies Rule[];

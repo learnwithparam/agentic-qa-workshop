@@ -4,9 +4,7 @@
 
 The suite in `tests/` has 16 green tests. Green proves they run, not that they catch a bug.
 
-Pantry Run plants 8 bugs that break a written rule, each behind a switch. A good suite goes red when a bug is
-on. This one misses 2. For example, with `BUGS=sub-allergen` the picker swaps Oat granola for Almond crunch
-granola. Ana declared tree nuts, and every test stays green.
+Pantry Run plants 8 bugs, each behind a switch. A good suite goes red when a bug is on. This one misses 2. With `BUGS=sub-allergen`, the picker swaps Oat granola for Almond crunch granola. Ana declared tree nuts. Every test stays green.
 
 ```mermaid
 flowchart LR
@@ -17,10 +15,7 @@ flowchart LR
   R1 & R2 & R3 --> G[the grid:<br/>caught or missed]
 ```
 
-## Your challenge
-
-Get Claude Code to close the gap until the suite catches at least 7 of the 8 bugs. You write no test. You read
-the grid, find the untested rule, and give Claude Code that job.
+## Watch it done
 
 First, see the grid. From the repo root:
 
@@ -28,9 +23,13 @@ First, see the grid. From the repo root:
 bun run verify catch-the-seeded-bugs
 ```
 
-Expect: a grid with `6 of 8 bugs caught`, and a `missed` line for `sub-allergen` and `sub-optout-chilled`.
+Expect: a grid with 6 of 8 bugs caught, and a `missed` line for `sub-allergen` and `sub-optout-chilled`.
 
 Both misses are substitution rules (SUB-2 and SUB-4). No test reads the packing note on an order.
+
+## Your turn
+
+Get Claude Code to close the gap until the suite catches at least 7 of the 8 bugs. You write no test. You read the grid, find the untested rule, and give Claude Code that job.
 
 Start Claude Code in this folder:
 
@@ -38,12 +37,9 @@ Start Claude Code in this folder:
 claude
 ```
 
-Expect: Claude Code opens in this folder.
-
-Give it the job:
+Expect: Claude Code opens in this folder. Give it the job:
 
 ```text
-The suite in tests/ is green, but it never checks the substitution rules, so planted substitution bugs go through.
 Read ../../../../world/requirements/substitutions.md.
 First plan: write specs/substitutions.md in the same format as specs/basket.md, with a scenario for each of SUB-1 to SUB-6. Each scenario has **Covers:** and **Kind:** lines.
 Then write tests/substitutions.spec.ts from that plan, in the style of tests/basket.spec.ts.
@@ -56,24 +52,26 @@ Read each new test before you accept it. Which `expect` goes red if the rule bre
 
 ![The grid with every bug caught](../images/expected.png)
 
+## Do it on your work
+
+Pick one rule in an app your team owns. Ask Claude Code for one test that goes red when that rule breaks. Read the test before you keep it.
+
 ## Done when
 
 - The suite passes on the fixed build (`BUGS=none`).
 - The suite goes red on at least 7 of the 8 requirement bugs.
 
-Ask Claude Code:
-
-```text
-Run `bun run verify catch-the-seeded-bugs` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify catch-the-seeded-bugs
 ```
 
-Expect: `8 of 8 bugs caught` (7 is enough), then `Done. All 2 rules pass.`
+Expect: 8 of 8 bugs caught (7 is enough), then `Done. All 2 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 

@@ -23,7 +23,7 @@ flowchart LR
 The check script `checks/assignment.ts` tests each line and writes `assignment/result.json`. The file holds one
 `pass` or `fail` per line, and the Playwright version it found.
 
-- `@playwright/test` resolves to 1.65.0.
+- `@playwright/test` resolves to the pinned version.
 - A plan file exists for the chosen flow.
 - The generated spec passes.
 - After the scripted selector break, the healed spec passes.

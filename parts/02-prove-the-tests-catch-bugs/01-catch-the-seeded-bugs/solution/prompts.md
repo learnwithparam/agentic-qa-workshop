@@ -42,7 +42,7 @@ does it for you.
 - Each new test ends in an `expect` on the packing note, the number or line a shopper sees.
 - 1.2 and 2.2 read the exact words that change when `sub-optout-chilled` and `sub-allergen` are on.
 - Claude Code changed no existing test. `git diff tests/basket.spec.ts tests/slots.spec.ts` is empty.
-- The grid now says `8 of 8 bugs caught`, and the fixed build is still green.
+- The grid now says 8 of 8 bugs caught, and the fixed build is still green.
 
 ## What you would reject
 

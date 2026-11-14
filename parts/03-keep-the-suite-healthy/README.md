@@ -2,12 +2,26 @@
 
 This part moves the outcome: a suite that stays honest when Claude Code heals it, and that the team trusts again.
 
+## After this part you can
+
+- Tell a healed test from a weakened one.
+- Turn a real regression into a bug report, not a skip.
+- Find the cause of a flaky test, and fix it.
+- Check looks and access with screenshot and axe tests.
+
+## You leave with
+
+- A healed suite that passes on the new release, with no expect changed.
+- A bug report for the SUB-1 bug.
+- Triage notes for the flaky tests, approved by a person.
+- Visual and accessibility tests that catch two bugs.
+
 ## The problem
 
-Release v2 of Pantry Run renames "Book slot" to "Reserve" and moves the slot picker into a dialog. 15 of your 23
+The new release of Pantry Run renames "Book slot" to "Reserve" and moves the slot picker into a dialog. 15 of your 23
 tests go red, and shoppers notice nothing. A healer agent can fix those tests in minutes.
 
-But release v2 also ships one real regression. For example, on v2 a new basket line starts with "Allow
+But the new release also ships one real regression. For example, on the new release a new basket line starts with "Allow
 substitutes" switched off. That breaks SUB-1. A healer that "fixes" that test, by expecting the box unticked,
 hides the bug from every later run.
 
@@ -27,12 +41,12 @@ A retry turns it green without fixing anything.
 
 So the numbers this part moves are all yours, computed by the checks:
 
-| Number                                  | Before | After this part      |
-| --------------------------------------- | ------ | -------------------- |
-| Tests red on v2 for a moved button      | 8      | 0                    |
-| Tests red on v2 for the real SUB-1 bug  | 7      | 7, with a bug report |
-| Failures in 60 shuffled runs of 3 tests | 24     | 0                    |
-| Looks and access bugs caught            | 0 of 2 | 2 of 2               |
+| Number                                              | Before | After this part      |
+| --------------------------------------------------- | ------ | -------------------- |
+| Tests red on the new release for a moved button     | 8      | 0                    |
+| Tests red on the new release for the real SUB-1 bug | 7      | 7, with a bug report |
+| Failures in 60 shuffled runs of 3 tests             | 24     | 0                    |
+| Looks and access bugs caught                        | 0 of 2 | 2 of 2               |
 
 ```mermaid
 flowchart LR
@@ -48,14 +62,14 @@ flowchart LR
 
 In every step you type prompts and review. Claude Code makes each file below. The check reads what it made.
 
-| Step                                                                              | Minutes | Claude Code makes                                | The check reads                                                                                        |
-| --------------------------------------------------------------------------------- | ------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| [heal-a-renamed-button](01-heal-a-renamed-button/problem/README.md)               | 15      | healed tests                                     | the suite on `RELEASE=v2`: green outside `substitutions.spec.ts`; every expect and value kept; no skip |
-| [stop-the-healer-hiding-a-bug](02-stop-the-healer-hiding-a-bug/problem/README.md) | 10      | the SUB-1 test still red, and `qa/bugs/SUB-1.md` | the SUB-1 test fails on v2 at `toBeChecked`; the report has Steps, Expected, Actual, Requirement       |
-| [triage-the-flaky-tests](03-triage-the-flaky-tests/problem/README.md)             | 20      | the fixes and `qa/triage.json`                   | 20 shuffled runs of each flaky test: 0 failures, no retries or sleeps; right causes; a person approved |
-| [check-looks-and-access](04-check-looks-and-access/problem/README.md)             | 15      | `tests/visual.spec.ts` and `tests/a11y.spec.ts`  | fresh baselines, then green on the fixed build, red on `price-overlap` and on `missing-label`          |
+| Step                                                                              | Minutes | Claude Code makes                                | The check reads                                                                                               |
+| --------------------------------------------------------------------------------- | ------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| [heal-a-renamed-button](01-heal-a-renamed-button/problem/README.md)               | 15      | healed tests                                     | the suite on `RELEASE=v2`: green outside `substitutions.spec.ts`; every expect and value kept; no skip        |
+| [stop-the-healer-hiding-a-bug](02-stop-the-healer-hiding-a-bug/problem/README.md) | 10      | the SUB-1 test still red, and `qa/bugs/SUB-1.md` | the SUB-1 test fails on the new release at `toBeChecked`; the report has Steps, Expected, Actual, Requirement |
+| [triage-the-flaky-tests](03-triage-the-flaky-tests/problem/README.md)             | 20      | the fixes and `qa/triage.json`                   | 20 shuffled runs of each flaky test: 0 failures, no retries or sleeps; right causes; a person approved        |
+| [check-looks-and-access](04-check-looks-and-access/problem/README.md)             | 15      | `tests/visual.spec.ts` and `tests/a11y.spec.ts`  | fresh baselines, then green on the fixed build, red on `price-overlap` and on `missing-label`                 |
 
-Total: 60 minutes. Each step's folder is self-contained: work in its `problem/` folder. The first two steps start
+Total: a short session. Each step's folder is self-contained: work in its `problem/` folder. The first two steps start
 with the Part 2 guard hook already on.
 
 Every sample solution here is a real Claude Code run. The recordings are in `recordings/`, and
@@ -63,7 +77,7 @@ Every sample solution here is a real Claude Code run. The recordings are in `rec
 
 ## Walkthrough
 
-The first two steps need the shop on release v2. Start it in one terminal and leave it running:
+The first two steps need the shop on the new release. Start it in one terminal and leave it running:
 
 ```bash
 RELEASE=v2 bun run shop
@@ -98,7 +112,7 @@ bun run verify stop-the-healer-hiding-a-bug
 
 Expect: `Done. All 5 rules pass.` and `Done. All 6 rules pass.` Each command then counts your progress on every step, which can take a few minutes.
 
-The last two steps need release v1. Stop the shop and start it again:
+The last two steps need the old release. Stop the shop and start it again:
 
 ```bash
 bun run shop
@@ -112,7 +126,7 @@ In `03-triage-the-flaky-tests/problem/`, see the flakes for yourself before Clau
 bunx playwright test --repeat-each=20 --shuffle --grep "suggestions appear|orders page lists|store clock is now"
 ```
 
-Expect: some of the 60 runs fail, most of them `orders page lists my order`. After the fixes, the same
+Expect: some of the 60 runs fail, most of them the test named orders page lists my order. After the fixes, the same
 command prints `60 passed`.
 
 Give Claude Code the prompts in each step README, then check from the repo root:
@@ -132,7 +146,7 @@ bun run verify triage-the-flaky-tests
 bun run verify check-looks-and-access
 ```
 
-Expect: `Done. All 8 rules pass.` and `Done. All 7 rules pass.` Each command then counts your progress on every step, which can take a few minutes.
+Expect: `Done. All 10 rules pass.` and `Done. All 7 rules pass.` Each command then counts your progress on every step, which can take a few minutes.
 
 When all four pass, the whole part passes:
 
@@ -172,3 +186,17 @@ Expect: `Part keep-the-suite-healthy is done: 4/4 steps pass.`
 You can now let an agent heal a suite without letting it lie. The guard stops weakening edits. A red test that is
 right becomes a bug report, not a `fixme`. Flaky tests get a cause, a fix and a person's sign-off. Part 4 tests
 what no screen shows: the order API, bugs nobody wrote down, and the AI suggester.
+
+## Watch and read
+
+| Kind  | Title                                                | Author                            | Why                                                                     | Link                                                                           |
+| ----- | ---------------------------------------------------- | --------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| video | Test flakiness: methods for dealing with flaky tests | Jason Palmer, Spotify             | An engineer from a large team on how to find the cause of a flaky test. | <https://www.youtube.com/watch?v=38pW08_nY_k>                                  |
+| video | Fighting layout bugs                                 | Google Test Automation Conference | A Google talk on catching bugs in how a page looks.                     | <https://www.youtube.com/watch?v=WY3C6FHqSqQ>                                  |
+| read  | Flaky tests at Google and how we mitigate them       | Google Testing Blog               | Google says how common flakes are and how it handles them.              | <https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html> |
+| read  | Trace viewer                                         | The Playwright team               | The tool docs for the recording that you open after a failed run.       | <https://playwright.dev/docs/trace-viewer>                                     |
+| read  | Visual comparisons                                   | The Playwright team               | The tool docs for screenshot checks like the ones in this part.         | <https://playwright.dev/docs/test-snapshots>                                   |
+
+## Project
+
+Your project is the Assignment above. Hand in the four `problem/` folders and answer the rubric.

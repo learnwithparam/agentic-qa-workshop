@@ -18,5 +18,5 @@ Cost per kept test: $0.08
 ## What we learned
 
 - Planning cost the most. The planner walked the shop in a browser to write 21 scenarios.
-- Healing was cheap: v2 moved the slot picker into a dialog, and the healer changed one helper that 6 tests use.
+- Healing was cheap: the new release moved the slot picker into a dialog, and the healer changed one helper that 6 tests use.
 - The number to watch is cost per kept test. A cheap run that writes tests we later drop is not cheap.

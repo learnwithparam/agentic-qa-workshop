@@ -2,34 +2,31 @@
 
 ## The problem
 
-Some bugs break no number. On a 375 px phone, a price can sit on top of its Add button. A screen reader
-can find slot radios with no name.
-
-For example, with `BUGS=price-overlap` every functional test stays green. The card just looks
-broken on a phone.
-
-Two kinds of test catch this. A **visual test** saves a screenshot and compares each run with it. An
-**accessibility test** runs axe, a tool that checks the page against the WCAG rules for people with
-disabilities.
+Some bugs break no number. On a 375 px phone, a price can sit on top of its Add button. A screen reader can find slot radios with no name. Two kinds of test catch these. A **visual test** compares screenshots. An **accessibility test** checks the page against the WCAG rules for people with disabilities.
 
 ```mermaid
 flowchart LR
   V[visual.spec.ts<br/>375 px and 1280 px] --> S[screenshot vs baseline]
-  A[a11y.spec.ts<br/>axe, WCAG 2.1 AA] --> X[list of violations]
+  A[a11y.spec.ts<br/>axe, WCAG AA] --> X[list of violations]
   S -->|price-overlap| R1[red]
   X -->|missing-label| R2[red]
 ```
 
-## Your challenge
+## Watch it done
 
-Get Claude Code to write `tests/visual.spec.ts` and `tests/a11y.spec.ts`. You write no test. Start the shop with
-`bun run shop`, then start Claude Code in this folder:
+For example, with `BUGS=price-overlap` every functional test stays green.
+
+A visual test saves a screenshot and compares each run with it. An accessibility test runs axe, a tool that checks the page against the WCAG rules.
+
+## Your turn
+
+Get Claude Code to write `tests/visual.spec.ts` and `tests/a11y.spec.ts`. You write no test. Start the shop with `bun run shop`, then Claude Code:
 
 ```bash
 claude
 ```
 
-Expect: Claude Code opens in this folder. Give it the job:
+Expect: Claude Code opens. Give it the job:
 
 ```text
 Pantry Run is running on http://localhost:4173. tests/seed.spec.ts shows how to reset the data and sign in.
@@ -57,26 +54,28 @@ Do the same with `BUGS=missing-label` and `tests/a11y.spec.ts`. Axe lists a viol
 Saved screenshots differ a little between machines. To share baselines with a team, make them in
 Playwright's container, `mcr.microsoft.com/playwright:v1.65.0-noble`.
 
+## Do it on your work
+
+Ask Claude Code for a screenshot and accessibility test of one screen in your app.
+
 ## Done when
 
 - The visual test uses `toHaveScreenshot` at 375 px, passes on the fixed build, and fails on `price-overlap`.
-- The accessibility test runs axe with the WCAG 2.1 AA tags, passes on the fixed build, and fails on
+- The accessibility test runs axe with the WCAG AA tags, passes on the fixed build, and fails on
   `missing-label`.
 - Any axe rule turned off has a comment that names a ticket.
 
-Ask Claude Code:
-
-```text
-Run `bun run verify check-looks-and-access` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify check-looks-and-access
 ```
 
 Expect: `Done. All 7 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 
@@ -88,6 +87,5 @@ Expect: `Done. All 7 rules pass.`
 
 ## Words you will use
 
-- **Baseline**: the saved screenshot a visual test compares with.
 - **Axe**: a tool that lists accessibility problems.
-- **WCAG 2.1 AA**: the usual accessibility rules.
+- **WCAG AA**: the usual accessibility rules.

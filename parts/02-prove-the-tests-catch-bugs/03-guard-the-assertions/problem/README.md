@@ -2,9 +2,9 @@
 
 ## The problem
 
-In Part 3 an agent will "heal" your tests. Playwright's healer may fix "assertions and expected values" or mark
-a test `test.fixme()`. Both hide bugs. For example, if the shop charges `$1.05` for bananas, a healer can change
-the test from `$1.04` to `$1.05`. Shoppers pay too much.
+In Part 3 an agent will "heal" your tests. Playwright's healer may fix "assertions and expected values" or mark a test `test.fixme()`. Both hide bugs. For example, if the shop charges `$1.05` for bananas, a healer can change the test from `$1.04` to `$1.05`. Shoppers pay too much.
+
+## Watch it done
 
 Claude Code runs a **hook** before each tool call. A hook that exits with code 2 blocks the call.
 
@@ -16,7 +16,7 @@ flowchart LR
   H -->|exit 2 and a reason| NO[edit blocked,<br/>Claude reads why]
 ```
 
-## Your challenge
+## Your turn
 
 Get Claude Code to write `qa/guard.ts` and wire it as a hook. You say what counts as weakening.
 
@@ -44,7 +44,7 @@ Then wire it in .claude/settings.json as a PreToolUse hook with matcher "Edit|Wr
 Test it with bun qa/guard.ts < qa/examples/removes-an-expect.diff (must exit 2) and qa/examples/changes-a-locator.diff (must exit 0), and with a few small diffs and hook inputs of your own. Keep the code short and readable.
 ```
 
-Claude Code asks before it changes `.claude/settings.json`. Approve the hook, then try an example:
+Approve the hook when Claude Code asks, then try an example:
 
 ```bash
 bun qa/guard.ts < qa/examples/removes-an-expect.diff; echo "exit $?"
@@ -56,24 +56,26 @@ Then ask Claude Code to change the banana test to `$1.05`. The hook blocks it:
 
 ![Claude Code blocked by the guard hook](../images/expected.png)
 
+## Do it on your work
+
+Ask Claude Code which edits to a test file your team owns should be blocked.
+
 ## Done when
 
 - The guard rejects 5 planted weakening diffs and accepts 3 harmless ones.
 - As an `Edit|Write` hook it blocks weakening edits and allows a locator edit.
 
-Ask Claude Code:
-
-```text
-Run `bun run verify guard-the-assertions` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify guard-the-assertions
 ```
 
 Expect: `Done. All 14 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 
@@ -86,4 +88,3 @@ Expect: `Done. All 14 rules pass.`
 ## Words you will use
 
 - **PreToolUse hook**: a command Claude Code runs before each tool call. Exit code 2 blocks the call.
-- **Unified diff**: what `git diff` prints: `-` removed, `+` added.

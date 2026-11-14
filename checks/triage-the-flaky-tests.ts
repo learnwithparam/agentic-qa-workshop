@@ -36,6 +36,7 @@ type TriageEntry = {
   evidence?: string;
   fix?: string;
   approvedBy?: string;
+  trace?: string;
 };
 
 function flakyTestsIn(folder: string): Map<string, FoundTest> {
@@ -111,6 +112,20 @@ function readTriage(folder: string): TriageEntry[] {
   }
 }
 
+// A failed run must leave a trace, or the next person cannot see what the test did.
+function keepsTracesOfFailures(folder: string): boolean {
+  const config = join(folder, "playwright.config.ts");
+  if (!existsSync(config)) return false;
+  return /\btrace\s*:\s*["'](retain-on-failure|on-first-retry|on)["']/.test(
+    readFileSync(config, "utf8"),
+  );
+}
+
+// Each entry names the trace the person opened in the trace viewer.
+function entriesNameTrace(folder: string): boolean {
+  return FLAKY_TITLES.every((title) => /trace\.zip$/.test(entryFor(folder, title)?.trace ?? ""));
+}
+
 const filled = (text: string | undefined) => (text ?? "").trim().length > 0;
 
 function entryIsComplete(entry: TriageEntry): boolean {
@@ -184,5 +199,15 @@ export default [
     says: "every fix was approved by a person, not by the agent",
     test: approvedByPeople,
     tryNext: 'put your own name in approvedBy; "Claude Code" cannot approve its own fix',
+  },
+  {
+    says: "playwright.config.ts keeps a trace of every failed run",
+    test: keepsTracesOfFailures,
+    tryNext: 'set trace: "retain-on-failure" in use, so a red run leaves a trace.zip to open',
+  },
+  {
+    says: "each triage entry names the trace.zip that showed the cause",
+    test: entriesNameTrace,
+    tryNext: "run bunx playwright show-trace on a failed run's trace.zip and put its path in trace",
   },
 ] satisfies Rule[];

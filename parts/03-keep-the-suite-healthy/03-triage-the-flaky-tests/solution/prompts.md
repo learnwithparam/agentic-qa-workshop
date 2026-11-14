@@ -20,7 +20,7 @@ For each one, show me the cause, the evidence and the fix you propose. Do not ch
 After you read the diagnosis:
 
 ```text
-Approved, with one change. For the clock test, 2026-03-10T21:59:00-06:00 is 22:59 in Larkford: on March 10 the store is on daylight time, -05:00. Use the shop's own seeded time instead, 2026-03-10T15:00:00-05:00.
+Approved, with one change. For the clock test, 2026-03-10T21:59:00-06:00 is 22:59 in Larkford: on that day the store is on daylight time, -05:00. Use the shop's own seeded time instead, 2026-03-10T15:00:00-05:00.
 Apply the three fixes. Rules: no retries, no waitForTimeout, no removed expect, and keep each test's title.
 Then write qa/triage.json: an array with one entry per flaky test, { "test", "cause", "evidence", "fix", "approvedBy" }. "test" is the exact test title, "cause" is race, shared-data or clock, and "approvedBy" is "Priya Raman (QA lead)".
 Prove it: run bunx playwright test --repeat-each=20 --shuffle --grep on the three titles, and show me the result.
@@ -41,7 +41,7 @@ Prove it: run bunx playwright test --repeat-each=20 --shuffle --grep on the thre
 
 ## What you checked
 
-- Fix 3 was wrong. On March 10 the store is on daylight time, -05:00, so `21:59:00-06:00` is 22:59, after the
+- Fix 3 was wrong. In daylight time the store is on -05:00, so `21:59:00-06:00` is 22:59, after the
   cutoff. You asked for the seeded time, `2026-03-10T15:00:00-05:00`.
 - The proof: `--repeat-each=20 --shuffle` on the three titles gave `60 passed`.
 - Claude Code said the clock fix cannot be proven by a run at this hour. It is safe because the time is now
@@ -52,4 +52,4 @@ Prove it: run bunx playwright test --repeat-each=20 --shuffle --grep on the thre
 
 - `retries: 2` in the config. Every run looks green, and nothing is fixed. See `wrong/raised-retries/`.
 - `waitForTimeout(1000)` for the race. It is slower and still a guess. See `wrong/longer-sleep/`.
-- `approvedBy: "Claude Code"`, and the clock test filed as a race. See `wrong/agent-approved/`.
+- `approvedBy` set to the agent's name, and the clock test filed as a race. See `wrong/agent-approved/`.

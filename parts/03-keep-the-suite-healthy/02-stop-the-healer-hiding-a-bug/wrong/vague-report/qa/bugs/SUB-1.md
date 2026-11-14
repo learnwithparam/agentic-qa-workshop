@@ -1,6 +1,6 @@
-# Substitutions are broken on v2
+# Substitutions are broken on the new release
 
-Some substitution tests fail on release v2. Orders show "Not available" for items that are out of stock.
+Some substitution tests fail on the new release. Orders show "Not available" for items that are out of stock.
 
 ## Steps
 

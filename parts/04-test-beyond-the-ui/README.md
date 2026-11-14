@@ -2,6 +2,18 @@
 
 This part moves the outcome: tests for the partner API, for bugs nobody wrote down, and for the AI feature.
 
+## After this part you can
+
+- Write API tests from an OpenAPI contract, with strict schemas.
+- Explore a shop with an agent, and turn each finding into a repro test.
+- Test an AI feature with rules that never bend, such as allergens.
+
+## You leave with
+
+- Tests for the order API, each one checked against the contract.
+- Repro tests for three bugs that no requirement named.
+- A suggester test, with notes, thresholds and rules.
+
 ## The problem
 
 The shop's pages are one way in, but not the only one. Partner apps place orders through the API in
@@ -41,7 +53,7 @@ In every step you type prompts and review. Claude Code makes each file below. Th
 | [explore-with-an-agent](02-explore-with-an-agent/problem/README.md)                     | 15      | `qa/explore/charter.md` and one repro test per finding                   | each repro green on the fixed build and red with its bug on; at least 2 of the 3 unwritten bugs found       |
 | [test-the-substitution-suggester](03-test-the-substitution-suggester/problem/README.md) | 25      | `qa/ai-notes.md`, `qa/ai-thresholds.json`, `tests/ai/suggester.spec.ts`  | notes against real answers; red on `ai-allergen` and on a single allergen; green on a reordered good answer |
 
-Total: 60 minutes. Each step's folder is self-contained: work in its `problem/` folder.
+Total: a short session. Each step's folder is self-contained: work in its `problem/` folder.
 
 ## How the checks see your tests
 
@@ -91,7 +103,7 @@ You can check any sample solution the same way. For example:
 bun run verify test-the-order-api-contract solution
 ```
 
-Expect: `Done. All 6 rules pass.`
+Expect: `Done. All 8 rules pass.`
 
 When all three pass, the whole part passes.
 
@@ -127,7 +139,7 @@ suggester notes, thresholds and test.
 **Rubric.** Each line is yes or no.
 
 1. Does `bun run verify test-the-order-api-contract` print `Done.`?
-2. Does `bun run verify explore-with-an-agent` print `Found 2 of 3` or `Found 3 of 3`?
+2. Does `bun run verify explore-with-an-agent` report that it found 2 or 3 of the 3 unwritten bugs?
 3. Does `bun run verify test-the-substitution-suggester` print `Done.`, with allergen in `hardFail`?
 4. Does every repro test expect what should happen, not what the buggy shop did?
 
@@ -143,3 +155,17 @@ one rule that can never bend.
 
 Part 5 turns this into a team practice. You compare MCP and the CLI by measured tokens, and fuzz the API from
 the schema. Then you count what agent runs cost, and build one pull request gate that reports the numbers.
+
+## Watch and read
+
+| Kind  | Title                                      | Author                          | Why                                                         | Link                                          |
+| ----- | ------------------------------------------ | ------------------------------- | ----------------------------------------------------------- | --------------------------------------------- |
+| video | API-schema-based testing with Schemathesis | Alexander Hultnér at EuroPython | A conference talk on making tests from an API contract.     | <https://www.youtube.com/watch?v=9FHRwrv-xuQ> |
+| video | Property based testing with Hypothesis     | Shai Geva                       | A clear talk on letting a tool make many cases from a rule. | <https://www.youtube.com/watch?v=jhhpdzkHyqU> |
+| read  | API testing                                | The Playwright team             | The tool docs for calling an API from a test.               | <https://playwright.dev/docs/api-testing>     |
+| read  | Mock APIs                                  | The Playwright team             | The tool docs for faking a failed call with a route.        | <https://playwright.dev/docs/mock>            |
+| read  | Authentication                             | The Playwright team             | The tool docs for saving a sign in once and reusing it.     | <https://playwright.dev/docs/auth>            |
+
+## Project
+
+Your project is the Assignment above. Hand in the three `problem/` folders and answer the rubric.

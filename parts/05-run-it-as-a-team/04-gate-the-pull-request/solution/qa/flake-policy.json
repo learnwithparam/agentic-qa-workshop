@@ -1,0 +1,12 @@
+{
+  "retries": 0,
+  "maxQuarantined": 2,
+  "quarantine": [
+    {
+      "test": "orders page lists my order",
+      "owner": "Ana Torres",
+      "reason": "shares order data with another test",
+      "expires": "2026-12-15"
+    }
+  ]
+}

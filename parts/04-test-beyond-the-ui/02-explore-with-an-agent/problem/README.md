@@ -2,9 +2,7 @@
 
 ## The problem
 
-Planned tests only find what someone wrote down. The release candidate has three bugs that break no written
-requirement. People find such bugs by exploring. For example, a shopper on a
-slow phone taps "Book slot" twice. Does the shop book two slots and charge the $2.99 fee twice?
+Planned tests only find what someone wrote down. The release candidate has three bugs that break no written requirement. People find such bugs by exploring. For example, a shopper on a slow phone taps "Book slot" twice. Does the shop book two slots and charge the $2.99 fee twice?
 
 ```mermaid
 flowchart LR
@@ -15,13 +13,17 @@ flowchart LR
   RP --> V{red on the bug,<br/>green when fixed?}
 ```
 
-## Your challenge
+## Watch it done
 
-Get Claude Code to write a charter, explore the release candidate in a real browser, and turn each finding
-into a repro test. You type prompts and judge each finding. You write no test code.
+After a double click on Book slot, you should see two held slots:
 
-This folder has a `.mcp.json` that gives Claude Code a browser through Playwright MCP. Start the release
-candidate in one terminal:
+![Two slots held after one double click](../images/expected.png)
+
+## Your turn
+
+Get Claude Code to write a charter, explore the release candidate in a real browser, and turn each finding into a repro test. You type prompts and judge each finding. You write no test code.
+
+This folder's `.mcp.json` gives Claude Code a browser. Start the release candidate in one terminal:
 
 ```bash
 BUGS=release bun run shop
@@ -62,19 +64,17 @@ bunx playwright test
 
 Expect: each repro test fails, with the bug it describes in its error.
 
+## Do it on your work
+
+Write a charter for one flow in your own app. Turn each finding you trust into a repro test.
+
 ## Done when
 
 - `qa/explore/charter.md` has a Mission, Areas and a Time box.
 - Each repro test starts with `// finding:`, passes on the fixed build and goes red with its bug on.
 - The repro tests find at least 2 of the 3 unwritten bugs.
 
-Ask Claude Code:
-
-```text
-Run `bun run verify explore-with-an-agent` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify explore-with-an-agent
@@ -82,9 +82,9 @@ bun run verify explore-with-an-agent
 
 Expect: `Done. All 5 rules pass.`
 
-After a double click on Book slot, you should see two held slots:
+## Solution
 
-![Two slots held after one double click](../images/expected.png)
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 
@@ -92,10 +92,8 @@ After a double click on Book slot, you should see two held slots:
 | ------------------------------------------------- | -------------------------------------------------------------------------------- |
 | `/mcp` shows `playwright` as failed               | Run `bun run setup` at the repo root, then restart Claude Code.                  |
 | `FAIL every repro test passes on the fixed build` | The test expects what the bug did. Ask Claude Code to expect what should happen. |
-| `Found 1 of 3`                                    | Explore again. Try a double click on Book slot, or Back after checkout.          |
+| Only 1 of 3 bugs found                            | Explore again. Try a double click on Book slot, or Back after checkout.          |
 
 ## Words you will use
 
-- **Charter**: one short page with a mission, areas and a time box.
-- **Finding**: something odd you saw, written as steps, expected and actual.
 - **Repro test**: a test that reproduces one finding. Red with the bug, green without it.

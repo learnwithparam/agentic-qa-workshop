@@ -2,13 +2,12 @@
 
 ## The problem
 
-Playwright has a planner agent and a generator agent. Both start every session from one file: the seed test.
-A seed test is the first test an agent runs. It opens the app in a known state, and the agent copies its style.
+Playwright's planner and generator agents start from one file: the seed test, the first test an agent runs. It opens the app in a known state, and the agent copies its style.
 
-A bad seed spreads into every test. For example:
+For example:
 
-- A seed that does not reset the shop data gives tests that pass once and fail on the second run.
-- A seed that does not sign in sends the agent to explore the Sign in page instead of the basket.
+- No reset: tests pass once, then fail on run two.
+- No sign-in: the agent explores the Sign in page, not the basket.
 
 ```mermaid
 flowchart LR
@@ -17,7 +16,13 @@ flowchart LR
   E -.copied by.-> G[generator]
 ```
 
-## Your challenge
+## Watch it done
+
+Your seed should end here:
+
+![The empty basket the seed ends on](../images/expected.png)
+
+## Your turn
 
 Get Claude Code to finish `tests/seed.spec.ts` in this folder. You type no test code. When it is done, the seed must:
 
@@ -51,15 +56,16 @@ bunx playwright test --repeat-each=3
 
 Expect: `3 passed`
 
-Your seed should end here:
+## Do it on your work
 
-![The empty basket the seed ends on](../images/expected.png)
+Pick one app your team owns. Ask Claude Code for a seed that resets it and signs in. Read the plan before you say yes.
 
 ## Done when
 
 - `tests/seed.spec.ts` resets the shop through `POST /__test/reset` and has at least one `expect`.
 - It passes 3 runs in a row on the fixed build.
 - The shop's event log shows a reset and a sign-in as Ana on every run, and every run ends on an empty basket.
+- `tests/saved-sign-in.spec.ts` saves the sign-in to a file, and a second test starts signed in from it. Steps: [the second half](MORE.md).
 
 Ask Claude Code:
 
@@ -73,7 +79,11 @@ Or run it yourself:
 bun run verify write-the-seed-test
 ```
 
-Expect: `Done. All 6 rules pass.`
+Expect: `Done. All 8 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 
@@ -82,12 +92,10 @@ Expect: `Done. All 6 rules pass.`
 | `FAIL it passes 3 runs in a row`              | Read the first error. A missing reset often fails on the second run.                     |
 | `FAIL every run ends on an empty basket page` | The seed must not add anything. Tell Claude Code to open `/basket` last and add nothing. |
 | `Timed out waiting ... config.webServer`      | Start the shop with `bun run shop` in another terminal, then run again.                  |
-| `getByLabel("Email")` finds nothing           | The test is not on `/signin`. Tell Claude Code to go to `/signin` first.                 |
 
 ## Words you will use
 
 - **Seed test**: the first test an agent runs. The agent copies its style.
 - **`request`**: Playwright's tool for web calls with no browser.
 - **`expect`**: a check in a test. A test with no `expect` passes whatever the page shows.
-- **Event log**: `events.jsonl`, the shop's record of what happened. The checks read it.
 - **Plan**: the list of changes Claude Code shows before it edits files. You approve or reject it.

@@ -31,3 +31,13 @@ own the rest.
 - Flaky failures: from the gate's 10 runs of every new test. It must be 0.
 - New tests that catch a planted bug: from the gate. Every new test must catch one.
 - Cost per kept test: from `qa/cost.md`, today $0.08.
+
+## Parallel work
+
+- Give each agent its own worktree with `claude -w <name>`, so two agents never edit the same files.
+- Use `/batch` for one change that touches many files, and review each result as its own pull request.
+
+## Unattended runs
+
+- Use `/loop` inside a session to check on a slow job, such as a long mutation run.
+- Use `/schedule` for the nightly run, and give every scheduled run a contract in `qa/run-contract.md`.

@@ -5,6 +5,33 @@ on:
   pull_request:
 
 jobs:
+  # The suite runs in four shards side by side, so a long suite still ends fast.
+  shards:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps chromium
+      # Quarantined tests are named in qa/flake-policy.json. They run in their own job, not here.
+      - run: bunx playwright test --shard=${{ matrix.shard }}/4 --grep-invert @quarantine
+      # A red run keeps its trace and report, so a person can open them in the trace viewer.
+      - name: Keep the traces and the report
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: traces-shard-${{ matrix.shard }}
+          path: |
+            playwright-report
+            test-results
+          retention-days: 14
+
   gate:
     runs-on: ubuntu-latest
     steps:

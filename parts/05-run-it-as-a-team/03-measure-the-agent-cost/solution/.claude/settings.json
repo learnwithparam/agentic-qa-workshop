@@ -24,5 +24,8 @@
         ]
       }
     ]
+  },
+  "sandbox": {
+    "enabled": true
   }
 }

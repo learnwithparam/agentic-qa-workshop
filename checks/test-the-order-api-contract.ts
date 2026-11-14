@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { openDoor, pathPattern } from "../parts/04-test-beyond-the-ui/helpers/traffic";
 import { ROOT } from "../scripts/structure";
 import type { Rule } from "../scripts/verify";
+import { frontmatter, lineCount, readFile } from "./lib/claude-files";
 import { once } from "./lib/memo";
 import { specFiles } from "./lib/static";
 import { runSuite, type SuiteResult } from "./lib/suite";
@@ -105,6 +106,49 @@ function usesOnlyTheRequestFixture(folder: string): boolean {
   return files.length > 0 && !files.some(opensBrowserPage);
 }
 
+const mockedTests = (folder: string) => join(folder, "tests", "mocked");
+
+function mockSource(folder: string): string {
+  return specFiles(mockedTests(folder))
+    .map((file) => readFileSync(file, "utf8"))
+    .join("\n");
+}
+
+// A mock answers a call for the test. It must send a real failure and expect its effect.
+function mocksFailedCall(folder: string): boolean {
+  const source = mockSource(folder);
+  const routes = /page\.route\(/.test(source) && /route\.fulfill\(/.test(source);
+  const fails = /status:\s*[45]\d\d/.test(source);
+  return routes && fails && /\bexpect\(/.test(source);
+}
+
+function mockedTestPasses(folder: string): Promise<boolean> {
+  return once("contract-mocked", folder, () =>
+    withShop({ bugs: "none" }, async (shop) => {
+      const suite = await runSuite(mockedTests(folder), shop.url);
+      return suite.ran && suite.tests.length > 0 && suite.failed === 0;
+    }),
+  );
+}
+
+const MOST_LINES = 200;
+
+const claudeMd = (folder: string) => join(folder, "CLAUDE.md");
+
+function claudeMdIsShortAndRunsTheTests(folder: string): boolean {
+  const text = readFile(claudeMd(folder));
+  return (
+    text !== "" && lineCount(claudeMd(folder)) < MOST_LINES && /bunx playwright test/.test(text)
+  );
+}
+
+// A rule file in .claude/rules that loads only for the API tests.
+function apiRuleLoadsOnlyForApiTests(folder: string): boolean {
+  const file = join(folder, ".claude", "rules", "api-tests.md");
+  const header = frontmatter(readFile(file));
+  return /tests\/api/.test(header.paths ?? "") && readFile(file).split("\n").length > 5;
+}
+
 export default [
   {
     says: "tests/api/ has spec files, and each names the contract in a // spec: line",
@@ -135,5 +179,28 @@ export default [
     says: "the API tests go red when a full slot answers 500 instead of 409 (api-status)",
     test: goesRedWith("api-status"),
     tryNext: "add a test that orders into the full 18:00 slot and expects exactly 409 slot_full",
+  },
+  {
+    says: "tests/mocked/ mocks a failed call with page.route and expects its effect",
+    test: mocksFailedCall,
+    tryNext:
+      "use page.route to fulfill the booking call with status 503, then expect the alert text",
+  },
+  {
+    says: "the mocked test passes on the fixed build",
+    test: async (folder) => mocksFailedCall(folder) && (await mockedTestPasses(folder)),
+    tryNext: "run bunx playwright test tests/mocked and fix the first red line",
+  },
+  {
+    says: "CLAUDE.md is under 200 lines and says how to run the tests",
+    test: claudeMdIsShortAndRunsTheTests,
+    tryNext:
+      "run /init, keep the short file, and add the line: Run tests with bunx playwright test",
+  },
+  {
+    says: ".claude/rules/api-tests.md loads only for files in tests/api",
+    test: apiRuleLoadsOnlyForApiTests,
+    tryNext:
+      "move the API rules into .claude/rules/api-tests.md with paths: tests/api/** at the top",
   },
 ] satisfies Rule[];

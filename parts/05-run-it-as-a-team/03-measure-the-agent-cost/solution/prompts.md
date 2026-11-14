@@ -10,7 +10,7 @@ timing fields Claude Code adds for itself were removed, and nothing else.
 
 - **plan**: 35 turns. It walked the shop and wrote 21 scenarios in `specs/basket.md`.
 - **generate**: 5 turns. It wrote 21 tests, and all passed on the first run.
-- **heal**: 2 turns, on release v2. 6 tests failed because the slot picker moved into a dialog. It changed one
+- **heal**: 2 turns, on the new release. 6 tests failed because the slot picker moved into a dialog. It changed one
   helper, `bookSlot`, and left every expected value alone.
 
 The kept tests in `solution/tests/basket.spec.ts` are the healed file. It was formatted with Biome after the

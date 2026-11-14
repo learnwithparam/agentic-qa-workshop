@@ -2,10 +2,11 @@
 
 ## The problem
 
-The 25 legacy tests in `tests/` are sometimes red, and a rerun is green. A real bug can hide. A **flaky test** passes and fails on the same code. For example, "orders page lists my order"
-passes only when "place an order" runs just before it.
+The 25 legacy tests in `tests/` are sometimes red, and a rerun is green. A **flaky test** passes and fails on the same code. Three tests here are flaky, each for a different reason. Retries would hide them, not fix them.
 
-Three tests here are flaky, each for a different reason. Retries would hide them, not fix them.
+## Watch it done
+
+For example, "orders page lists my order" passes only when "place an order" runs just before it.
 
 ```mermaid
 flowchart LR
@@ -14,10 +15,13 @@ flowchart LR
   P --> A[a person approves] --> J[qa/triage.json]
 ```
 
-## Your challenge
+This is what 20 shuffled runs look like before the fix:
 
-Get Claude Code to find the three flaky tests, name each cause, and fix them after you approve. Start the
-shop (release v1) and leave it running:
+![Before the fix: 24 of 60 runs fail](../images/expected.png)
+
+## Your turn
+
+Get Claude Code to find the three flaky tests, name each cause, and fix them after you approve. Start the shop (the old release) and leave it running:
 
 ```bash
 bun run shop
@@ -40,11 +44,7 @@ For each flaky test, find the cause. Use one of these words: race (the test does
 For each one, show me the cause, the evidence and the fix you propose. Do not change any file yet.
 ```
 
-This is what 20 shuffled runs look like before the fix:
-
-![Before the fix: 24 of 60 runs fail](../images/expected.png)
-
-Claude Code may propose `21:59:00-06:00` for the clock test. On March 10
+Claude Code may propose a clock time with the wrong offset for the clock test. In daylight time,
 that is 22:59 in Larkford, after the cutoff. Then approve, with your own name:
 
 ```text
@@ -54,35 +54,35 @@ Then write qa/triage.json: an array with one entry per flaky test, { "test", "ca
 Prove it: run bunx playwright test --repeat-each=20 --shuffle --grep on the three titles, and show me the result.
 ```
 
+## Do it on your work
+
+Name the cause of one flaky test in your suite before you fix it.
+
 ## Done when
 
 - The 3 tests keep their expects and pass 20 shuffled runs, with no retries, sleeps or real time.
 - `qa/triage.json` gives each the right cause and a person in `approvedBy`.
+- The config keeps traces of failed runs, and each entry names the trace it read. Steps: [the second half](MORE.md).
 
-Ask Claude Code:
-
-```text
-Run `bun run verify triage-the-flaky-tests` from the repo root and tell me what it printed. Do not change anything to make it pass.
-```
-
-Or run it yourself:
+Run the check from the repo root:
 
 ```bash
 bun run verify triage-the-flaky-tests
 ```
 
-Expect: `Done. All 8 rules pass.`
+Expect: `Done. All 10 rules pass.`
+
+## Solution
+
+The finished answer is in `solution/`. Read it after you pass, not before.
 
 ## If you get stuck
 
-| What you see                                   | Fix                                         |
-| ---------------------------------------------- | ------------------------------------------- |
-| `FAIL each flaky test passes 20 shuffled runs` | One test still depends on time or order.    |
-| `FAIL no retries were added`                   | Take retries out of `playwright.config.ts`. |
-| `FAIL every fix was approved by a person`      | Use your own name.                          |
+| What you see                                   | Fix                                      |
+| ---------------------------------------------- | ---------------------------------------- |
+| `FAIL each flaky test passes 20 shuffled runs` | One test still depends on time or order. |
 
 ## Words you will use
 
+- **Trace**: a recording of one test run. Open it with `bunx playwright show-trace`.
 - **Flaky test**: a test that passes and fails on the same code.
-- **Race**: the test checks before the page is ready.
-- **Shared data**: the test needs another test to run first.

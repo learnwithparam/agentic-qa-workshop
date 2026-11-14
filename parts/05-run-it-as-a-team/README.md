@@ -2,6 +2,19 @@
 
 This part moves the goal: one pull request gate, run on every change, that reports the numbers that matter.
 
+## After this part you can
+
+- Measure an agent run by its tokens, turns and cost.
+- Compare two browser tools with the same task.
+- Fuzz an API from its schema with a seeded generator.
+- Build a pull request gate that blocks bad agent work.
+
+## You leave with
+
+- A cost per kept test, and the numbers behind it.
+- A pull request gate with its CI file.
+- A team playbook with rules and named human gates.
+
 ## The problem
 
 One person's strong suite is not a team practice. Agent runs cost money, and nobody has measured how much. The
@@ -43,7 +56,7 @@ what it made.
 | [gate-the-pull-request](04-gate-the-pull-request/problem/README.md)               | 25      | `qa/gate.ts` and `ci/pull-request.yml`             | the gate merges 1 planted pull request and blocks 4                                        |
 | [write-the-team-playbook](05-write-the-team-playbook/problem/README.md)           | 20      | `qa/playbook.md`                                   | four sections; every reported number is one the gate or the cost step computes             |
 
-Total: 100 minutes. Each step's folder is self-contained: work in its `problem/` folder.
+Total: a short session. Each step's folder is self-contained: work in its `problem/` folder.
 
 ## Real runs, and replays
 
@@ -86,7 +99,7 @@ Try the sample gate on one planted pull request, from the gate step's `solution/
 bun run gate ../pulls/catches-nothing
 ```
 
-Expect: `BLOCKED at catches: "the shop lists bananas" catches no planted bug`
+Expect: BLOCKED at catches. The shop lists bananas catches no planted bug.
 
 When all five steps pass, the whole part passes.
 
@@ -139,3 +152,17 @@ team's own words, what agents may do and who signs off.
 
 This is the course goal: a suite an agent wrote, with a gate and numbers that prove it works. Take the gate and
 the playbook to your own repo next.
+
+## Watch and read
+
+| Kind  | Title                                | Author              | Why                                                            | Link                                          |
+| ----- | ------------------------------------ | ------------------- | -------------------------------------------------------------- | --------------------------------------------- |
+| video | Playwright CLI vs MCP                | The Playwright team | The team compares the two ways an agent can drive a browser.   | <https://www.youtube.com/watch?v=Be0ceKN81S8> |
+| video | Tips for building AI agents          | Anthropic           | Anthropic engineers on common traps when you let an agent run. | <https://www.youtube.com/watch?v=LP5OCa20Zpg> |
+| read  | Hooks                                | Anthropic           | The docs for the Stop hook and the other hooks used here.      | <https://code.claude.com/docs/en/hooks>       |
+| read  | Subagents                            | Anthropic           | The docs for a reviewer agent that cannot edit.                | <https://code.claude.com/docs/en/sub-agents>  |
+| read  | Run Claude Code with no one watching | Anthropic           | The docs for claude -p, the base of a nightly run.             | <https://code.claude.com/docs/en/headless>    |
+
+## Project
+
+Your project is the Assignment above. Hand in the five `problem/` folders and answer the rubric.

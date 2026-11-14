@@ -8,7 +8,7 @@ You write Playwright tests for Pantry Run, a grocery delivery shop. The written 
 - Open the shop at the `BASE_URL` in the environment, or `http://localhost:4173`.
 - Test shopper: `ana@pantryrun.test`, password `pantry`. Sign in at `/signin`.
 - `POST /__test/reset` puts the data back to the seed. Call it at the start of every test.
-- `POST /__test/clock` with `{ "at": "<ISO time>" }` moves the store clock. The clock is frozen otherwise.
+- `POST /__test/clock` with a JSON body that sets `at` to an ISO time moves the store clock. The clock is frozen otherwise.
 - `tests/seed.spec.ts` shows the start every test copies: reset, sign in, open the basket.
 
 ## Plans

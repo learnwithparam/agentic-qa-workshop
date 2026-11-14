@@ -97,7 +97,7 @@
 **Steps:**
 
 1. Add three Greek yoghurt 500 g and five Ground coffee 227 g.
-2. Book Mar 12 17:00 ($4.99) and apply save10 in lower case.
+2. Book day two 17:00 ($4.99) and apply save10 in lower case.
 
 **Expected:**
 

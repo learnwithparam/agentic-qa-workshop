@@ -3,6 +3,18 @@
 This part moves the transformation: from "all green" to "catches 7 of 8 planted bugs", with numbers a script
 prints.
 
+## After this part you can
+
+- Show which planted bugs a suite catches, in a grid.
+- Measure how much of your domain code a test would defend.
+- Stop an agent from weakening a test's expects or expected values.
+
+## You leave with
+
+- A substitution spec and tests that catch the planted bugs.
+- Unit tests and a `stryker.config.json` for the domain code.
+- A guard script and a PreToolUse hook in `.claude/settings.json`.
+
 ## The problem
 
 Every test is green. That proves the tests run, not that they would catch anything. With agent-written tests the
@@ -47,7 +59,7 @@ In every step you type prompts and review. Claude Code makes each file below. Th
 | [kill-the-mutants](02-kill-the-mutants/problem/README.md)           | 25      | `domain/*.test.ts` (Vitest) and `stryker.config.json` with `"break": 70` | Stryker's JSON report on a fixed copy of the domain code: score at least 70, each file kills one |
 | [guard-the-assertions](03-guard-the-assertions/problem/README.md)   | 15      | `qa/guard.ts` and a PreToolUse hook in `.claude/settings.json`           | 8 planted diffs and 4 real hook payloads: weakening edits blocked, safe ones let through         |
 
-Total: 60 minutes. Each step's folder is self-contained: work in its `problem/` folder.
+Total: a short session. Each step's folder is self-contained: work in its `problem/` folder.
 
 Every sample solution here is a real Claude Code run. The recordings are in `recordings/`, and
 `recordings/RECORD.md` says how to make them again.
@@ -76,12 +88,12 @@ Or run it yourself:
 bun run verify catch-the-seeded-bugs
 ```
 
-Expect: `6 of 8 bugs caught`, with `missed` lines for `sub-allergen` and `sub-optout-chilled`.
+Expect: 6 of 8 bugs caught, with `missed` lines for `sub-allergen` and `sub-optout-chilled`.
 
 Then open `claude` in `01-catch-the-seeded-bugs/problem/`, give it the prompt in that step's README, and run
 the same command again.
 
-Expect: `8 of 8 bugs caught` and `Done. All 2 rules pass.`
+Expect: 8 of 8 bugs caught and `Done. All 2 rules pass.`
 
 For the unit tests, work in `02-kill-the-mutants/problem/`. After Claude Code has written the tests, run
 Stryker yourself there:
@@ -90,7 +102,7 @@ Stryker yourself there:
 bunx stryker run
 ```
 
-Expect: a table with `All files` and a mutation score of 70 or more, and no `under breaking threshold` error.
+Expect: a table with `All files` and a mutation score of 70 or more, and no error about being under the breaking threshold.
 
 For the guard, work in `03-guard-the-assertions/problem/`. After Claude Code has written it, try it on a
 planted example:
@@ -136,7 +148,23 @@ bun run verify part prove-the-tests-catch-bugs
 
 Expect: `Part prove-the-tests-catch-bugs is done: 3/3 steps pass.`
 
-## Assignment
+## Recap
+
+You can now prove a suite works, three ways. The bug-kill grid shows which planted bugs it catches. The mutation
+score shows how much of the domain code a test would defend. The guard makes sure no agent can quietly lower
+either number. Part 3 lets the healer loose on a new release, with this guard switched on.
+
+## Watch and read
+
+| Kind  | Title                                         | Author                            | Why                                                                                 | Link                                                                               |
+| ----- | --------------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| video | Mutation testing in JavaScript with StrykerJS | Nico Jansen, Stryker team         | A maintainer of the tool used in this part explains why coverage alone can mislead. | <https://www.youtube.com/watch?v=3FN1r43yJHU>                                      |
+| video | The value of small tests                      | Google Test Automation Conference | Engineers at Google on which tests catch bugs for the least cost.                   | <https://www.youtube.com/watch?v=MpG2i_6nkUg>                                      |
+| read  | Practical mutation testing at scale           | Google research team              | The people who run mutation testing at Google say what worked.                      | <https://research.google/pubs/pub50658/>                                           |
+| read  | Just say no to more end-to-end tests          | Google Testing Blog               | A Google engineer on how many UI tests a suite should hold.                         | <https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html> |
+| read  | The practical test pyramid                    | Ham Vocke on martinfowler.com     | A trusted engineering site on where each kind of test fits.                         | <https://martinfowler.com/articles/practical-test-pyramid.html>                    |
+
+## Project
 
 **Problem:** green proves the tests run, not that they catch anything.
 
@@ -153,9 +181,3 @@ step to your notes: the number before and after.
 
 **Extension:** ask Claude Code to write its own mutants for `domain/basket.ts`, like Meta's ACH project does.
 Keep only the ones no test kills. Each one it keeps is a test you are missing.
-
-## Recap
-
-You can now prove a suite works, three ways. The bug-kill grid shows which planted bugs it catches. The mutation
-score shows how much of the domain code a test would defend. The guard makes sure no agent can quietly lower
-either number. Part 3 lets the healer loose on a new release, with this guard switched on.

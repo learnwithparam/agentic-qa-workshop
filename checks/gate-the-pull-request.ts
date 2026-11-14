@@ -7,6 +7,7 @@ import { join } from "node:path";
 import { ROOT } from "../scripts/structure";
 import type { Rule } from "../scripts/verify";
 import { browserEnv } from "./lib/browser";
+import { frontmatter, readFile, readSettings } from "./lib/claude-files";
 import { readText } from "./lib/markdown";
 import { once } from "./lib/memo";
 import { withShop } from "./lib/world";
@@ -49,6 +50,61 @@ function ciRunsTheGate(folder: string): boolean {
   return /\bpull_request\b/.test(workflow) && /bun run gate\b/.test(workflow);
 }
 
+const policyPath = (folder: string) => join(folder, "qa", "flake-policy.json");
+
+type QuarantineEntry = { test?: string; owner?: string; reason?: string; expires?: string };
+type FlakePolicy = { retries?: number; maxQuarantined?: number; quarantine?: QuarantineEntry[] };
+
+function readPolicy(folder: string): FlakePolicy | null {
+  try {
+    return JSON.parse(readText(policyPath(folder))) as FlakePolicy;
+  } catch {
+    return null;
+  }
+}
+
+const filled = (text: string | undefined) => (text ?? "").trim().length > 0;
+const isDate = (text: string | undefined) => /^\d{4}-\d{2}-\d{2}$/.test(text ?? "");
+
+// A quarantined test needs a person who owns it and a day it must be fixed or deleted.
+function quarantineIsOwned(folder: string): boolean {
+  const policy = readPolicy(folder);
+  if (!policy || !Array.isArray(policy.quarantine)) return false;
+  const owned = (entry: QuarantineEntry) =>
+    filled(entry.test) && filled(entry.owner) && filled(entry.reason) && isDate(entry.expires);
+  return policy.quarantine.every(owned);
+}
+
+// The list may not grow without limit, and a retry may not stand in for a fix.
+function quarantineHasLimit(folder: string): boolean {
+  const policy = readPolicy(folder);
+  if (!policy || !Array.isArray(policy.quarantine)) return false;
+  const limit = policy.maxQuarantined;
+  return (
+    typeof limit === "number" &&
+    limit > 0 &&
+    policy.quarantine.length <= limit &&
+    (policy.retries ?? 0) === 0
+  );
+}
+
+function ciShardsTheSuite(folder: string): boolean {
+  const workflow = readText(join(folder, "ci", "pull-request.yml"));
+  return /\bmatrix:/.test(workflow) && /--shard=\$\{\{\s*matrix\.shard\s*\}\}\/\d+/.test(workflow);
+}
+
+function ciKeepsTraces(folder: string): boolean {
+  const workflow = readText(join(folder, "ci", "pull-request.yml"));
+  const uploads = /actions\/upload-artifact@/.test(workflow);
+  const onFailure = /if:\s*(failure\(\)|always\(\))/.test(workflow);
+  return uploads && onFailure && /test-results|playwright-report/.test(workflow);
+}
+
+function ciSkipsQuarantine(folder: string): boolean {
+  const workflow = readText(join(folder, "ci", "pull-request.yml"));
+  return /--grep-invert\s+@quarantine/.test(workflow);
+}
+
 const merges = (pull: string) => async (folder: string) => (await runGate(folder, pull)).merged;
 
 const blocks = (pull: string) => async (folder: string) => {
@@ -56,6 +112,28 @@ const blocks = (pull: string) => async (folder: string) => {
   const run = await runGate(folder, pull);
   return !run.merged;
 };
+
+// A Stop hook runs when Claude Code thinks it is done. If the gate says no, it keeps working.
+function stopHookRunsTheGate(folder: string): boolean {
+  // biome-ignore lint/style/useNamingConvention: Stop is the event name Claude Code uses
+  type Settings = { Stop?: { hooks?: { command?: string }[] }[] };
+  const hooks = readSettings(folder).hooks as Settings | undefined;
+  const commands = (hooks?.Stop ?? []).flatMap((entry) => entry.hooks ?? []);
+  return commands.some((hook) => /qa\/gate\.ts|bun run gate/.test(hook.command ?? ""));
+}
+
+// The reviewer agent reads and reports. It has no tool that edits a file.
+function reviewerCannotEdit(folder: string): boolean {
+  const text = readFile(join(folder, ".claude", "agents", "test-reviewer.md"));
+  const header = frontmatter(text);
+  const tools = header.tools ?? "";
+  return (
+    header.name === "test-reviewer" &&
+    tools !== "" &&
+    !/\b(Edit|Write|MultiEdit)\b/.test(tools) &&
+    /\/code-review|expect/i.test(text)
+  );
+}
 
 export default [
   {
@@ -87,5 +165,42 @@ export default [
     says: "the gate blocks the pull request whose mutation score is under the break threshold",
     test: blocks("mutation-drop"),
     tryNext: "read reports/mutation/mutation.json and compare the score with thresholds.break",
+  },
+  {
+    says: "ci/pull-request.yml splits the suite into shards that run side by side",
+    test: ciShardsTheSuite,
+    tryNext: "add a matrix of shard numbers and run playwright test with --shard=N/4",
+  },
+  {
+    says: "a red run uploads its trace and report as a CI artefact",
+    test: ciKeepsTraces,
+    tryNext:
+      "add an upload-artifact step with if: failure() for playwright-report and test-results",
+  },
+  {
+    says: "qa/flake-policy.json gives every quarantined test an owner, a reason and an end date",
+    test: quarantineIsOwned,
+    tryNext: "add test, owner, reason and expires (YYYY-MM-DD) to each quarantine entry",
+  },
+  {
+    says: "the quarantine has a size limit and the policy allows no retries",
+    test: quarantineHasLimit,
+    tryNext: "set maxQuarantined above zero, keep the list within it, and keep retries at 0",
+  },
+  {
+    says: "the sharded job leaves quarantined tests out with --grep-invert @quarantine",
+    test: ciSkipsQuarantine,
+    tryNext: "tag quarantined tests @quarantine and skip that tag in the sharded job",
+  },
+  {
+    says: ".claude/settings.json has a Stop hook that runs the gate",
+    test: stopHookRunsTheGate,
+    tryNext: "add a Stop hook in .claude/settings.json that runs bun qa/gate.ts",
+  },
+  {
+    says: "a test-reviewer agent can read but not edit, and checks for a removed expect",
+    test: reviewerCannotEdit,
+    tryNext:
+      "save .claude/agents/test-reviewer.md with tools: Read, Grep, Glob and no Edit or Write",
   },
 ] satisfies Rule[];

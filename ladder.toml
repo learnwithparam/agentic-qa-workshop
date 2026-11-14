@@ -1,0 +1,41 @@
+# Maps each Claude Code feature a learner must use to the step that teaches it.
+# Levels come from standard section 7. Every step named here has a check script.
+[features]
+# L0 Ask
+plan-mode = "write-the-seed-test"
+at-files = "plan-tests-from-requirements"
+screenshots = "check-looks-and-access"
+specific-prompt = "write-the-seed-test"
+# L1 Supervise
+permission-modes = "review-the-agent-tests"
+diff-review = "review-the-agent-tests"
+esc = "review-the-agent-tests"
+rewind = "review-the-agent-tests"
+clear = "review-the-agent-tests"
+# L2 Teach the repo
+init = "test-the-order-api-contract"
+claude-md = "test-the-order-api-contract"
+rules = "test-the-order-api-contract"
+check-to-run = "write-the-seed-test"
+# L3 Fence it
+hooks = "stop-the-healer-hiding-a-bug"
+deny-rules = "measure-the-agent-cost"
+sandbox = "measure-the-agent-cost"
+skills = "compare-mcp-and-cli"
+mcp-or-cli-tools = "compare-mcp-and-cli"
+# L4 Spec and verify
+spec-interview = "test-the-substitution-suggester"
+goal = "test-the-substitution-suggester"
+stop-hook-gate = "gate-the-pull-request"
+code-review-subagent = "gate-the-pull-request"
+# L5 Parallel
+subagents = "redo-the-flow-with-agents"
+worktrees = "write-the-team-playbook"
+batch = "write-the-team-playbook"
+reviewer-agent = "gate-the-pull-request"
+# L6 Unattended
+headless = "measure-the-agent-cost"
+loop = "write-the-team-playbook"
+schedule = "write-the-team-playbook"
+github-action = "gate-the-pull-request"
+run-contract-and-metrics = "write-the-team-playbook"

@@ -4,6 +4,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Rule } from "../scripts/verify";
+import { sectionOf, words } from "./lib/claude-files";
 import { readText } from "./lib/markdown";
 
 const SECTIONS = ["Agents may", "Agents may not", "Human gates", "Numbers we report"];
@@ -71,6 +72,34 @@ function reportsNoVanityNumber(folder: string): boolean {
   return reported.length > 0 && !reported.some((line) => VANITY_NUMBERS.test(line));
 }
 
+const bulletsAbout = (folder: string, name: string) => bulletsIn(folder, name).join("\n");
+
+function parallelRulesNameWorktreesAndBatch(folder: string): boolean {
+  const rules = bulletsAbout(folder, "Parallel work");
+  return (
+    /claude -w/.test(rules) &&
+    /\/batch/.test(rules) &&
+    bulletsIn(folder, "Parallel work").length >= 2
+  );
+}
+
+function unattendedRulesNameLoopAndSchedule(folder: string): boolean {
+  const rules = bulletsAbout(folder, "Unattended runs");
+  return (
+    /\/loop/.test(rules) &&
+    /\/schedule/.test(rules) &&
+    bulletsIn(folder, "Unattended runs").length >= 2
+  );
+}
+
+// A run contract is what a run with no one watching must obey: its goal, its stop, its limits.
+const CONTRACT_PARTS = ["Goal", "Stop condition", "Tools allowed", "Budget", "Report to"];
+
+function runContractIsComplete(folder: string): boolean {
+  const contract = readText(join(folder, "qa", "run-contract.md"));
+  return CONTRACT_PARTS.every((name) => words(sectionOf(contract, name)) >= 3);
+}
+
 export default [
   {
     says: "qa/playbook.md has Agents may, Agents may not, Human gates and Numbers we report",
@@ -98,5 +127,21 @@ export default [
     tryNext:
       "remove the count of tests written: it goes up when the suite gets worse, " +
       "just as when it gets better",
+  },
+  {
+    says: "Parallel work gives each agent its own worktree with claude -w and names /batch",
+    test: parallelRulesNameWorktreesAndBatch,
+    tryNext:
+      "add a Parallel work section with at least two rules, one for claude -w and one for /batch",
+  },
+  {
+    says: "Unattended runs say what /loop and /schedule are for",
+    test: unattendedRulesNameLoopAndSchedule,
+    tryNext: "add an Unattended runs section with at least two rules, naming /loop and /schedule",
+  },
+  {
+    says: "qa/run-contract.md has a goal, stop, tools, budget and who gets the report",
+    test: runContractIsComplete,
+    tryNext: "write the five ## parts of the run contract, a few words each",
   },
 ] satisfies Rule[];

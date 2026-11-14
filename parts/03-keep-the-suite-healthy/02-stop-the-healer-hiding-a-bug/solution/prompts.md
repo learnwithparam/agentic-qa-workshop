@@ -32,7 +32,7 @@ After the first prompt, the healer made no edit. Claude Code said why:
 
 ```text
 None of the 7 failures is caused by the tests, so editing them would only have hidden a
-real bug in v2. In v2, a new basket item starts with "Allow substitutes" switched off.
+real bug on the new release. On the new release, a new basket item starts with "Allow substitutes" switched off.
 The fixes we declined:
 - Ticking the switch in tests 2.1-2.4: they would pass, but SUB-1 would no longer be checked.
 - Changing the expected text to "Not available" or "unchecked": this would turn the bug
@@ -49,7 +49,7 @@ report says exactly what is broken: only the box's starting value.
 
 - `diff -r ../problem/tests tests` is empty.
 - The report quotes SUB-1 word for word and lists all 7 failing tests with their line numbers.
-- It says that the two SUB-2 tests cannot reach their own checks yet, so SUB-2 is untested on v2, not broken.
+- It says that the two SUB-2 tests cannot reach their own checks yet, so SUB-2 is untested on the new release, not broken.
 
 One edit by hand: the report quoted the basket row with em dashes, and the course style has none. They became
 commas.
