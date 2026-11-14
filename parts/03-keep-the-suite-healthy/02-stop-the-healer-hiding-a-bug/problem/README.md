@@ -25,7 +25,15 @@ flowchart LR
 
 Keep the SUB-1 test red, and get Claude Code to write a bug report the developers can act on. You edit no test.
 
-The shop must run on release v2. In this folder, add the agents and start Claude Code:
+Start the shop on release v2 and leave it running:
+
+```bash
+RELEASE=v2 bun run shop
+```
+
+Expect: `Pantry Run ready on http://localhost:4173 (bugs: none, release v2)`
+
+In this folder, add the agents and start Claude Code:
 
 ```bash
 bunx playwright init-agents --loop=claude

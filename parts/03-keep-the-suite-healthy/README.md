@@ -86,7 +86,7 @@ bun run verify heal-a-renamed-button
 bun run verify stop-the-healer-hiding-a-bug
 ```
 
-Expect: `Done. All 5 rules pass.` and `Done. All 6 rules pass.`
+Expect: `Done. All 5 rules pass.` and `Done. All 6 rules pass.` Each command then counts your progress on every step, which can take a few minutes.
 
 The last two steps need release v1. Stop the shop and start it again:
 
@@ -112,7 +112,7 @@ bun run verify triage-the-flaky-tests
 bun run verify check-looks-and-access
 ```
 
-Expect: `Done. All 8 rules pass.` and `Done. All 7 rules pass.`
+Expect: `Done. All 8 rules pass.` and `Done. All 7 rules pass.` Each command then counts your progress on every step, which can take a few minutes.
 
 When all four pass, the whole part passes:
 
