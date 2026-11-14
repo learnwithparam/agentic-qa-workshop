@@ -143,3 +143,13 @@ one rule that can never bend.
 
 Part 5 turns this into a team practice. You compare MCP and the CLI by measured tokens, and fuzz the API from
 the schema. Then you count what agent runs cost, and build one pull request gate that reports the numbers.
+
+## Watch and read
+
+| Kind  | Title                                      | Author                          | Why                                                         | Link                                          |
+| ----- | ------------------------------------------ | ------------------------------- | ----------------------------------------------------------- | --------------------------------------------- |
+| video | API-schema-based testing with Schemathesis | Alexander Hultnér at EuroPython | A conference talk on making tests from an API contract.     | <https://www.youtube.com/watch?v=9FHRwrv-xuQ> |
+| video | Property based testing with Hypothesis     | Shai Geva                       | A clear talk on letting a tool make many cases from a rule. | <https://www.youtube.com/watch?v=jhhpdzkHyqU> |
+| read  | API testing                                | The Playwright team             | The tool docs for calling an API from a test.               | <https://playwright.dev/docs/api-testing>     |
+| read  | Mock APIs                                  | The Playwright team             | The tool docs for faking a failed call with a route.        | <https://playwright.dev/docs/mock>            |
+| read  | Authentication                             | The Playwright team             | The tool docs for saving a sign in once and reusing it.     | <https://playwright.dev/docs/auth>            |

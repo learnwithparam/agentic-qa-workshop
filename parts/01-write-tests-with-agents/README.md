@@ -111,3 +111,13 @@ Expect: `Part write-tests-with-agents is done: 4/4 steps pass.`
 
 You can now give Claude Code a seed and a set of requirements. You can read its plan against the rules. And
 you can judge its tests by one question: would this go red if the rule broke? Part 2 answers that question for the whole suite at once.
+
+## Watch and read
+
+| Kind  | Title                           | Author              | Why                                                                                             | Link                                                               |
+| ----- | ------------------------------- | ------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| video | Claude Code best practices      | Anthropic           | A maker of the tool shows how to ask for a plan first and give the agent a way to check itself. | <https://www.youtube.com/watch?v=gv0WHhKelSE>                      |
+| video | Playwright Live: agents and MCP | The Playwright team | The team that built the planner, generator and healer shows them at work.                       | <https://www.youtube.com/watch?v=S4qzP07ZkOg>                      |
+| read  | Test agents                     | The Playwright team | The tool docs for the three agents this part uses.                                              | <https://playwright.dev/docs/test-agents>                          |
+| read  | Claude Code best practices      | Anthropic           | Short advice on plans, checks and clear prompts.                                                | <https://www.anthropic.com/engineering/claude-code-best-practices> |
+| read  | Building effective agents       | Anthropic           | The idea behind an agent loop that ends with a check.                                           | <https://www.anthropic.com/engineering/building-effective-agents>  |

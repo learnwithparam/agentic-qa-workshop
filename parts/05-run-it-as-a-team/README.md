@@ -139,3 +139,13 @@ team's own words, what agents may do and who signs off.
 
 This is the course goal: a suite an agent wrote, with a gate and numbers that prove it works. Take the gate and
 the playbook to your own repo next.
+
+## Watch and read
+
+| Kind  | Title                                | Author              | Why                                                            | Link                                          |
+| ----- | ------------------------------------ | ------------------- | -------------------------------------------------------------- | --------------------------------------------- |
+| video | Playwright CLI vs MCP                | The Playwright team | The team compares the two ways an agent can drive a browser.   | <https://www.youtube.com/watch?v=Be0ceKN81S8> |
+| video | Tips for building AI agents          | Anthropic           | Anthropic engineers on common traps when you let an agent run. | <https://www.youtube.com/watch?v=LP5OCa20Zpg> |
+| read  | Hooks                                | Anthropic           | The docs for the Stop hook and the other hooks used here.      | <https://code.claude.com/docs/en/hooks>       |
+| read  | Subagents                            | Anthropic           | The docs for a reviewer agent that cannot edit.                | <https://code.claude.com/docs/en/sub-agents>  |
+| read  | Run Claude Code with no one watching | Anthropic           | The docs for claude -p, the base of a nightly run.             | <https://code.claude.com/docs/en/headless>    |

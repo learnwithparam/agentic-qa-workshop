@@ -67,7 +67,7 @@ Expect: `Done. All rules pass.`
 - `evidence/report.json` shows every test passed, for the tests you have now.
 
 ```bash
-bun capstone/check.ts ./capstone/template
+bun capstone/check.ts <your folder>
 ```
 
 Expect: `Done. All rules pass.`

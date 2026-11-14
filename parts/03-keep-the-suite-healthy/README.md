@@ -172,3 +172,13 @@ Expect: `Part keep-the-suite-healthy is done: 4/4 steps pass.`
 You can now let an agent heal a suite without letting it lie. The guard stops weakening edits. A red test that is
 right becomes a bug report, not a `fixme`. Flaky tests get a cause, a fix and a person's sign-off. Part 4 tests
 what no screen shows: the order API, bugs nobody wrote down, and the AI suggester.
+
+## Watch and read
+
+| Kind  | Title                                                | Author                            | Why                                                                     | Link                                                                           |
+| ----- | ---------------------------------------------------- | --------------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| video | Test flakiness: methods for dealing with flaky tests | Jason Palmer, Spotify             | An engineer from a large team on how to find the cause of a flaky test. | <https://www.youtube.com/watch?v=38pW08_nY_k>                                  |
+| video | Fighting layout bugs                                 | Google Test Automation Conference | A Google talk on catching bugs in how a page looks.                     | <https://www.youtube.com/watch?v=WY3C6FHqSqQ>                                  |
+| read  | Flaky tests at Google and how we mitigate them       | Google Testing Blog               | Google says how common flakes are and how it handles them.              | <https://testing.googleblog.com/2016/05/flaky-tests-at-google-and-how-we.html> |
+| read  | Trace viewer                                         | The Playwright team               | The tool docs for the recording that you open after a failed run.       | <https://playwright.dev/docs/trace-viewer>                                     |
+| read  | Visual comparisons                                   | The Playwright team               | The tool docs for screenshot checks like the ones in this part.         | <https://playwright.dev/docs/test-snapshots>                                   |

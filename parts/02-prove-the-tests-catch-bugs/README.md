@@ -159,3 +159,13 @@ Keep only the ones no test kills. Each one it keeps is a test you are missing.
 You can now prove a suite works, three ways. The bug-kill grid shows which planted bugs it catches. The mutation
 score shows how much of the domain code a test would defend. The guard makes sure no agent can quietly lower
 either number. Part 3 lets the healer loose on a new release, with this guard switched on.
+
+## Watch and read
+
+| Kind  | Title                                         | Author                            | Why                                                                                 | Link                                                                               |
+| ----- | --------------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| video | Mutation testing in JavaScript with StrykerJS | Nico Jansen, Stryker team         | A maintainer of the tool used in this part explains why coverage alone can mislead. | <https://www.youtube.com/watch?v=3FN1r43yJHU>                                      |
+| video | The value of small tests                      | Google Test Automation Conference | Engineers at Google on which tests catch bugs for the least cost.                   | <https://www.youtube.com/watch?v=MpG2i_6nkUg>                                      |
+| read  | Practical mutation testing at scale           | Google research team              | The people who run mutation testing at Google say what worked.                      | <https://research.google/pubs/pub50658/>                                           |
+| read  | Just say no to more end-to-end tests          | Google Testing Blog               | A Google engineer on how many UI tests a suite should hold.                         | <https://testing.googleblog.com/2015/04/just-say-no-to-more-end-to-end-tests.html> |
+| read  | The practical test pyramid                    | Ham Vocke on martinfowler.com     | A trusted engineering site on where each kind of test fits.                         | <https://martinfowler.com/articles/practical-test-pyramid.html>                    |
