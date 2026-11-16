@@ -34,6 +34,7 @@ run them.
 
 For example, a planner can write ten basket scenarios and still skip BASK-4, the price by weight. Then no test
 ever checks that 750 g of bananas costs $1.04.
+
 This part builds the habits that keep the planner and generator honest. Part 3 deals with
 the healer.
 
@@ -65,8 +66,10 @@ Total: a short session. Each step's folder is self-contained: work in its `probl
 You run Playwright's own agents inside Claude Code. In a step's `problem/` folder,
 `bunx playwright init-agents --loop=claude` writes three Claude Code subagents to `.claude/agents/`:
 `playwright-test-planner`, `playwright-test-generator` and `playwright-test-healer`. It also writes a `.mcp.json`.
-That file gives the agents a browser through Playwright's test MCP server. Open `claude` in that folder and ask for an agent by name. The
-first time, Claude Code asks you to trust the folder and to allow the `playwright-test` MCP server: say yes to both.
+That file gives the agents a browser through Playwright's test MCP server.
+
+Open `claude` in that folder and ask for an agent by name. The
+first time, Claude Code asks you to trust the folder and to allow the `playwright-test` MCP server. Say yes to both.
 The checks read the files the agents leave behind and run the tests, never the chat.
 
 ## Walkthrough
@@ -121,7 +124,9 @@ Expect: `Part write-tests-with-agents is done: 4/4 steps pass.`
 ## Recap
 
 You can now give Claude Code a seed and a set of requirements. You can read its plan against the rules. And
-you can judge its tests by one question: would this go red if the rule broke? Part 2 answers that question for the whole suite at once.
+you can judge its tests by one question: would this go red if the rule broke?
+
+Part 2 answers that question for the whole suite at once.
 
 ## Watch and read
 

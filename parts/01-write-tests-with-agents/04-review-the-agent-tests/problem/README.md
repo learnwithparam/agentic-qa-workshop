@@ -78,7 +78,7 @@ Pick one test in your own app. Ask whether it would go red if its rule broke.
 
 - `qa/review.md` gives every test a verdict, with a reason for each fix or drop.
 - At least one test is marked fix or drop.
-- Every fix was changed; every drop is gone.
+- Every fix was changed, and every drop is gone.
 - The suite passes on the fixed build and catches `weighted-price`, `ghost-line` and `promo-stacking`.
 - "How I reviewed" names your permission mode, your diff check, Esc, `/rewind` and `/clear`.
 

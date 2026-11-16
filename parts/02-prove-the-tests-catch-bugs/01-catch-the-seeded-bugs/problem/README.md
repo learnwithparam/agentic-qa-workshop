@@ -4,7 +4,9 @@
 
 The suite in `tests/` has 16 green tests. Green proves they run, not that they catch a bug.
 
-Pantry Run plants 8 bugs, each behind a switch. A good suite goes red when a bug is on. This one misses 2. With `BUGS=sub-allergen`, the picker swaps Oat granola for Almond crunch granola. Ana declared tree nuts. Every test stays green.
+Pantry Run plants 8 bugs, each behind a switch. A good suite goes red when a bug is on. This one misses 2.
+
+With `BUGS=sub-allergen`, the picker swaps Oat granola for Almond crunch granola. Ana declared tree nuts. Every test stays green.
 
 ```mermaid
 flowchart LR

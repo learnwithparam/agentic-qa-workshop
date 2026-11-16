@@ -25,7 +25,7 @@ picker gives Ana, who declared tree nuts, Almond crunch granola. All 16 tests st
 
 ## Why it matters
 
-The mutate-test kata puts the trap in one line: passing tests and high coverage "may be giving a false sense of
+The mutate-test kata puts the trap in one line. Passing tests and high coverage "may be giving a false sense of
 security due to low quality of the tests"
 ([vmzakharov/mutate-test-kata](https://raw.githubusercontent.com/vmzakharov/mutate-test-kata/master/README.md)).
 Its tests cover close to 100% of the code, and the code is still full of bugs.

@@ -14,8 +14,9 @@ new ones. It asks before it runs a command or changes a file, and you say yes or
 **What you do.** You paste prompts, read the plan it shows, and say yes or no. You write no code.
 
 **1. Open a terminal.** On a Mac, press Command and Space, type Terminal and press Enter. On Windows, open
-the Start menu, type PowerShell and press Enter. On Linux, open your Terminal app. A terminal is a window where
-you type a command and press Enter. Later you will open a second one in the same way.
+the Start menu, type PowerShell and press Enter. On Linux, open your Terminal app.
+
+A terminal is a window where you type a command and press Enter. Later you will open a second one in the same way.
 
 **2. Get the course.** Type these two lines in the terminal. The first copies the course to your computer. The
 second moves into its folder.
@@ -40,12 +41,14 @@ lists each habit the course teaches and links to the step where you try it.
   gate.
 - **Transformation.** Before: "the agent wrote 40 tests and they are all green". After: "the agent's tests catch
   7 of 8 planted bugs, and here is the board".
-- **Goal.** The last step's check: one pull request gate that reports the bugs caught, the mutation score, the
+- **Goal.** The last step's check is one pull request gate. It reports the bugs caught, the mutation score, the
   guard's log and the cost per kept test.
 
 **Who it is for.** This course is for QA engineers, SDETs and test leads who own a web test suite. It is also for
-developers who own their own tests. Do you run a manual regression sheet today? You can start here: you write no
-code in this course. Already run Playwright in CI? The bug-kill matrix, the assertion guard and the MCP against CLI
+developers who own their own tests.
+
+Do you run a manual regression sheet today? You can start here, because you write no code in this course.
+Already run Playwright in CI? The bug-kill matrix, the assertion guard and the MCP against CLI
 measurement are where you learn something new.
 
 **How you work.** You do every agent task in the real Claude Code, signed in with your own Claude account. You type
@@ -200,7 +203,7 @@ for cohort grading. The rules every course repo follows are in [STANDARD.md](STA
 
 Ship a public repo where Claude Code wrote most of the suite, and a CI gate proves it works. The gate shows the
 bug-kill grid, the mutation score, the assertion guard's log and a cost per kept test. Scripts make all four
-numbers; nobody types them in. A hiring manager reads the top of your README and sees a number, not a claim.
+numbers. Nobody types them in. A hiring manager reads the top of your README and sees a number, not a claim.
 
 ## Read before you start
 

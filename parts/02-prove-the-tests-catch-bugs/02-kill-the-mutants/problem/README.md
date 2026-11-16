@@ -2,7 +2,9 @@
 
 ## The problem
 
-The bug-kill grid uses 8 planted bugs. Mutation testing is a second measure. Stryker makes small changes to the code, one at a time. Each changed copy is a **mutant**. For example, it turns the `>=` in `booked >= capacity` into `>`. Your unit tests then run. A red test **kills** the mutant. If every test stays green, the mutant **survived**.
+The bug-kill grid uses 8 planted bugs. Mutation testing is a second measure. Stryker makes small changes to the code, one at a time. Each changed copy is a **mutant**. For example, it turns the `>=` in `booked >= capacity` into `>`.
+
+Your unit tests then run. A red test **kills** the mutant. If every test stays green, the mutant **survived**.
 
 ```mermaid
 flowchart LR

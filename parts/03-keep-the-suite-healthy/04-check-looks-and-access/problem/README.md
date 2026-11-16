@@ -2,7 +2,9 @@
 
 ## The problem
 
-Some bugs break no number. On a 375 px phone, a price can sit on top of its Add button. A screen reader can find slot radios with no name. Two kinds of test catch these. A **visual test** compares screenshots. An **accessibility test** checks the page against the WCAG rules for people with disabilities.
+Some bugs break no number. On a 375 px phone, a price can sit on top of its Add button. A screen reader can find slot radios with no name.
+
+Two kinds of test catch these. A **visual test** compares screenshots. An **accessibility test** checks the page against the WCAG rules for people with disabilities.
 
 ```mermaid
 flowchart LR

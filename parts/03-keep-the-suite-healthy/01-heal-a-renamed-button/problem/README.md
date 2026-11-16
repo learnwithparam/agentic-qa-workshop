@@ -2,7 +2,9 @@
 
 ## The problem
 
-The new release of Pantry Run renames "Book slot" to "Reserve". It also moves the slot picker into a dialog. Shoppers notice nothing, but 15 of your 23 tests go red. A **healer** agent fixes tests like this. Some red tests are red for a real reason. Heal the first kind and leave the second red.
+The new release of Pantry Run renames "Book slot" to "Reserve". It also moves the slot picker into a dialog. Shoppers notice nothing, but 15 of your 23 tests go red.
+
+A **healer** agent fixes tests like this. Some red tests are red for a real reason. Heal the first kind and leave the second red.
 
 ```mermaid
 flowchart LR

@@ -2,7 +2,9 @@
 
 ## The problem
 
-An agent opens a pull request. Today the gate only runs the tests, so green means merge. But green hides mistakes. An agent can delete an expect, and every test stays green. `../pulls/` holds five planted pull requests. One is clean.
+An agent opens a pull request. Today the gate only runs the tests, so green means merge. But green hides mistakes. An agent can delete an expect, and every test stays green.
+
+`../pulls/` holds five planted pull requests. One is clean.
 
 ```mermaid
 flowchart LR
@@ -17,7 +19,7 @@ flowchart LR
 
 ## Watch it done
 
-The other four hide a mistake: an expect removed, a new test that catches no bug, a flaky test, or a score under the break threshold. For example, an agent can delete the expect that checks $1.04 for bananas, and the gate must catch it.
+The other four hide one mistake each. It is an expect removed, a new test that catches no bug, a flaky test, or a score under the break threshold. For example, an agent can delete the expect that checks $1.04 for bananas, and the gate must catch it.
 
 First see the problem. The gate today merges the pull request that removed an `expect`:
 
