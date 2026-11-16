@@ -6,6 +6,7 @@
       "!**/node_modules",
       "!**/world/recordings",
       "!**/.runs",
+      "!**/.auth",
       "!**/e2e/page-checks.js",
       "!**/.claude/rules"
     ]
